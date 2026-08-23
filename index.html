@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kawalerski Waldka</title>
+  <meta name="description" content="Sobota 26.09.2026 — Warszawa albo Sopot. Plan dnia, noclegi, wieczór i kalkulator kosztów.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#E6E8ED" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0D0F13" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:title" content="Kawalerski Waldka">
+  <meta property="og:description" content="Sobota 26.09.2026 — Warszawa albo Sopot. Plan dnia, noclegi, wieczór i kalkulator kosztów.">
+  <meta property="og:image" content="https://vsqool.github.io/kawalerski-waldka/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kawalerski Waldka">
+  <meta name="twitter:description" content="Sobota 26.09.2026 — Warszawa albo Sopot. Plan dnia, noclegi, wieczór i kalkulator kosztów.">
+  <meta name="twitter:image" content="https://vsqool.github.io/kawalerski-waldka/og.png">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%8E%AF%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@400..700&family=Source+Serif+4:opsz,wght@8..60,300..700&display=swap">
+  <style>
+  h1,h2,h3,h4,p,dl,dd,ol,ul,figure,blockquote{margin:0}
+  ol,ul{padding:0}
+  img{max-width:100%;height:auto;display:block}
+  button,input,select,textarea{font:inherit;color:inherit}
+  </style>
+</head>
+<body>
+<style>
+/* ── tokens ────────────────────────────────────────────────────────── */
+:root{
+  --ground:#E6E8ED; --surface:#FBFBFC; --surface-2:#EFF1F5; --sunken:#DDE0E7;
+  --line:#C9CDD8; --line-soft:#DCE0E8;
+  --ink:#12141A; --ink-2:#4B5262; --ink-3:#7B8393;
+  --accent:#C9411A; --accent-ink:#A8340F; --accent-soft:rgba(201,65,26,.10); --on-accent:#FFF6F1;
+  --shadow:0 1px 2px rgba(18,20,26,.05), 0 8px 24px -14px rgba(18,20,26,.22);
+  --r:5px;
+}
+:root[data-city="sopot"]{
+  --accent:#0C7480; --accent-ink:#0A5E68; --accent-soft:rgba(12,116,128,.10); --on-accent:#F0FBFC;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D0F13; --surface:#161920; --surface-2:#1C2029; --sunken:#101318;
+    --line:#2A3039; --line-soft:#222831;
+    --ink:#ECEEF3; --ink-2:#A5ACBA; --ink-3:#737B8B;
+    --accent:#FF7A4D; --accent-ink:#FF9670; --accent-soft:rgba(255,122,77,.13); --on-accent:#1A0B04;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -16px rgba(0,0,0,.8);
+  }
+  :root:not([data-theme="light"])[data-city="sopot"]{
+    --accent:#43C9D4; --accent-ink:#68D6DF; --accent-soft:rgba(67,201,212,.13); --on-accent:#041416;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D0F13; --surface:#161920; --surface-2:#1C2029; --sunken:#101318;
+  --line:#2A3039; --line-soft:#222831;
+  --ink:#ECEEF3; --ink-2:#A5ACBA; --ink-3:#737B8B;
+  --accent:#FF7A4D; --accent-ink:#FF9670; --accent-soft:rgba(255,122,77,.13); --on-accent:#1A0B04;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -16px rgba(0,0,0,.8);
+}
+:root[data-theme="dark"][data-city="sopot"]{
+  --accent:#43C9D4; --accent-ink:#68D6DF; --accent-soft:rgba(67,201,212,.13); --on-accent:#041416;
+}
+
+/* ── base ──────────────────────────────────────────────────────────── */
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:'Source Serif 4', Georgia, 'Times New Roman', serif;
+  font-size:17px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.disp{
+  font-family:'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  font-stretch:118%; font-weight:800; text-transform:uppercase;
+  letter-spacing:-.005em; line-height:1.02; text-wrap:balance; margin:0;
+}
+.mono{
+  font-family:'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  font-variant-numeric:tabular-nums;
+}
+.eyebrow{
+  font-family:'JetBrains Mono', ui-monospace, monospace;
+  font-size:10.5px; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--ink-3);
+}
+a{color:var(--accent-ink); text-decoration-thickness:1px; text-underline-offset:3px}
+a:hover{color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+p{margin:0}
+
+.wrap{max-width:880px; margin:0 auto; padding:0 22px}
+
+/* ── hero ──────────────────────────────────────────────────────────── */
+.hero{padding:56px 0 30px}
+.hero-kicker{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:baseline; margin-bottom:20px}
+.hero h1{font-size:clamp(46px,12vw,104px); font-stretch:125%; font-weight:900}
+.hero h1 em{font-style:normal; color:var(--accent); transition:color .4s ease}
+.hero-sub{margin-top:20px; max-width:56ch; color:var(--ink-2); font-size:18px}
+.stripe{
+  height:9px; margin:26px 0 0; border-radius:2px;
+  background:repeating-linear-gradient(115deg, var(--accent) 0 13px, transparent 13px 26px);
+  opacity:.85; transition:background .4s ease;
+}
+.facts{display:flex; flex-wrap:wrap; gap:0; margin-top:26px; border:1px solid var(--line); border-radius:var(--r); background:var(--surface); overflow:hidden}
+.fact{flex:1 1 150px; padding:14px 18px; border-right:1px solid var(--line-soft)}
+.fact:last-child{border-right:0}
+.fact dt{margin:0 0 5px}
+.fact dd{margin:0; font-family:'Archivo',sans-serif; font-stretch:112%; font-weight:700; font-size:20px; font-variant-numeric:tabular-nums}
+
+/* ── city switch ───────────────────────────────────────────────────── */
+.switchbar{position:sticky; top:0; z-index:20; background:var(--ground); background:color-mix(in srgb, var(--ground) 88%, transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--line-soft); margin-top:38px}
+.switchbar-in{display:flex; align-items:center; gap:16px; padding:11px 22px; max-width:880px; margin:0 auto}
+.seg{display:flex; gap:4px; padding:4px; background:var(--sunken); border:1px solid var(--line-soft); border-radius:var(--r)}
+.seg button{
+  appearance:none; border:0; cursor:pointer; background:transparent; color:var(--ink-2);
+  font-family:'Archivo',sans-serif; font-stretch:112%; font-weight:700; font-size:13px;
+  text-transform:uppercase; letter-spacing:.05em; padding:7px 16px; border-radius:3px;
+  transition:background .2s ease, color .2s ease;
+}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.switch-note{color:var(--ink-3); font-size:12px}
+
+/* ── sections ──────────────────────────────────────────────────────── */
+.sec{padding:52px 0 8px}
+.sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:8px}
+.sec-head h2{font-size:clamp(24px,4.4vw,34px)}
+.sec-lead{color:var(--ink-2); max-width:60ch; margin-bottom:26px}
+.rule{height:1px; background:var(--line-soft); margin:0 0 22px}
+
+/* ── timeline ──────────────────────────────────────────────────────── */
+.tl{display:flex; flex-direction:column; gap:0; list-style:none; margin:0; padding:0}
+.tl li{display:grid; grid-template-columns:78px 1fr; gap:22px; position:relative; padding:0 0 26px}
+.tl li::before{content:""; position:absolute; left:83px; top:11px; bottom:-11px; width:1px; background:var(--line)}
+.tl li:last-child{padding-bottom:0}
+.tl li:last-child::before{display:none}
+.tl-time{text-align:right; position:relative; padding-top:1px}
+.tl-time span{font-family:'JetBrains Mono',monospace; font-size:14px; font-weight:600; font-variant-numeric:tabular-nums; color:var(--ink)}
+.tl-time::after{content:""; position:absolute; right:-24px; top:7px; width:9px; height:9px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 4px var(--ground); transition:background .4s ease}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:16px 18px; box-shadow:var(--shadow)}
+.card h3{margin:0; font-family:'Archivo',sans-serif; font-stretch:112%; font-weight:700; font-size:19px; letter-spacing:-.01em}
+.card-top{display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:8px 14px}
+.chip{
+  font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums;
+  font-size:12px; font-weight:600; padding:3px 9px; border-radius:3px;
+  background:var(--accent-soft); color:var(--accent-ink); white-space:nowrap;
+  transition:background .4s ease, color .4s ease;
+}
+.chip.plain{background:var(--surface-2); color:var(--ink-3)}
+.card .where{margin-top:3px; font-size:14.5px; color:var(--ink-3)}
+.card .body{margin-top:10px; color:var(--ink-2); font-size:16px}
+.alts{margin:13px 0 0; padding:12px 0 0; border-top:1px dashed var(--line); display:flex; flex-direction:column; gap:8px}
+.alt{display:grid; grid-template-columns:auto 1fr; gap:10px; font-size:14.5px; color:var(--ink-2)}
+.alt b{font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); padding-top:3px}
+
+/* ── stay cards ────────────────────────────────────────────────────── */
+.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(255px,1fr)); gap:14px}
+.stay{display:flex; flex-direction:column; gap:9px}
+.stay .num{color:var(--ink-3)}
+.stay .go{
+  margin-top:auto; align-self:flex-start; display:inline-flex; align-items:center; gap:7px;
+  font-family:'Archivo',sans-serif; font-stretch:108%; font-weight:700; font-size:13px;
+  text-transform:uppercase; letter-spacing:.04em; text-decoration:none;
+  color:var(--on-accent); background:var(--accent); padding:8px 13px; border-radius:3px;
+  transition:background .4s ease, transform .12s ease, color .4s ease;
+}
+.stay .go:hover{transform:translateY(-1px); color:var(--on-accent)}
+
+/* ── calculator ────────────────────────────────────────────────────── */
+.calc{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden}
+.calc-head{display:flex; flex-wrap:wrap; align-items:center; gap:10px 20px; padding:14px 18px; background:var(--surface-2); border-bottom:1px solid var(--line)}
+.people{display:flex; align-items:center; gap:10px}
+.people label{font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3)}
+.stepper{display:flex; align-items:center; border:1px solid var(--line); border-radius:3px; overflow:hidden; background:var(--ground)}
+.stepper button{appearance:none; border:0; background:transparent; color:var(--ink-2); cursor:pointer; width:30px; height:32px; font-size:17px; line-height:1}
+.stepper button:hover{background:var(--accent-soft); color:var(--accent-ink)}
+.stepper input{
+  width:46px; height:32px; border:0; background:transparent; text-align:center; color:var(--ink);
+  font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:600; font-variant-numeric:tabular-nums;
+}
+.rows{list-style:none; margin:0; padding:0}
+.rows li{display:grid; grid-template-columns:24px 1fr 118px 96px; gap:12px; align-items:center; padding:11px 18px; border-bottom:1px solid var(--line-soft)}
+.rows li:last-child{border-bottom:0}
+.rows li.off{opacity:.42}
+.rows input[type="checkbox"]{width:17px; height:17px; accent-color:var(--accent); cursor:pointer; margin:0}
+.rname{display:flex; flex-direction:column; gap:2px; min-width:0}
+.rname strong{font-family:'Archivo',sans-serif; font-stretch:108%; font-weight:600; font-size:15.5px}
+.rname span{font-size:12.5px; color:var(--ink-3); line-height:1.4}
+.tag{display:inline-block; margin-left:6px; font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-3); border:1px solid var(--line); border-radius:2px; padding:1px 4px; vertical-align:1px}
+.rprice{display:flex; align-items:center; gap:5px; justify-content:flex-end}
+.rprice input{
+  width:66px; padding:5px 7px; text-align:right; color:var(--ink);
+  background:var(--ground); border:1px solid var(--line); border-radius:3px;
+  font-family:'JetBrains Mono',monospace; font-size:14px; font-variant-numeric:tabular-nums;
+}
+.rprice input:focus{border-color:var(--accent); outline:none}
+.rprice small{font-size:11px; color:var(--ink-3); white-space:nowrap}
+.rout{text-align:right; font-family:'JetBrains Mono',monospace; font-size:14.5px; font-weight:600; font-variant-numeric:tabular-nums; color:var(--ink)}
+.calc-foot{display:flex; flex-wrap:wrap; gap:14px 30px; justify-content:space-between; align-items:flex-end; padding:16px 18px; background:var(--surface-2); border-top:1px solid var(--line)}
+.total{display:flex; flex-direction:column; gap:3px}
+.total b{font-family:'Archivo',sans-serif; font-stretch:118%; font-weight:800; font-size:34px; font-variant-numeric:tabular-nums; line-height:1; color:var(--accent-ink); transition:color .4s ease}
+.total.sm b{font-size:22px; color:var(--ink)}
+
+/* ── compare table ─────────────────────────────────────────────────── */
+.tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:var(--r); background:var(--surface); box-shadow:var(--shadow)}
+table{border-collapse:collapse; width:100%; min-width:560px; font-size:15px}
+th,td{text-align:left; padding:12px 16px; border-bottom:1px solid var(--line-soft); vertical-align:top}
+tr:last-child th, tr:last-child td{border-bottom:0}
+thead th{font-family:'Archivo',sans-serif; font-stretch:112%; font-weight:700; font-size:14px; text-transform:uppercase; letter-spacing:.05em; background:var(--surface-2); border-bottom:1px solid var(--line)}
+thead th:nth-child(2){color:#C9411A}
+thead th:nth-child(3){color:#0C7480}
+tbody th{font-weight:400; color:var(--ink-3); font-size:13px; width:150px}
+td{color:var(--ink-2)}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) thead th:nth-child(2){color:#FF9670}
+  :root:not([data-theme="light"]) thead th:nth-child(3){color:#68D6DF}
+}
+:root[data-theme="dark"] thead th:nth-child(2){color:#FF9670}
+:root[data-theme="dark"] thead th:nth-child(3){color:#68D6DF}
+
+/* ── decisions ─────────────────────────────────────────────────────── */
+.q{padding:16px 0; border-bottom:1px solid var(--line-soft)}
+.q:last-of-type{border-bottom:0}
+.q p{font-family:'Archivo',sans-serif; font-stretch:108%; font-weight:600; font-size:16.5px; margin-bottom:11px}
+.opts{display:flex; flex-wrap:wrap; gap:8px}
+.opt{
+  appearance:none; cursor:pointer; background:var(--surface); color:var(--ink-2);
+  border:1px solid var(--line); border-radius:3px; padding:7px 13px; font-size:14.5px;
+  font-family:'Source Serif 4',serif; transition:background .18s ease, color .18s ease, border-color .18s ease;
+}
+.opt:hover{border-color:var(--accent); color:var(--ink)}
+.opt[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--on-accent); font-weight:600}
+
+footer{margin:56px 0 44px; padding-top:22px; border-top:1px solid var(--line-soft); color:var(--ink-3); font-size:13.5px}
+
+/* ── motion ────────────────────────────────────────────────────────── */
+.fade{animation:fade .34s cubic-bezier(.22,.7,.3,1) both}
+@keyframes fade{from{opacity:0; transform:translateY(7px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms !important; transition-duration:.001ms !important}
+}
+
+/* ── narrow ────────────────────────────────────────────────────────── */
+@media (max-width:620px){
+  body{font-size:16px}
+  .tl li{grid-template-columns:1fr; gap:8px}
+  .tl li::before{display:none}
+  .tl-time{text-align:left}
+  .tl-time::after{display:none}
+  .tl-time span{background:var(--accent-soft); color:var(--accent-ink); padding:2px 8px; border-radius:3px}
+  .rows li{grid-template-columns:20px 1fr; gap:8px 10px}
+  .rows li .rprice{grid-column:2; justify-content:flex-start}
+  .rows li .rout{grid-column:2; text-align:left}
+  .fact{flex:1 1 100%; border-right:0; border-bottom:1px solid var(--line-soft)}
+  .fact:last-child{border-bottom:0}
+}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-kicker">
+      <span class="eyebrow">Wieczór kawalerski</span>
+      <span class="eyebrow mono" id="countdown">—</span>
+    </div>
+    <h1 class="disp">Kawalerski<br><em>Waldka</em></h1>
+    <div class="stripe" aria-hidden="true"></div>
+    <p class="hero-sub">Jeden dzień, dwa warianty do wyboru. Paintball, gokarty, coś do jedzenia i nocleg — reszta zależy od tego, co wybierzecie poniżej.</p>
+    <dl class="facts">
+      <div class="fact"><dt class="eyebrow">Termin</dt><dd>sob. 26.09.2026</dd></div>
+      <div class="fact"><dt class="eyebrow">Powrót</dt><dd>ndz. 27.09.2026</dd></div>
+      <div class="fact"><dt class="eyebrow">Ekipa</dt><dd>8 osób</dd></div>
+      <div class="fact"><dt class="eyebrow">Wariant</dt><dd id="factCity">Warszawa</dd></div>
+    </dl>
+  </header>
+</div>
+
+<div class="switchbar">
+  <div class="switchbar-in">
+    <div class="seg" role="group" aria-label="Wybór wariantu">
+      <button type="button" data-city="warszawa" aria-pressed="true">Warszawa</button>
+      <button type="button" data-city="sopot" aria-pressed="false">Sopot</button>
+    </div>
+    <span class="switch-note" id="switchNote">bez dojazdu — mieści się cały plan</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section class="sec">
+    <div class="sec-head"><span class="eyebrow">01</span><h2 class="disp">Plan dnia</h2></div>
+    <p class="sec-lead" id="planLead"></p>
+    <ol class="tl" id="timeline"></ol>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head"><span class="eyebrow">02</span><h2 class="disp">Nocleg</h2></div>
+    <p class="sec-lead">Dwie opcje z Bookinga, obie na 8 osób, cały obiekt na wyłączność. Ceny sprawdzajcie w linkach — potrafią się zmieniać.</p>
+    <div class="grid2" id="stays"></div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head"><span class="eyebrow">03</span><h2 class="disp">Wieczór</h2></div>
+    <p class="sec-lead" id="eveLead"></p>
+    <div class="grid2" id="evening"></div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head"><span class="eyebrow">04</span><h2 class="disp">Ile to kosztuje</h2></div>
+    <p class="sec-lead">Ceny atrakcji pochodzą z cenników w linkach powyżej. Nocleg, jedzenie i paliwo to szacunki — kliknijcie w kwotę i wpiszcie swoją. Odznaczcie to, czego nie robimy.</p>
+    <div class="calc">
+      <div class="calc-head">
+        <div class="people">
+          <label for="peopleInput">Liczba osób</label>
+          <div class="stepper">
+            <button type="button" id="minus" aria-label="Mniej osób">−</button>
+            <input id="peopleInput" class="mono" type="number" min="2" max="24" value="8" inputmode="numeric">
+            <button type="button" id="plus" aria-label="Więcej osób">+</button>
+          </div>
+        </div>
+        <span class="eyebrow" id="calcCity">Wariant: Warszawa</span>
+      </div>
+      <ul class="rows" id="calcRows"></ul>
+      <div class="calc-foot">
+        <div class="total"><span class="eyebrow">Na osobę</span><b id="perHead">0 zł</b></div>
+        <div class="total sm"><span class="eyebrow">Cała ekipa</span><b id="totalAll">0 zł</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head"><span class="eyebrow">05</span><h2 class="disp">Warszawa czy Sopot</h2></div>
+    <p class="sec-lead">Krótko, na czym polega różnica.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th scope="col"></th><th scope="col">Warszawa</th><th scope="col">Sopot</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Dojazd</th><td>zero — startujemy na miejscu</td><td>ok. 4 h w jedną stronę</td></tr>
+          <tr><th scope="row">Atrakcje</th><td>trzy plus bonusowy CS</td><td>dwie — reszta ginie w aucie</td></tr>
+          <tr><th scope="row">Paintball</th><td>pakiet 1400 zł na 10 osób, po 500 kulek</td><td>139 zł od osoby, 400 kulek</td></tr>
+          <tr><th scope="row">Gokarty</th><td>85 zł za przejazd (Janki)</td><td>120 zł za dwa przejazdy — taniej</td></tr>
+          <tr><th scope="row">Wieczór</th><td>grill i piłkarzyki na noclegu, ewentualnie jacuzzi</td><td>Monciak, plaża, piknik pod chmurką</td></tr>
+          <tr><th scope="row">Słaby punkt</th><td>mniej klimatu „wyjazdu”</td><td>osiem godzin w aucie zjada dzień</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head"><span class="eyebrow">06</span><h2 class="disp">Do ustalenia</h2></div>
+    <p class="sec-lead">Sześć rzeczy, na które potrzebuję waszego zdania. Klikajcie — zaznaczenia zostają w waszej przeglądarce, więc nikt poza wami ich nie widzi. Wyniki i tak wrzućcie na grupę.</p>
+    <div id="questions"></div>
+  </section>
+
+  <footer>
+    Na podstawie planu Michała. Ceny i dostępność sprawdzajcie w linkach — obiekty na Bookingu potrafią zniknąć z dnia na dzień.
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var BOOK = {
+    bizon:'https://www.booking.com/hotel/pl/bizon-village.pl.html?label=gen173nr-10CAEoggI46AdIM1gEaLYBiAEBmAEzuAEHyAEN2AED6AEB-AEBiAIBqAIBuAKmr6vUBsACAdICJDJmNDNiZDgwLTMzMzgtNDI1My1hMjA5LTVkNWYzYzc2MjM4YdgCAeACAQ&aid=304142&ucfs=1&checkin=2026-09-26&checkout=2026-09-27&dest_id=1310&dest_type=region&group_adults=8&no_rooms=1&group_children=0&nflt=ht_id%3D220%3Bht_id%3D213%3Bht_id%3D221%3Bprivacy_type%3D3%3Boos%3D1&srpvid=4bff501b1a630641&srepoch=1787484306&all_sr_blocks=1017501803_430704874_8_0_0_48164&highlighted_blocks=1017501803_430704874_8_0_0_48164&matching_block_id=1017501803_430704874_8_0_0_48164&sb_entire_place=1&atlas_src=sr_iw_title',
+    chillout:'https://www.booking.com/hotel/pl/chillout-pod-warszawa.pl.html?label=gen173nr-10CAEoggI46AdIM1gEaLYBiAEBmAEzuAEHyAEN2AED6AEB-AEBiAIBqAIBuAKmr6vUBsACAdICJDJmNDNiZDgwLTMzMzgtNDI1My1hMjA5LTVkNWYzYzc2MjM4YdgCAeACAQ&aid=304142&ucfs=1&checkin=2026-09-26&checkout=2026-09-27&dest_id=1310&dest_type=region&group_adults=8&no_rooms=1&group_children=0&nflt=oos%3D1%3Bprice%3DPLN-min-2200-1%3Bht_id%3D220%3Bht_id%3D213%3Bht_id%3D228%3Bht_id%3D206%3Bht_id%3D223%3Bht_id%3D221%3Bht_id%3D210%3Bht_id%3D212%3Bprivacy_type%3D3%3Bht_id%3D201&srpvid=4bff501b1a630641&srepoch=1787484605&all_sr_blocks=1667830801_438603834_8_0_0&highlighted_blocks=1667830801_438603834_8_0_0&matching_block_id=1667830801_438603834_8_0_0&sb_entire_place=1&atlas_src=sr_iw_title',
+    metropolis:'https://www.booking.com/hotel/pl/metropolis-domki.pl.html?label=gen173nr-10CAEoggI46AdIM1gEaLYBiAEBmAEzuAEHyAEN2AED6AEB-AEBiAIBqAIBuAKmr6vUBsACAdICJDJmNDNiZDgwLTMzMzgtNDI1My1hMjA5LTVkNWYzYzc2MjM4YdgCAeACAQ&aid=304142&ucfs=1&checkin=2026-09-26&checkout=2026-09-27&dest_id=1310&dest_type=region&group_adults=8&no_rooms=1&group_children=0&nflt=oos%3D1%3Bprice%3DPLN-min-2200-1%3Bht_id%3D220%3Bht_id%3D213%3Bht_id%3D228%3Bht_id%3D206%3Bht_id%3D223%3Bht_id%3D221%3Bht_id%3D210%3Bht_id%3D212%3Bprivacy_type%3D3&srpvid=4bff501b1a630641&srepoch=1787486391&all_sr_blocks=113646502_329761780_4_2_0%2C113646502_329761780_4_2_0&highlighted_blocks=113646502_329761780_4_2_0%2C113646502_329761780_4_2_0&matching_block_id=113646502_329761780_4_2_0&sb_entire_place=1&atlas_src=sr_iw_title',
+    seacity:'https://www.booking.com/hotel/pl/sea-amp-city-monte-casinno-apartments-lux-sopot.pl.html?label=gen173nr-10CAEoggI46AdIM1gEaLYBiAEBmAEzuAEHyAEN2AED6AEB-AEBiAIBqAIBuAKmr6vUBsACAdICJDJmNDNiZDgwLTMzMzgtNDI1My1hMjA5LTVkNWYzYzc2MjM4YdgCAeACAQ&aid=304142&ucfs=1&checkin=2026-09-26&checkout=2026-09-27&dest_id=1310&dest_type=region&group_adults=8&no_rooms=1&group_children=0&nflt=oos%3D1%3Bprice%3DPLN-min-2200-1%3Bht_id%3D220%3Bht_id%3D213%3Bht_id%3D228%3Bht_id%3D206%3Bht_id%3D223%3Bht_id%3D221%3Bht_id%3D210%3Bht_id%3D212%3Bprivacy_type%3D3%3Bht_id%3D201&srpvid=4bff501b1a630641&srepoch=1787486562&all_sr_blocks=563220801_212452311_8_0_0&highlighted_blocks=563220801_212452311_8_0_0&matching_block_id=563220801_212452311_8_0_0&sb_entire_place=1&atlas_src=sr_iw_title'
+  };
+
+  var PLAN = {
+    warszawa: {
+      label:'Warszawa',
+      note:'bez dojazdu — mieści się cały plan',
+      lead:'Startujemy w południe i idziemy punkt po punkcie. Nic nie ginie na dojazdach, więc mieszczą się trzy atrakcje plus wieczór na noclegu.',
+      stops:[
+        { time:'11:00', title:'Paintball', place:'ASM Arena', url:'https://asmarena.pl/cennik/',
+          chip:'1400 zł / 10 os.',
+          body:'Pakiet „impreza zamknięta” w sobotę: 1400 zł dla dziesięciu, po 500 kulek na głowę. Przy ośmiu wychodzi 175 zł od osoby.' },
+        { time:'14:00', title:'Gokarty', place:'Pole Position, Janki', url:'https://www.pole-position.pl/?page_id=747',
+          chip:'85 zł / przejazd',
+          body:'Jeden przejazd albo dwa — do ustalenia. Dwa dają szansę na rewanż, ale zjadają godzinę i drugie 85 zł.' },
+        { time:'15:30', title:'Szamka', place:'gdzieś w mieście', url:'',
+          chip:'~70 zł / os. · szac.',
+          body:'Burgery, pizza, cokolwiek szybkiego. Nie rozsiadamy się — jemy i ruszamy dalej.' },
+        { time:'17:00', title:'CS na profesjonalnych stanowiskach', place:'FPS Center, metro Natolin', url:'https://fpscenter.pl',
+          chip:'cena do sprawdzenia',
+          body:'Waldek miał swój epizod z CS-em i coś tam potrafi, więc godzina na porządnym sprzęcie przy metrze Natolin. Bonus, nie obowiązek.',
+          alts:[
+            ['Plan B','Kilka laptopów ze sobą i mini LAN party na noclegu. Po biedzie, ale oryginalnie.'],
+            ['Plan C','Odpuszczamy temat i idziemy prosto na nocleg.']
+          ] },
+        { time:'20:00', title:'Nocleg pod Warszawą', place:'grill, piłkarzyki, jacuzzi', url:'',
+          chip:'reszta wieczoru',
+          body:'Domyślnie zostajemy na miejscu: grill, piłkarzyki, w Bizonie podobno jest jacuzzi. Miasto to alternatywa, nie plan główny.' }
+      ],
+      stays:[
+        { n:'Opcja 1', name:'Bizon Village', desc:'To ta z jacuzzi — jeśli dobrze pamiętam ofertę. Cały obiekt na wyłączność.', url:BOOK.bizon },
+        { n:'Opcja 2', name:'Chillout pod Warszawą', desc:'Druga propozycja pod miastem, też cały obiekt dla ośmiu osób.', url:BOOK.chillout }
+      ],
+      eveLead:'Mój typ to zostać na noclegu, ale wrzucam obie opcje — mówcie, co wolicie.',
+      evening:[
+        { name:'Zostajemy na miejscu', tag:'domyślne', desc:'Grill, piłkarzyki, jacuzzi i własne pomysły na rozrywkę. Bez taksówek i bez pilnowania godzin.' },
+        { name:'Ruszamy w miasto', tag:'alternatywa', desc:'Pub crawl albo nad Wisłę przy muzyce. Kluby raczej odpadają — nie wygląda mi to na klimaty Waldka, ale jak uważacie inaczej, to mnie poprawcie.' }
+      ],
+      calc:[
+        { id:'pb', name:'Paintball ASM Arena', hint:'pakiet impreza zamknięta, 500 kulek', v:1400, per:'grupa', on:true },
+        { id:'gk', name:'Gokarty Pole Position', hint:'za jeden przejazd — podwójcie, jeśli robimy dwa', v:85, per:'osoba', on:true },
+        { id:'food', name:'Jedzenie', hint:'burgery albo pizza', v:70, per:'osoba', on:true, est:true },
+        { id:'cs', name:'FPS Center — CS', hint:'cennika nie znam, wpiszcie po telefonie', v:0, per:'osoba', on:true, est:true },
+        { id:'stay', name:'Nocleg', hint:'cały obiekt za dobę', v:2200, per:'grupa', on:true, est:true },
+        { id:'fuel', name:'Dojazd i paliwo', hint:'wszystko na miejscu', v:0, per:'osoba', on:true, est:true }
+      ]
+    },
+    sopot: {
+      label:'Sopot',
+      note:'cztery godziny drogi — jedna atrakcja odpada',
+      lead:'Ten sam schemat, tylko z czterogodzinnym dojazdem w jedną stronę. To zjada jeden punkt programu, więc CS wypada i zostają dwie atrakcje.',
+      stops:[
+        { time:'07:00', title:'Wyjazd', place:'ok. 4 h do Trójmiasta', url:'',
+          chip:'~4 h',
+          body:'Trzeba wstać. Cztery godziny w aucie oznaczają, że jedna atrakcja z warszawskiego planu po prostu się nie mieści.' },
+        { time:'12:00', title:'Paintball', place:'Trafiony Paintball, Gdańsk', url:'https://trafionypaintball.pl/gdansk/cennik/',
+          chip:'139 zł / os.',
+          body:'139 zł od osoby za 400 kulek. Cenowo podobnie jak w Warszawie, tylko kulek trochę mniej.' },
+        { time:'15:00', title:'Gokarty', place:'Kart Center', url:'https://kartcenter.pl/cennik/',
+          chip:'120 zł / 2 przejazdy',
+          body:'Tu wychodzi taniej niż w Jankach — 120 zł za dwa przejazdy zamiast 85 zł za jeden.' },
+        { time:'18:00', title:'Sopot po godzinach', place:'Monciak, plaża, nocleg', url:'',
+          chip:'reszta wieczoru',
+          body:'W Sopocie raczej nie siedzimy w chałupie. Knajpa na Monciaku albo alkoholowy piknik na plaży — chyba że macie lepszy pomysł.' }
+      ],
+      stays:[
+        { n:'Nocleg 1', name:'Metropolis Domki', desc:'Domki na całą ekipę, osiem osób, obiekt na wyłączność.', url:BOOK.metropolis },
+        { n:'Nocleg 2', name:'Sea & City Monte Cassino Apartments Lux', desc:'Apartamenty w samym Sopocie — bliżej Monciaka i plaży.', url:BOOK.seacity }
+      ],
+      eveLead:'Tu plan wieczoru jest właściwie jeden: wychodzimy.',
+      evening:[
+        { name:'Monciak i knajpa', tag:'domyślne', desc:'Kolacja i drinki w mieście. Sopot we wrześniu jest jeszcze na chodzie, a wszystko masz w zasięgu spaceru.' },
+        { name:'Piknik na plaży', tag:'jeśli pogoda dopisze', desc:'Alkoholowy piknik nad wodą zamiast siedzenia w lokalu. Koniec września nad Bałtykiem bywa różnie — plan zależy od prognozy.' }
+      ],
+      calc:[
+        { id:'pb', name:'Paintball Trafiony', hint:'400 kulek na osobę', v:139, per:'osoba', on:true },
+        { id:'gk', name:'Gokarty Kart Center', hint:'dwa przejazdy', v:120, per:'osoba', on:true },
+        { id:'food', name:'Jedzenie', hint:'obiad plus kolacja w mieście', v:110, per:'osoba', on:true, est:true },
+        { id:'stay', name:'Nocleg', hint:'cały obiekt za dobę', v:2200, per:'grupa', on:true, est:true },
+        { id:'fuel', name:'Dojazd i paliwo', hint:'ok. 700 km w dwie strony, składka na auto', v:120, per:'osoba', on:true, est:true }
+      ]
+    }
+  };
+
+  var QUESTIONS = [
+    { id:'q-city',  q:'Warszawa czy Sopot?', o:['Warszawa','Sopot','Wszystko jedno'] },
+    { id:'q-karts', q:'Gokarty — jeden przejazd czy dwa?', o:['Jeden','Dwa','Olewamy gokarty'] },
+    { id:'q-cs',    q:'Co z CS-em?', o:['FPS Center','LAN party na noclegu','Odpuszczamy'] },
+    { id:'q-eve',   q:'Wieczór — nocleg czy miasto?', o:['Zostajemy na noclegu','Ruszamy w miasto','Pół na pół'] },
+    { id:'q-club',  q:'Kluby wchodzą w grę?', o:['Nie, to nie klimat Waldka','Tak, jedna próba','Jak wyjdzie'] },
+    { id:'q-stay',  q:'Który nocleg?', o:['Pierwszy z listy','Drugi z listy','Szukamy dalej'] }
+  ];
+
+  var $ = function(s){ return document.querySelector(s); };
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function zl(n){ return Math.round(n).toLocaleString('pl-PL') + ' zł'; }
+
+  var city = 'warszawa';
+  var people = 8;
+  var state = {};   // city -> { id: {on, v} }
+
+  function store(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
+  function load(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+
+  /* ---------- countdown ---------- */
+  (function(){
+    var target = new Date('2026-09-26T11:00:00+02:00').getTime();
+    var el = $('#countdown');
+    function tick(){
+      var d = Math.ceil((target - Date.now()) / 86400000);
+      el.textContent = d > 1 ? ('za ' + d + ' dni') : d === 1 ? 'jutro' : d === 0 ? 'dziś' : '26.09.2026';
+    }
+    tick();
+    setInterval(tick, 60000);
+  })();
+
+  /* ---------- render plan ---------- */
+  function renderPlan(){
+    var p = PLAN[city];
+    $('#planLead').textContent = p.lead;
+    $('#switchNote').textContent = p.note;
+    $('#factCity').textContent = p.label;
+    $('#calcCity').textContent = 'Wariant: ' + p.label;
+
+    $('#timeline').innerHTML = p.stops.map(function(s, i){
+      var head = s.url
+        ? '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a>'
+        : esc(s.title);
+      var alts = s.alts ? '<div class="alts">' + s.alts.map(function(a){
+        return '<div class="alt"><b>' + esc(a[0]) + '</b><span>' + esc(a[1]) + '</span></div>';
+      }).join('') + '</div>' : '';
+      return '<li class="fade" style="animation-delay:' + (i * 45) + 'ms">' +
+        '<div class="tl-time"><span>' + esc(s.time) + '</span></div>' +
+        '<div class="card">' +
+          '<div class="card-top"><h3>' + head + '</h3><span class="chip">' + esc(s.chip) + '</span></div>' +
+          '<div class="where">' + esc(s.place) + '</div>' +
+          '<p class="body">' + esc(s.body) + '</p>' + alts +
+        '</div></li>';
+    }).join('');
+
+    $('#stays').innerHTML = p.stays.map(function(s, i){
+      return '<div class="card stay fade" style="animation-delay:' + (i * 60) + 'ms">' +
+        '<span class="eyebrow num">' + esc(s.n) + '</span>' +
+        '<h3>' + esc(s.name) + '</h3>' +
+        '<p class="body" style="margin-top:0">' + esc(s.desc) + '</p>' +
+        '<a class="go" href="' + esc(s.url) + '" target="_blank" rel="noopener">Zobacz na Bookingu →</a>' +
+      '</div>';
+    }).join('');
+
+    $('#eveLead').textContent = p.eveLead;
+    $('#evening').innerHTML = p.evening.map(function(e, i){
+      return '<div class="card fade" style="animation-delay:' + (i * 60) + 'ms">' +
+        '<div class="card-top"><h3>' + esc(e.name) + '</h3><span class="chip plain">' + esc(e.tag) + '</span></div>' +
+        '<p class="body">' + esc(e.desc) + '</p></div>';
+    }).join('');
+  }
+
+  /* ---------- calculator ---------- */
+  function cityState(){
+    if(!state[city]){
+      state[city] = {};
+      PLAN[city].calc.forEach(function(r){ state[city][r.id] = { on:r.on, v:r.v }; });
+    }
+    return state[city];
+  }
+
+  function renderCalc(){
+    var st = cityState();
+    $('#calcRows').innerHTML = PLAN[city].calc.map(function(r){
+      var s = st[r.id];
+      return '<li class="' + (s.on ? '' : 'off') + '" data-row="' + r.id + '">' +
+        '<input type="checkbox" ' + (s.on ? 'checked' : '') + ' aria-label="Wliczaj: ' + esc(r.name) + '">' +
+        '<span class="rname"><strong>' + esc(r.name) + (r.est ? '<span class="tag">szac.</span>' : '') + '</strong>' +
+        '<span>' + esc(r.hint) + '</span></span>' +
+        '<span class="rprice"><input type="number" min="0" step="10" value="' + s.v + '" aria-label="Kwota: ' + esc(r.name) + '">' +
+        '<small>zł / ' + (r.per === 'grupa' ? 'grupa' : 'os.') + '</small></span>' +
+        '<span class="rout" data-out="' + r.id + '"></span>' +
+      '</li>';
+    }).join('');
+    recalc();
+  }
+
+  function recalc(){
+    var st = cityState(), sum = 0;
+    PLAN[city].calc.forEach(function(r){
+      var s = st[r.id];
+      var head = s.on ? (r.per === 'grupa' ? s.v / people : s.v) : 0;
+      if(s.on) sum += head;
+      var out = document.querySelector('[data-out="' + r.id + '"]');
+      if(out) out.textContent = s.on ? zl(head) : '—';
+    });
+    $('#perHead').textContent = zl(sum);
+    $('#totalAll').textContent = zl(sum * people);
+  }
+
+  $('#calcRows').addEventListener('change', function(e){
+    var li = e.target.closest('li'); if(!li) return;
+    var st = cityState(), id = li.dataset.row;
+    if(e.target.type === 'checkbox'){ st[id].on = e.target.checked; li.classList.toggle('off', !e.target.checked); }
+    else { st[id].v = Math.max(0, Number(e.target.value) || 0); }
+    recalc();
+  });
+  $('#calcRows').addEventListener('input', function(e){
+    if(e.target.type !== 'number') return;
+    var li = e.target.closest('li'); if(!li) return;
+    cityState()[li.dataset.row].v = Math.max(0, Number(e.target.value) || 0);
+    recalc();
+  });
+
+  function setPeople(n){
+    people = Math.min(24, Math.max(2, n || 8));
+    $('#peopleInput').value = people;
+    recalc();
+  }
+  $('#minus').addEventListener('click', function(){ setPeople(people - 1); });
+  $('#plus').addEventListener('click', function(){ setPeople(people + 1); });
+  $('#peopleInput').addEventListener('input', function(){ var n = Number(this.value); if(n >= 2 && n <= 24){ people = n; recalc(); } });
+  $('#peopleInput').addEventListener('blur', function(){ setPeople(Number(this.value)); });
+
+  /* ---------- questions ---------- */
+  $('#questions').innerHTML = QUESTIONS.map(function(q){
+    var saved = load('kw:' + q.id);
+    return '<div class="q"><p>' + esc(q.q) + '</p><div class="opts" data-q="' + q.id + '">' +
+      q.o.map(function(o){
+        return '<button type="button" class="opt" aria-pressed="' + (saved === o ? 'true' : 'false') + '">' + esc(o) + '</button>';
+      }).join('') + '</div></div>';
+  }).join('');
+
+  $('#questions').addEventListener('click', function(e){
+    var b = e.target.closest('.opt'); if(!b) return;
+    var group = b.parentNode, already = b.getAttribute('aria-pressed') === 'true';
+    group.querySelectorAll('.opt').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+    if(already){ store('kw:' + group.dataset.q, ''); }
+    else { b.setAttribute('aria-pressed','true'); store('kw:' + group.dataset.q, b.textContent); }
+  });
+
+  /* ---------- city switch ---------- */
+  document.querySelectorAll('.seg button').forEach(function(b){
+    b.addEventListener('click', function(){
+      if(b.dataset.city === city) return;
+      city = b.dataset.city;
+      document.documentElement.setAttribute('data-city', city);
+      document.querySelectorAll('.seg button').forEach(function(x){
+        x.setAttribute('aria-pressed', x.dataset.city === city ? 'true' : 'false');
+      });
+      store('kw:city', city);
+      renderPlan();
+      renderCalc();
+    });
+  });
+
+  var savedCity = load('kw:city');
+  if(savedCity === 'sopot'){
+    city = 'sopot';
+    document.documentElement.setAttribute('data-city','sopot');
+    document.querySelectorAll('.seg button').forEach(function(x){
+      x.setAttribute('aria-pressed', x.dataset.city === 'sopot' ? 'true' : 'false');
+    });
+  }
+
+  renderPlan();
+  renderCalc();
+})();
+</script>
+
+</body>
+</html>
