@@ -340,12 +340,13 @@ footer{margin:56px 0 44px; padding-top:22px; border-top:1px solid var(--line-sof
       <table>
         <thead><tr><th scope="col"></th><th scope="col">Warszawa</th><th scope="col">Sopot</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Dojazd</th><td>zero — startujemy na miejscu</td><td>ok. 4 h w jedną stronę</td></tr>
-          <tr><th scope="row">Atrakcje</th><td>trzy plus bonusowy CS</td><td>dwie — reszta ginie w aucie</td></tr>
+          <tr><th scope="row">Dojazd</th><td>zero — startujemy na miejscu</td><td>pociąg, ok. 4 h w jedną stronę</td></tr>
+          <tr><th scope="row">Atrakcje</th><td>trzy plus bonusowy CS</td><td>dwie — reszta ginie w drodze</td></tr>
           <tr><th scope="row">Paintball</th><td>pakiet 1400 zł na 10 osób, po 500 kulek</td><td>139 zł od osoby, 400 kulek</td></tr>
           <tr><th scope="row">Gokarty</th><td>85 zł za przejazd (Janki)</td><td>120 zł za dwa przejazdy — taniej</td></tr>
+          <tr><th scope="row">Kto prowadzi</th><td>ktoś musi zostać trzeźwy albo jedziemy taxi</td><td>nikt — pociąg załatwia sprawę</td></tr>
           <tr><th scope="row">Wieczór</th><td>grill i piłkarzyki na noclegu, ewentualnie jacuzzi</td><td>Monciak, plaża, piknik pod chmurką</td></tr>
-          <tr><th scope="row">Słaby punkt</th><td>mniej klimatu „wyjazdu”</td><td>osiem godzin w aucie zjada dzień</td></tr>
+          <tr><th scope="row">Słaby punkt</th><td>mniej klimatu „wyjazdu”</td><td>osiem godzin w drodze plus taksówki na miejscu</td></tr>
         </tbody>
       </table>
     </div>
@@ -419,12 +420,15 @@ footer{margin:56px 0 44px; padding-top:22px; border-top:1px solid var(--line-sof
     },
     sopot: {
       label:'Sopot',
-      note:'cztery godziny drogi — jedna atrakcja odpada',
-      lead:'Ten sam schemat, tylko z czterogodzinnym dojazdem w jedną stronę. To zjada jeden punkt programu, więc CS wypada i zostają dwie atrakcje.',
+      note:'pociąg, cztery godziny w jedną stronę — jedna atrakcja odpada',
+      lead:'Ten sam schemat, tylko z czterogodzinną jazdą pociągiem w jedną stronę. To zjada jeden punkt programu, więc CS wypada i zostają dwie atrakcje. Za to nikt nie prowadzi, więc impreza może się zacząć już w przedziale.',
       stops:[
-        { time:'07:00', title:'Wyjazd', place:'ok. 4 h do Trójmiasta', url:'',
-          chip:'~4 h',
-          body:'Trzeba wstać. Cztery godziny w aucie oznaczają, że jedna atrakcja z warszawskiego planu po prostu się nie mieści.' },
+        { time:'07:00', title:'Pociąg do Trójmiasta', place:'ok. 4 h w jedną stronę', url:'',
+          chip:'~4 h pociągiem',
+          body:'Trzeba wstać, ale za to nikt nie prowadzi — cztery godziny w przedziale spokojnie liczą się już jako część imprezy. Bilety na osiem osób kupcie mocno z wyprzedzeniem, bo im bliżej terminu, tym drożej.',
+          alts:[
+            ['Pamiętaj','Bez auta na miejscu jeździmy taksówkami albo SKM-ką — paintball jest w Gdańsku, gokarty w jeszcze innym punkcie.']
+          ] },
         { time:'12:00', title:'Paintball', place:'Trafiony Paintball, Gdańsk', url:'https://trafionypaintball.pl/gdansk/cennik/',
           chip:'139 zł / os.',
           body:'139 zł od osoby za 400 kulek. Cenowo podobnie jak w Warszawie, tylko kulek trochę mniej.' },
@@ -449,7 +453,8 @@ footer{margin:56px 0 44px; padding-top:22px; border-top:1px solid var(--line-sof
         { id:'gk', name:'Gokarty Kart Center', hint:'dwa przejazdy', v:120, per:'osoba', on:true },
         { id:'food', name:'Jedzenie', hint:'obiad plus kolacja w mieście', v:110, per:'osoba', on:true, est:true },
         { id:'stay', name:'Nocleg', hint:'cały obiekt za dobę', v:2200, per:'grupa', on:true, est:true },
-        { id:'fuel', name:'Dojazd i paliwo', hint:'ok. 700 km w dwie strony, składka na auto', v:120, per:'osoba', on:true, est:true }
+        { id:'train', name:'Bilety na pociąg', hint:'w dwie strony, kupione z wyprzedzeniem', v:200, per:'osoba', on:true, est:true },
+        { id:'local', name:'Taksówki na miejscu', hint:'dojazdy na paintball i gokarty bez auta', v:60, per:'osoba', on:true, est:true }
       ]
     }
   };
