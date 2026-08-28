@@ -4,20 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kawalerski Waldka</title>
-  <meta name="description" content="Sobota 26.09.2026 — Warszawa albo Sopot. Plan dnia, noclegi, wieczór i kalkulator kosztów.">
+  <meta name="description" content="Sobota 26.09.2026, Warszawa. Trasa, plan dnia, wieczór przy domku i rozliczenia na żywo.">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#E6E8ED" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0D0F13" media="(prefers-color-scheme: dark)">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="pl_PL">
   <meta property="og:title" content="Kawalerski Waldka">
-  <meta property="og:description" content="Sobota 26.09.2026 — Warszawa albo Sopot. Plan dnia, noclegi, wieczór i kalkulator kosztów.">
+  <meta property="og:description" content="Sobota 26.09.2026, Warszawa. Trasa, plan dnia, wieczór przy domku i rozliczenia na żywo.">
   <meta property="og:image" content="https://vsqool.github.io/kawalerski-waldka/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Kawalerski Waldka">
-  <meta name="twitter:description" content="Sobota 26.09.2026 — Warszawa albo Sopot. Plan dnia, noclegi, wieczór i kalkulator kosztów.">
+  <meta name="twitter:description" content="Sobota 26.09.2026, Warszawa. Trasa, plan dnia, wieczór przy domku i rozliczenia na żywo.">
   <meta name="twitter:image" content="https://vsqool.github.io/kawalerski-waldka/og.png">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%8E%AF%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,11 +38,9 @@
   --line:#C9CDD8; --line-soft:#DCE0E8;
   --ink:#12141A; --ink-2:#4B5262; --ink-3:#7B8393;
   --accent:#C9411A; --accent-ink:#A8340F; --accent-soft:rgba(201,65,26,.10); --on-accent:#FFF6F1;
+  --pos:#1E7A4C;
   --shadow:0 1px 2px rgba(18,20,26,.05), 0 8px 24px -14px rgba(18,20,26,.22);
   --r:5px;
-}
-:root[data-city="sopot"]{
-  --accent:#0C7480; --accent-ink:#0A5E68; --accent-soft:rgba(12,116,128,.10); --on-accent:#F0FBFC;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -50,10 +48,8 @@
     --line:#2A3039; --line-soft:#222831;
     --ink:#ECEEF3; --ink-2:#A5ACBA; --ink-3:#737B8B;
     --accent:#FF7A4D; --accent-ink:#FF9670; --accent-soft:rgba(255,122,77,.13); --on-accent:#1A0B04;
+    --pos:#57D392;
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -16px rgba(0,0,0,.8);
-  }
-  :root:not([data-theme="light"])[data-city="sopot"]{
-    --accent:#43C9D4; --accent-ink:#68D6DF; --accent-soft:rgba(67,201,212,.13); --on-accent:#041416;
   }
 }
 :root[data-theme="dark"]{
@@ -61,193 +57,266 @@
   --line:#2A3039; --line-soft:#222831;
   --ink:#ECEEF3; --ink-2:#A5ACBA; --ink-3:#737B8B;
   --accent:#FF7A4D; --accent-ink:#FF9670; --accent-soft:rgba(255,122,77,.13); --on-accent:#1A0B04;
+  --pos:#57D392;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -16px rgba(0,0,0,.8);
-}
-:root[data-theme="dark"][data-city="sopot"]{
-  --accent:#43C9D4; --accent-ink:#68D6DF; --accent-soft:rgba(67,201,212,.13); --on-accent:#041416;
 }
 
 /* ── base ──────────────────────────────────────────────────────────── */
 *{box-sizing:border-box}
-body{
-  margin:0; background:var(--ground); color:var(--ink);
-  font-family:'Source Serif 4', Georgia, 'Times New Roman', serif;
-  font-size:17px; line-height:1.62;
-  -webkit-font-smoothing:antialiased;
-}
-.disp{
-  font-family:'Archivo', 'Helvetica Neue', Arial, sans-serif;
-  font-stretch:118%; font-weight:800; text-transform:uppercase;
-  letter-spacing:-.005em; line-height:1.02; text-wrap:balance; margin:0;
-}
-.mono{
-  font-family:'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
-  font-variant-numeric:tabular-nums;
-}
-.eyebrow{
-  font-family:'JetBrains Mono', ui-monospace, monospace;
-  font-size:10.5px; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
-  color:var(--ink-3);
-}
+body{margin:0; background:var(--ground); color:var(--ink);
+  font-family:'Source Serif 4',Georgia,'Times New Roman',serif;
+  font-size:17px; line-height:1.62; -webkit-font-smoothing:antialiased}
+.disp{font-family:'Archivo','Helvetica Neue',Arial,sans-serif; font-stretch:118%; font-weight:800;
+  text-transform:uppercase; letter-spacing:-.005em; line-height:1.02; text-wrap:balance; margin:0}
+.eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace; font-size:10.5px; font-weight:600;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3)}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums}
 a{color:var(--accent-ink); text-decoration-thickness:1px; text-underline-offset:3px}
 a:hover{color:var(--ink)}
 :focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
 p{margin:0}
-
-.wrap{max-width:880px; margin:0 auto; padding:0 22px}
+.wrap{max-width:900px; margin:0 auto; padding:0 22px}
+.sprite{position:absolute; width:0; height:0; overflow:hidden}
 
 /* ── hero ──────────────────────────────────────────────────────────── */
-.hero{padding:56px 0 30px}
-.hero-kicker{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:baseline; margin-bottom:20px}
+.hero{padding:52px 0 26px}
+.hero-kicker{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:baseline; margin-bottom:18px}
 .hero h1{font-size:clamp(46px,12vw,104px); font-stretch:125%; font-weight:900}
-.hero h1 em{font-style:normal; color:var(--accent); transition:color .4s ease}
-.hero-sub{margin-top:20px; max-width:56ch; color:var(--ink-2); font-size:18px}
-.stripe{
-  height:9px; margin:26px 0 0; border-radius:2px;
-  background:repeating-linear-gradient(115deg, var(--accent) 0 13px, transparent 13px 26px);
-  opacity:.85; transition:background .4s ease;
-}
-.facts{display:flex; flex-wrap:wrap; gap:0; margin-top:26px; border:1px solid var(--line); border-radius:var(--r); background:var(--surface); overflow:hidden}
+.hero h1 em{font-style:normal; color:var(--accent)}
+.hero-sub{margin-top:18px; max-width:56ch; color:var(--ink-2); font-size:18px}
+.stripe{height:9px; margin-top:24px; border-radius:2px; opacity:.85;
+  background:repeating-linear-gradient(115deg,var(--accent) 0 13px,transparent 13px 26px)}
+.facts{display:flex; flex-wrap:wrap; margin-top:24px; border:1px solid var(--line);
+  border-radius:var(--r); background:var(--surface); overflow:hidden}
 .fact{flex:1 1 150px; padding:14px 18px; border-right:1px solid var(--line-soft)}
 .fact:last-child{border-right:0}
 .fact dt{margin:0 0 5px}
-.fact dd{margin:0; font-family:'Archivo',sans-serif; font-stretch:112%; font-weight:700; font-size:20px; font-variant-numeric:tabular-nums}
+.fact dd{margin:0; font-family:'Archivo',sans-serif; font-stretch:112%; font-weight:700;
+  font-size:19px; font-variant-numeric:tabular-nums}
 
-/* ── city switch ───────────────────────────────────────────────────── */
-.switchbar{position:sticky; top:0; z-index:20; background:var(--ground); background:color-mix(in srgb, var(--ground) 88%, transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--line-soft); margin-top:38px}
-.switchbar-in{display:flex; align-items:center; gap:16px; padding:11px 22px; max-width:880px; margin:0 auto}
-.seg{display:flex; gap:4px; padding:4px; background:var(--sunken); border:1px solid var(--line-soft); border-radius:var(--r)}
-.seg button{
-  appearance:none; border:0; cursor:pointer; background:transparent; color:var(--ink-2);
+/* ── tabs ──────────────────────────────────────────────────────────── */
+.tabbar{position:sticky; top:0; z-index:30; margin-top:34px; border-bottom:1px solid var(--line-soft);
+  background:var(--ground); background:color-mix(in srgb,var(--ground) 90%,transparent); backdrop-filter:blur(10px)}
+.tabbar-in{display:flex; align-items:center; gap:16px; max-width:900px; margin:0 auto; padding:11px 22px}
+.seg{display:flex; gap:4px; padding:4px; background:var(--sunken);
+  border:1px solid var(--line-soft); border-radius:var(--r)}
+.seg button{appearance:none; border:0; cursor:pointer; background:transparent; color:var(--ink-2);
   font-family:'Archivo',sans-serif; font-stretch:112%; font-weight:700; font-size:13px;
   text-transform:uppercase; letter-spacing:.05em; padding:7px 16px; border-radius:3px;
-  transition:background .2s ease, color .2s ease;
-}
+  transition:background .2s ease,color .2s ease}
 .seg button:hover{color:var(--ink)}
-.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
-.switch-note{color:var(--ink-3); font-size:12px}
+.seg button[aria-selected="true"]{background:var(--accent); color:var(--on-accent)}
+.tabnote{color:var(--ink-3); font-size:12px}
+[role="tabpanel"][hidden]{display:none}
 
 /* ── sections ──────────────────────────────────────────────────────── */
-.sec{padding:52px 0 8px}
+.sec{padding:50px 0 8px}
 .sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:8px}
 .sec-head h2{font-size:clamp(24px,4.4vw,34px)}
-.sec-lead{color:var(--ink-2); max-width:60ch; margin-bottom:26px}
-.rule{height:1px; background:var(--line-soft); margin:0 0 22px}
+.sec-lead{color:var(--ink-2); max-width:62ch; margin-bottom:24px}
+
+/* ── map ───────────────────────────────────────────────────────────── */
+.mapbox{background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
+  box-shadow:var(--shadow); overflow:hidden}
+.mapscroll{overflow-x:auto; overflow-y:hidden}
+.mapscroll svg{display:block; width:100%; min-width:680px; height:auto}
+.map-foot{display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center; justify-content:space-between;
+  padding:11px 16px; border-top:1px solid var(--line-soft); background:var(--surface-2)}
+.replay{appearance:none; cursor:pointer; background:var(--surface); color:var(--ink-2);
+  border:1px solid var(--line); border-radius:3px; padding:6px 13px; font-family:'Archivo',sans-serif;
+  font-stretch:108%; font-weight:600; font-size:12.5px; text-transform:uppercase; letter-spacing:.05em;
+  transition:border-color .18s,color .18s}
+.replay:hover{border-color:var(--accent); color:var(--accent-ink)}
+.road-base{fill:none; stroke:var(--line); stroke-width:15; stroke-linecap:round}
+.road-mid{fill:none; stroke:var(--accent); stroke-width:2.4; stroke-dasharray:11 12; stroke-linecap:round; opacity:.8}
+.node{cursor:pointer; opacity:0}
+.node.on{opacity:1; animation:pop .5s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes pop{from{opacity:0; transform:translateY(9px) scale(.7)} to{opacity:1; transform:none}}
+.node-disc{fill:var(--surface); stroke:var(--accent); stroke-width:2.4}
+.node:hover .node-disc, .node:focus-visible .node-disc{fill:var(--accent-soft)}
+.node-ico{color:var(--ink); pointer-events:none}
+.node-lab{font-family:'Archivo',sans-serif; font-stretch:112%; font-weight:700; font-size:15px;
+  fill:var(--ink); text-anchor:middle; pointer-events:none}
+.node-sub{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.08em;
+  fill:var(--ink-3); text-anchor:middle; pointer-events:none}
+.rider{opacity:0}
+.rider.go{opacity:1}
 
 /* ── timeline ──────────────────────────────────────────────────────── */
-.tl{display:flex; flex-direction:column; gap:0; list-style:none; margin:0; padding:0}
-.tl li{display:grid; grid-template-columns:78px 1fr; gap:22px; position:relative; padding:0 0 26px}
-.tl li::before{content:""; position:absolute; left:83px; top:11px; bottom:-11px; width:1px; background:var(--line)}
+.tl{display:flex; flex-direction:column; list-style:none; margin:0; padding:0}
+.tl li{display:grid; grid-template-columns:70px 1fr; gap:20px; position:relative; padding:0 0 24px}
+.tl li::before{content:""; position:absolute; left:75px; top:12px; bottom:-12px; width:1px; background:var(--line)}
 .tl li:last-child{padding-bottom:0}
 .tl li:last-child::before{display:none}
-.tl-time{text-align:right; position:relative; padding-top:1px}
-.tl-time span{font-family:'JetBrains Mono',monospace; font-size:14px; font-weight:600; font-variant-numeric:tabular-nums; color:var(--ink)}
-.tl-time::after{content:""; position:absolute; right:-24px; top:7px; width:9px; height:9px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 4px var(--ground); transition:background .4s ease}
-.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:16px 18px; box-shadow:var(--shadow)}
-.card h3{margin:0; font-family:'Archivo',sans-serif; font-stretch:112%; font-weight:700; font-size:19px; letter-spacing:-.01em}
+.tl-time{text-align:right; position:relative}
+.tl-time span{font-family:'JetBrains Mono',monospace; font-size:14px; font-weight:600;
+  font-variant-numeric:tabular-nums; color:var(--ink)}
+.tl-time::after{content:""; position:absolute; right:-22px; top:7px; width:9px; height:9px;
+  border-radius:50%; background:var(--accent); box-shadow:0 0 0 4px var(--ground)}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
+  padding:16px 18px; box-shadow:var(--shadow)}
+.card h3{margin:0; font-family:'Archivo',sans-serif; font-stretch:112%; font-weight:700;
+  font-size:19px; letter-spacing:-.01em}
 .card-top{display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:8px 14px}
-.chip{
-  font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums;
-  font-size:12px; font-weight:600; padding:3px 9px; border-radius:3px;
-  background:var(--accent-soft); color:var(--accent-ink); white-space:nowrap;
-  transition:background .4s ease, color .4s ease;
-}
-.chip.plain{background:var(--surface-2); color:var(--ink-3)}
+.card-ico{display:flex; align-items:flex-start; gap:14px}
+.card-ico > svg{flex:none; width:46px; height:46px; color:var(--ink); margin-top:2px}
+.chip{font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums; font-size:12px;
+  font-weight:600; padding:3px 9px; border-radius:3px; background:var(--accent-soft);
+  color:var(--accent-ink); white-space:nowrap}
 .card .where{margin-top:3px; font-size:14.5px; color:var(--ink-3)}
-.card .body{margin-top:10px; color:var(--ink-2); font-size:16px}
-.alts{margin:13px 0 0; padding:12px 0 0; border-top:1px dashed var(--line); display:flex; flex-direction:column; gap:8px}
+.card .body{margin-top:9px; color:var(--ink-2); font-size:16px}
+.alts{margin-top:13px; padding-top:12px; border-top:1px dashed var(--line);
+  display:flex; flex-direction:column; gap:8px}
 .alt{display:grid; grid-template-columns:auto 1fr; gap:10px; font-size:14.5px; color:var(--ink-2)}
-.alt b{font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); padding-top:3px}
+.alt b{font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-3); padding-top:3px}
 
-/* ── stay cards ────────────────────────────────────────────────────── */
-.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(255px,1fr)); gap:14px}
-.stay{display:flex; flex-direction:column; gap:9px}
-.stay .num{color:var(--ink-3)}
-.stay .go{
-  margin-top:auto; align-self:flex-start; display:inline-flex; align-items:center; gap:7px;
-  font-family:'Archivo',sans-serif; font-stretch:108%; font-weight:700; font-size:13px;
-  text-transform:uppercase; letter-spacing:.04em; text-decoration:none;
-  color:var(--on-accent); background:var(--accent); padding:8px 13px; border-radius:3px;
-  transition:background .4s ease, transform .12s ease, color .4s ease;
-}
-.stay .go:hover{transform:translateY(-1px); color:var(--on-accent)}
+/* ── fun grid ──────────────────────────────────────────────────────── */
+.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(232px,1fr)); gap:14px}
+.fun{display:flex; flex-direction:column; gap:9px; align-items:flex-start; transition:transform .18s ease}
+.fun:hover{transform:translateY(-2px)}
+.fun > svg{width:52px; height:52px; color:var(--ink)}
+.fun h3{font-size:17.5px}
+.fun p{font-size:15px; color:var(--ink-2)}
+.need{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.06em; color:var(--ink-3);
+  border-top:1px dashed var(--line); padding-top:9px; width:100%; margin-top:auto}
+.stay{display:flex; flex-direction:column; gap:10px; align-items:flex-start}
+.go{display:inline-flex; align-items:center; gap:7px; font-family:'Archivo',sans-serif; font-stretch:108%;
+  font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.04em; text-decoration:none;
+  color:var(--on-accent); background:var(--accent); padding:9px 14px; border-radius:3px; transition:transform .12s ease}
+.go:hover{transform:translateY(-1px); color:var(--on-accent)}
 
-/* ── calculator ────────────────────────────────────────────────────── */
-.calc{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden}
-.calc-head{display:flex; flex-wrap:wrap; align-items:center; gap:10px 20px; padding:14px 18px; background:var(--surface-2); border-bottom:1px solid var(--line)}
+/* ── panels / calculator ───────────────────────────────────────────── */
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
+  box-shadow:var(--shadow); overflow:hidden}
+.panel-head{display:flex; flex-wrap:wrap; align-items:center; gap:10px 20px; padding:13px 18px;
+  background:var(--surface-2); border-bottom:1px solid var(--line)}
+.panel-foot{display:flex; flex-wrap:wrap; gap:14px 30px; justify-content:space-between; align-items:flex-end;
+  padding:16px 18px; background:var(--surface-2); border-top:1px solid var(--line)}
 .people{display:flex; align-items:center; gap:10px}
-.people label{font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3)}
-.stepper{display:flex; align-items:center; border:1px solid var(--line); border-radius:3px; overflow:hidden; background:var(--ground)}
-.stepper button{appearance:none; border:0; background:transparent; color:var(--ink-2); cursor:pointer; width:30px; height:32px; font-size:17px; line-height:1}
+.people label{font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3)}
+.stepper{display:flex; align-items:center; border:1px solid var(--line); border-radius:3px;
+  overflow:hidden; background:var(--ground)}
+.stepper button{appearance:none; border:0; background:transparent; color:var(--ink-2); cursor:pointer;
+  width:30px; height:32px; font-size:17px; line-height:1}
 .stepper button:hover{background:var(--accent-soft); color:var(--accent-ink)}
-.stepper input{
-  width:46px; height:32px; border:0; background:transparent; text-align:center; color:var(--ink);
-  font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:600; font-variant-numeric:tabular-nums;
-}
+.stepper input{width:46px; height:32px; border:0; background:transparent; text-align:center; color:var(--ink);
+  font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:600; font-variant-numeric:tabular-nums}
 .rows{list-style:none; margin:0; padding:0}
-.rows li{display:grid; grid-template-columns:24px 1fr 118px 96px; gap:12px; align-items:center; padding:11px 18px; border-bottom:1px solid var(--line-soft)}
+.rows li{display:grid; grid-template-columns:24px 1fr 118px 96px; gap:12px; align-items:center;
+  padding:11px 18px; border-bottom:1px solid var(--line-soft)}
 .rows li:last-child{border-bottom:0}
 .rows li.off{opacity:.42}
 .rows input[type="checkbox"]{width:17px; height:17px; accent-color:var(--accent); cursor:pointer; margin:0}
 .rname{display:flex; flex-direction:column; gap:2px; min-width:0}
 .rname strong{font-family:'Archivo',sans-serif; font-stretch:108%; font-weight:600; font-size:15.5px}
 .rname span{font-size:12.5px; color:var(--ink-3); line-height:1.4}
-.tag{display:inline-block; margin-left:6px; font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-3); border:1px solid var(--line); border-radius:2px; padding:1px 4px; vertical-align:1px}
+.tag{display:inline-block; margin-left:6px; font-family:'JetBrains Mono',monospace; font-size:9.5px;
+  font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-3);
+  border:1px solid var(--line); border-radius:2px; padding:1px 4px; vertical-align:1px}
 .rprice{display:flex; align-items:center; gap:5px; justify-content:flex-end}
-.rprice input{
-  width:66px; padding:5px 7px; text-align:right; color:var(--ink);
-  background:var(--ground); border:1px solid var(--line); border-radius:3px;
-  font-family:'JetBrains Mono',monospace; font-size:14px; font-variant-numeric:tabular-nums;
-}
-.rprice input:focus{border-color:var(--accent); outline:none}
-.rprice small{font-size:11px; color:var(--ink-3); white-space:nowrap}
-.rout{text-align:right; font-family:'JetBrains Mono',monospace; font-size:14.5px; font-weight:600; font-variant-numeric:tabular-nums; color:var(--ink)}
-.calc-foot{display:flex; flex-wrap:wrap; gap:14px 30px; justify-content:space-between; align-items:flex-end; padding:16px 18px; background:var(--surface-2); border-top:1px solid var(--line)}
+.rout{text-align:right; font-family:'JetBrains Mono',monospace; font-size:14.5px; font-weight:600;
+  font-variant-numeric:tabular-nums; color:var(--ink)}
 .total{display:flex; flex-direction:column; gap:3px}
-.total b{font-family:'Archivo',sans-serif; font-stretch:118%; font-weight:800; font-size:34px; font-variant-numeric:tabular-nums; line-height:1; color:var(--accent-ink); transition:color .4s ease}
+.total b{font-family:'Archivo',sans-serif; font-stretch:118%; font-weight:800; font-size:34px;
+  font-variant-numeric:tabular-nums; line-height:1; color:var(--accent-ink)}
 .total.sm b{font-size:22px; color:var(--ink)}
 
-/* ── compare table ─────────────────────────────────────────────────── */
-.tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:var(--r); background:var(--surface); box-shadow:var(--shadow)}
-table{border-collapse:collapse; width:100%; min-width:560px; font-size:15px}
-th,td{text-align:left; padding:12px 16px; border-bottom:1px solid var(--line-soft); vertical-align:top}
-tr:last-child th, tr:last-child td{border-bottom:0}
-thead th{font-family:'Archivo',sans-serif; font-stretch:112%; font-weight:700; font-size:14px; text-transform:uppercase; letter-spacing:.05em; background:var(--surface-2); border-bottom:1px solid var(--line)}
-thead th:nth-child(2){color:#C9411A}
-thead th:nth-child(3){color:#0C7480}
-tbody th{font-weight:400; color:var(--ink-3); font-size:13px; width:150px}
-td{color:var(--ink-2)}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) thead th:nth-child(2){color:#FF9670}
-  :root:not([data-theme="light"]) thead th:nth-child(3){color:#68D6DF}
-}
-:root[data-theme="dark"] thead th:nth-child(2){color:#FF9670}
-:root[data-theme="dark"] thead th:nth-child(3){color:#68D6DF}
+/* ── inputs ────────────────────────────────────────────────────────── */
+input[type="text"],input[type="number"],select{padding:8px 10px; color:var(--ink); background:var(--ground);
+  border:1px solid var(--line); border-radius:3px; font-family:'Source Serif 4',serif; font-size:15px}
+input[type="number"]{font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums; text-align:right}
+input:focus,select:focus{border-color:var(--accent); outline:none}
+.rprice input{width:66px; padding:5px 7px; font-size:14px}
+.rprice small{font-size:11px; color:var(--ink-3); white-space:nowrap}
 
-/* ── decisions ─────────────────────────────────────────────────────── */
+/* ── questions ─────────────────────────────────────────────────────── */
 .q{padding:16px 0; border-bottom:1px solid var(--line-soft)}
 .q:last-of-type{border-bottom:0}
 .q p{font-family:'Archivo',sans-serif; font-stretch:108%; font-weight:600; font-size:16.5px; margin-bottom:11px}
 .opts{display:flex; flex-wrap:wrap; gap:8px}
-.opt{
-  appearance:none; cursor:pointer; background:var(--surface); color:var(--ink-2);
-  border:1px solid var(--line); border-radius:3px; padding:7px 13px; font-size:14.5px;
-  font-family:'Source Serif 4',serif; transition:background .18s ease, color .18s ease, border-color .18s ease;
-}
+.opt{appearance:none; cursor:pointer; background:var(--surface); color:var(--ink-2); border:1px solid var(--line);
+  border-radius:3px; padding:7px 13px; font-size:14.5px; font-family:'Source Serif 4',serif;
+  transition:background .18s,color .18s,border-color .18s}
 .opt:hover{border-color:var(--accent); color:var(--ink)}
 .opt[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--on-accent); font-weight:600}
 
-footer{margin:56px 0 44px; padding-top:22px; border-top:1px solid var(--line-soft); color:var(--ink-3); font-size:13.5px}
+/* ── rozliczenia ───────────────────────────────────────────────────── */
+.crew{display:flex; flex-wrap:wrap; gap:8px; padding:16px 18px}
+.crew input{width:120px; padding:6px 9px; font-size:14.5px; text-align:left;
+  font-family:'Source Serif 4',serif; background:var(--surface)}
+.form{display:grid; grid-template-columns:1fr 130px; gap:12px; padding:16px 18px}
+.field{display:flex; flex-direction:column; gap:5px; min-width:0}
+.field > label{font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:600;
+  letter-spacing:.13em; text-transform:uppercase; color:var(--ink-3); display:flex; align-items:center; gap:8px}
+.field.full{grid-column:1 / -1}
+.who{display:flex; flex-wrap:wrap; gap:7px}
+.who label{display:inline-flex; align-items:center; gap:6px; cursor:pointer; user-select:none;
+  border:1px solid var(--line); border-radius:3px; padding:5px 10px; font-size:14px;
+  background:var(--surface); transition:background .16s,border-color .16s,color .16s}
+.who label:has(input:checked){background:var(--accent-soft); border-color:var(--accent); color:var(--accent-ink)}
+.who input{width:15px; height:15px; accent-color:var(--accent); margin:0; cursor:pointer}
+.mini{appearance:none; cursor:pointer; background:transparent; color:var(--ink-3); border:1px solid var(--line);
+  border-radius:3px; padding:3px 8px; font-size:10.5px; font-family:'JetBrains Mono',monospace;
+  letter-spacing:.08em; text-transform:uppercase; transition:border-color .16s,color .16s}
+.mini:hover{border-color:var(--accent); color:var(--accent-ink)}
+.btn{appearance:none; cursor:pointer; background:var(--accent); color:var(--on-accent); border:0;
+  border-radius:3px; padding:10px 16px; font-family:'Archivo',sans-serif; font-stretch:110%; font-weight:700;
+  font-size:13.5px; text-transform:uppercase; letter-spacing:.05em; transition:transform .12s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn.ghost{background:transparent; color:var(--ink-2); border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--accent); color:var(--accent-ink)}
+.exp{list-style:none; margin:0; padding:0}
+.exp li{display:grid; grid-template-columns:1fr auto auto; gap:12px; align-items:center;
+  padding:12px 18px; border-bottom:1px solid var(--line-soft)}
+.exp li:last-child{border-bottom:0}
+.exp .what{display:flex; flex-direction:column; gap:2px; min-width:0}
+.exp .what strong{font-family:'Archivo',sans-serif; font-stretch:108%; font-weight:600; font-size:15.5px}
+.exp .what span{font-size:12.5px; color:var(--ink-3); line-height:1.45}
+.exp .amt{font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums;
+  font-weight:600; font-size:15px; white-space:nowrap}
+.del{appearance:none; cursor:pointer; background:transparent; border:1px solid var(--line); color:var(--ink-3);
+  border-radius:3px; width:28px; height:28px; font-size:15px; line-height:1; transition:border-color .16s,color .16s}
+.del:hover{border-color:var(--accent); color:var(--accent-ink)}
+.empty{padding:26px 18px; text-align:center; color:var(--ink-3); font-size:15px}
+.bal{list-style:none; margin:0; padding:0}
+.bal li{display:grid; grid-template-columns:1fr auto; gap:14px; align-items:baseline;
+  padding:11px 18px; border-bottom:1px solid var(--line-soft)}
+.bal li:last-child{border-bottom:0}
+.bal .nm{font-family:'Archivo',sans-serif; font-stretch:108%; font-weight:600; font-size:15.5px}
+.bal .nm small{display:block; font-family:'JetBrains Mono',monospace; font-weight:400; font-size:11.5px;
+  color:var(--ink-3); letter-spacing:.04em; margin-top:2px}
+.bal .v{font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums; font-weight:700; font-size:16px}
+.v.up{color:var(--pos)} .v.down{color:var(--accent-ink)} .v.zero{color:var(--ink-3)}
+.settle{list-style:none; margin:0; padding:0}
+.settle li{display:flex; flex-wrap:wrap; align-items:center; gap:9px; padding:12px 18px;
+  border-bottom:1px solid var(--line-soft); font-size:15.5px}
+.settle li:last-child{border-bottom:0}
+.settle .arrow{color:var(--accent); font-family:'JetBrains Mono',monospace}
+.settle b{font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums; margin-left:auto}
+.share{display:flex; flex-wrap:wrap; gap:10px; margin-top:14px}
+.linkout{width:100%; font-family:'JetBrains Mono',monospace; font-size:12px; text-align:left}
+.note{margin-top:14px; padding:13px 16px; border:1px dashed var(--line); border-radius:var(--r);
+  color:var(--ink-2); font-size:14.5px; background:var(--surface-2)}
+.banner{display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center; justify-content:space-between;
+  padding:13px 18px; margin:22px 0 0; border:1px solid var(--accent); border-radius:var(--r);
+  background:var(--accent-soft); font-size:15px}
+.toast{position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(14px);
+  background:var(--ink); color:var(--ground); padding:10px 18px; border-radius:4px; font-size:14.5px;
+  opacity:0; pointer-events:none; transition:opacity .25s,transform .25s; z-index:60}
+.toast.on{opacity:1; transform:translateX(-50%) translateY(0)}
 
-/* ── motion ────────────────────────────────────────────────────────── */
+footer{margin:54px 0 44px; padding-top:22px; border-top:1px solid var(--line-soft);
+  color:var(--ink-3); font-size:13.5px}
+
 .fade{animation:fade .34s cubic-bezier(.22,.7,.3,1) both}
 @keyframes fade{from{opacity:0; transform:translateY(7px)} to{opacity:1; transform:none}}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.001ms !important; transition-duration:.001ms !important}
 }
 
-/* ── narrow ────────────────────────────────────────────────────────── */
-@media (max-width:620px){
+@media (max-width:640px){
   body{font-size:16px}
   .tl li{grid-template-columns:1fr; gap:8px}
   .tl li::before{display:none}
@@ -259,8 +328,86 @@ footer{margin:56px 0 44px; padding-top:22px; border-top:1px solid var(--line-sof
   .rows li .rout{grid-column:2; text-align:left}
   .fact{flex:1 1 100%; border-right:0; border-bottom:1px solid var(--line-soft)}
   .fact:last-child{border-bottom:0}
+  .form{grid-template-columns:1fr}
+  .card-ico > svg{width:38px; height:38px}
 }
 </style>
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-paint" viewBox="0 0 48 48">
+    <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="14" cy="12" r="4.4"/><path d="M14 17v10"/><path d="M14 27l-4 9"/><path d="M14 27l5 8"/>
+      <path d="M14.5 20l7-1.5"/><path d="M21 17.5l13 4.5"/><path d="M34 22l6 2"/>
+      <circle cx="26" cy="13.6" r="3.6"/><path d="M26 17.2l.5 2.4"/>
+    </g>
+    <g fill="var(--accent)"><circle cx="40" cy="33" r="3.4"/><circle cx="33" cy="39" r="2.2"/><circle cx="44" cy="40" r="1.6"/></g>
+  </symbol>
+  <symbol id="i-kart" viewBox="0 0 48 48">
+    <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 32h4l3-7h15l6 7h3"/><path d="M19 25l2-5h7"/>
+      <circle cx="14" cy="35" r="4"/><circle cx="35" cy="35" r="4"/>
+      <circle cx="26" cy="14.5" r="4.4"/><path d="M22.4 12.2h7.2"/>
+    </g>
+    <g stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round" fill="none"><path d="M5 20h6"/><path d="M3 26h5"/></g>
+  </symbol>
+  <symbol id="i-food" viewBox="0 0 48 48">
+    <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 21c0-7 6.7-11 15-11s15 4 15 11"/><path d="M9 26h30"/><path d="M10 32h28"/>
+      <path d="M9 32c0 5 6.7 8 15 8s15-3 15-8"/>
+    </g>
+    <g fill="var(--accent)"><circle cx="18" cy="16" r="1.7"/><circle cx="25" cy="14" r="1.7"/><circle cx="32" cy="17" r="1.7"/></g>
+  </symbol>
+  <symbol id="i-cs" viewBox="0 0 48 48">
+    <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="6" y="9" width="36" height="24" rx="3"/><path d="M24 33v5"/><path d="M16 40h16"/>
+    </g>
+    <g fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round">
+      <circle cx="24" cy="21" r="6"/><path d="M24 11.5v3.5"/><path d="M24 27v3.5"/><path d="M14.5 21h3.5"/><path d="M30 21h3.5"/>
+    </g>
+  </symbol>
+  <symbol id="i-house" viewBox="0 0 48 48">
+    <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 24L24 9l18 15"/><path d="M10 22v18h28V22"/><path d="M20 40V29h8v11"/><path d="M33 13h4v5"/>
+    </g>
+    <path d="M36 11c2-2.5-1-4 1-6" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="i-fire" viewBox="0 0 48 48">
+    <path d="M24 8c5 7 9 10 6.5 16.5C29 28.5 26.5 30 24 30s-5-1.5-6.5-5.5C15 18 19 15 24 8z" fill="var(--accent)" opacity=".9"/>
+    <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+      <path d="M9 38l30-6"/><path d="M9 32l30 6"/>
+    </g>
+  </symbol>
+  <symbol id="i-ps" viewBox="0 0 48 48">
+    <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M16 16h16c5.5 0 9.5 5 10.5 11.5.8 5-.5 8.5-4 8.5-2.5 0-4-2-5.5-4l-2-2.5h-14L15 32c-1.5 2-3 4-5.5 4-3.5 0-4.8-3.5-4-8.5C6.5 21 10.5 16 16 16z"/>
+    </g>
+    <g stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" fill="none"><path d="M13 24h7"/><path d="M16.5 20.5v7"/></g>
+    <g fill="var(--accent)"><circle cx="31" cy="22.5" r="2"/><circle cx="35.5" cy="26" r="2"/></g>
+  </symbol>
+  <symbol id="i-beer" viewBox="0 0 48 48">
+    <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 26h11l-1.6 13H8.6z"/><path d="M18.5 26h11l-1.6 13h-7.8z"/><path d="M30 26h11l-1.6 13h-7.8z"/>
+    </g>
+    <path d="M9 21c6-13 22-13 28-2" fill="none" stroke="var(--accent)" stroke-width="2.2"
+          stroke-linecap="round" stroke-dasharray="3 5"/>
+    <circle cx="37" cy="18" r="3.4" fill="var(--accent)"/>
+  </symbol>
+  <symbol id="i-pong" viewBox="0 0 48 48">
+    <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <ellipse cx="20" cy="19" rx="11" ry="12" transform="rotate(-20 20 19)"/>
+      <path d="M25 29l7 10"/><path d="M6 41h34"/>
+    </g>
+    <circle cx="38" cy="14" r="4" fill="var(--accent)"/>
+    <g stroke="var(--accent)" stroke-width="2" stroke-linecap="round" fill="none"><path d="M33 8l2-2"/><path d="M43 9l2-2"/></g>
+  </symbol>
+  <symbol id="i-darts" viewBox="0 0 48 48">
+    <g fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="21" cy="26" r="15"/><circle cx="21" cy="26" r="9.5"/></g>
+    <circle cx="21" cy="26" r="4" fill="var(--accent)"/>
+    <g fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22.5 24.5L37 10"/><path d="M33 6l8 1 1 8"/>
+    </g>
+  </symbol>
+</svg>
 
 <div class="wrap">
   <header class="hero">
@@ -270,63 +417,90 @@ footer{margin:56px 0 44px; padding-top:22px; border-top:1px solid var(--line-sof
     </div>
     <h1 class="disp">Kawalerski<br><em>Waldka</em></h1>
     <div class="stripe" aria-hidden="true"></div>
-    <p class="hero-sub">Jeden dzień, dwa warianty do wyboru. Paintball, gokarty, coś do jedzenia i nocleg — reszta zależy od tego, co wybierzecie poniżej.</p>
+    <p class="hero-sub">Warszawa, jeden dzień. Paintball, gokarty, CS — a wieczorem wszyscy wracają do domku i nikt już nigdzie nie jedzie.</p>
     <dl class="facts">
       <div class="fact"><dt class="eyebrow">Termin</dt><dd>sob. 26.09.2026</dd></div>
       <div class="fact"><dt class="eyebrow">Powrót</dt><dd>ndz. 27.09.2026</dd></div>
       <div class="fact"><dt class="eyebrow">Ekipa</dt><dd>8 osób</dd></div>
-      <div class="fact"><dt class="eyebrow">Wariant</dt><dd id="factCity">Warszawa</dd></div>
+      <div class="fact"><dt class="eyebrow">Baza</dt><dd>Bizon Village</dd></div>
     </dl>
   </header>
 </div>
 
-<div class="switchbar">
-  <div class="switchbar-in">
-    <div class="seg" role="group" aria-label="Wybór wariantu">
-      <button type="button" data-city="warszawa" aria-pressed="true">Warszawa</button>
-      <button type="button" data-city="sopot" aria-pressed="false">Sopot</button>
+<div class="tabbar">
+  <div class="tabbar-in">
+    <div class="seg" role="tablist" aria-label="Widok">
+      <button type="button" role="tab" id="tab-plan" aria-controls="v-plan" aria-selected="true">Plan dnia</button>
+      <button type="button" role="tab" id="tab-kasa" aria-controls="v-kasa" aria-selected="false">Rozliczenia</button>
     </div>
-    <span class="switch-note" id="switchNote">bez dojazdu — mieści się cały plan</span>
+    <span class="tabnote" id="tabnote">zostały dwie drobne decyzje</span>
   </div>
 </div>
 
 <div class="wrap">
 
+<div role="tabpanel" id="v-plan" aria-labelledby="tab-plan">
+
   <section class="sec">
-    <div class="sec-head"><span class="eyebrow">01</span><h2 class="disp">Plan dnia</h2></div>
-    <p class="sec-lead" id="planLead"></p>
+    <div class="sec-head"><span class="eyebrow">01</span><h2 class="disp">Trasa</h2></div>
+    <p class="sec-lead">Pięć przystanków, od paintballu do domku. Kliknij w punkt, żeby przeskoczyć do szczegółów.</p>
+    <div class="mapbox">
+      <div class="mapscroll">
+        <svg id="map" viewBox="0 0 720 300" role="img" aria-label="Schemat trasy: paintball, gokarty, szamka, CS, Bizon Village">
+          <path id="road" class="road-base" d="M60,205 C120,205 130,105 200,105 C270,105 280,205 350,205 C420,205 430,105 500,105 C570,105 580,205 650,205"/>
+          <path class="road-mid" d="M60,205 C120,205 130,105 200,105 C270,105 280,205 350,205 C420,205 430,105 500,105 C570,105 580,205 650,205"/>
+          <g id="nodes"></g>
+          <g id="rider" class="rider">
+            <circle r="12" fill="var(--accent)" opacity=".22"/><circle r="6" fill="var(--accent)"/>
+          </g>
+        </svg>
+      </div>
+      <div class="map-foot">
+        <span class="eyebrow">Schemat, nie mapa w skali — odległości sprawdźcie w nawigacji</span>
+        <button type="button" class="replay" id="replay">↻ Odtwórz trasę</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head"><span class="eyebrow">02</span><h2 class="disp">Plan dnia</h2></div>
+    <p class="sec-lead">Startujemy w południe i idziemy punkt po punkcie. Nic nie ginie na dojazdach, więc mieszczą się trzy atrakcje, a wieczór zostaje wolny.</p>
     <ol class="tl" id="timeline"></ol>
   </section>
 
   <section class="sec">
-    <div class="sec-head"><span class="eyebrow">02</span><h2 class="disp">Nocleg</h2></div>
-    <p class="sec-lead">Dwie opcje z Bookinga, obie na 8 osób, cały obiekt na wyłączność. Ceny sprawdzajcie w linkach — potrafią się zmieniać.</p>
-    <div class="grid2" id="stays"></div>
+    <div class="sec-head"><span class="eyebrow">03</span><h2 class="disp">Baza</h2></div>
+    <p class="sec-lead">Nocleg ustalony. Cały obiekt na wyłączność dla ośmiu osób — cenę i dostępność sprawdźcie w linku, bo Booking potrafi je zmieniać.</p>
+    <div class="card stay">
+      <svg width="52" height="52" aria-hidden="true"><use href="#i-house"/></svg>
+      <div class="card-top" style="width:100%"><h3>Bizon Village</h3><span class="chip">wybrane</span></div>
+      <p class="body" style="margin-top:0">Tu wracamy po CS-ie i tu zostajemy do rana. Cały wieczór dzieje się na miejscu — reszta atrakcji niżej.</p>
+      <a class="go" id="bizonLink" href="#" target="_blank" rel="noopener">Zobacz na Bookingu →</a>
+    </div>
   </section>
 
   <section class="sec">
-    <div class="sec-head"><span class="eyebrow">03</span><h2 class="disp">Wieczór</h2></div>
-    <p class="sec-lead" id="eveLead"></p>
-    <div class="grid2" id="evening"></div>
+    <div class="sec-head"><span class="eyebrow">04</span><h2 class="disp">Wieczór przy domku</h2></div>
+    <p class="sec-lead">Żadnego pub crawlingu i żadnych taksówek. Pięć rzeczy do robienia na miejscu — sprawdźcie tylko, co trzeba dowieźć samemu.</p>
+    <div class="grid" id="fun"></div>
   </section>
 
   <section class="sec">
-    <div class="sec-head"><span class="eyebrow">04</span><h2 class="disp">Ile to kosztuje</h2></div>
-    <p class="sec-lead">Ceny atrakcji pochodzą z cenników w linkach powyżej. Nocleg, jedzenie i paliwo to szacunki — kliknijcie w kwotę i wpiszcie swoją. Odznaczcie to, czego nie robimy.</p>
-    <div class="calc">
-      <div class="calc-head">
+    <div class="sec-head"><span class="eyebrow">05</span><h2 class="disp">Wstępny budżet</h2></div>
+    <p class="sec-lead">Ile to mniej więcej wyjdzie, zanim wyjedziemy. Ceny atrakcji z cenników, reszta to szacunki — kliknijcie w kwotę i wpiszcie swoją. Prawdziwe koszty wbijajcie potem w zakładce Rozliczenia.</p>
+    <div class="panel">
+      <div class="panel-head">
         <div class="people">
           <label for="peopleInput">Liczba osób</label>
           <div class="stepper">
             <button type="button" id="minus" aria-label="Mniej osób">−</button>
-            <input id="peopleInput" class="mono" type="number" min="2" max="24" value="8" inputmode="numeric">
+            <input id="peopleInput" type="number" min="2" max="24" value="8" inputmode="numeric">
             <button type="button" id="plus" aria-label="Więcej osób">+</button>
           </div>
         </div>
-        <span class="eyebrow" id="calcCity">Wariant: Warszawa</span>
       </div>
       <ul class="rows" id="calcRows"></ul>
-      <div class="calc-foot">
+      <div class="panel-foot">
         <div class="total"><span class="eyebrow">Na osobę</span><b id="perHead">0 zł</b></div>
         <div class="total sm"><span class="eyebrow">Cała ekipa</span><b id="totalAll">0 zł</b></div>
       </div>
@@ -334,309 +508,492 @@ footer{margin:56px 0 44px; padding-top:22px; border-top:1px solid var(--line-sof
   </section>
 
   <section class="sec">
-    <div class="sec-head"><span class="eyebrow">05</span><h2 class="disp">Warszawa czy Sopot</h2></div>
-    <p class="sec-lead">Krótko, na czym polega różnica.</p>
-    <div class="tablewrap">
-      <table>
-        <thead><tr><th scope="col"></th><th scope="col">Warszawa</th><th scope="col">Sopot</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">Dojazd</th><td>zero — startujemy na miejscu</td><td>pociąg, ok. 4 h w jedną stronę</td></tr>
-          <tr><th scope="row">Atrakcje</th><td>trzy plus bonusowy CS</td><td>dwie — reszta ginie w drodze</td></tr>
-          <tr><th scope="row">Paintball</th><td>pakiet 1400 zł na 10 osób, po 500 kulek</td><td>139 zł od osoby, 400 kulek</td></tr>
-          <tr><th scope="row">Gokarty</th><td>85 zł za przejazd (Janki)</td><td>120 zł za dwa przejazdy — taniej</td></tr>
-          <tr><th scope="row">Kto prowadzi</th><td>ktoś musi zostać trzeźwy albo jedziemy taxi</td><td>nikt — pociąg załatwia sprawę</td></tr>
-          <tr><th scope="row">Wieczór</th><td>grill i piłkarzyki na noclegu, ewentualnie jacuzzi</td><td>Monciak, plaża, piknik pod chmurką</td></tr>
-          <tr><th scope="row">Słaby punkt</th><td>mniej klimatu „wyjazdu”</td><td>osiem godzin w drodze plus taksówki na miejscu</td></tr>
-        </tbody>
-      </table>
+    <div class="sec-head"><span class="eyebrow">06</span><h2 class="disp">Do ustalenia</h2></div>
+    <p class="sec-lead">Miasto, nocleg i wieczór już wiadomo. Zostały dwie rzeczy — klikajcie, zaznaczenia zostają w waszej przeglądarce, więc wyniki i tak wrzućcie na grupę.</p>
+    <div id="questions"></div>
+  </section>
+</div>
+
+<div role="tabpanel" id="v-kasa" aria-labelledby="tab-kasa" hidden>
+
+  <section class="sec">
+    <div class="sec-head"><span class="eyebrow">A</span><h2 class="disp">Ekipa</h2></div>
+    <p class="sec-lead">Wpiszcie imiona zamiast zaślepek — zapiszą się same i podstawią wszędzie niżej.</p>
+    <div class="panel"><div class="crew" id="crew"></div></div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head"><span class="eyebrow">B</span><h2 class="disp">Dorzuć koszt</h2></div>
+    <p class="sec-lead">Ktoś zapłacił za całą ekipę albo tylko za część? Wbijcie od razu, na bieżąco — po północy nikt nie będzie pamiętał, kto stawiał kolejkę.</p>
+    <div class="panel">
+      <form class="form" id="expForm">
+        <div class="field full">
+          <label for="fWhat">Za co</label>
+          <input type="text" id="fWhat" placeholder="np. kulki na paintball, pizza, piwo" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="fPayer">Kto zapłacił</label>
+          <select id="fPayer"></select>
+        </div>
+        <div class="field">
+          <label for="fAmount">Kwota w zł</label>
+          <input type="number" id="fAmount" min="0.01" step="0.01" placeholder="0">
+        </div>
+        <div class="field full">
+          <label>Za kogo
+            <button type="button" class="mini" id="allBtn">wszyscy</button>
+            <button type="button" class="mini" id="noneBtn">wyczyść</button>
+          </label>
+          <div class="who" id="fWho"></div>
+        </div>
+        <div class="field full"><button type="submit" class="btn">Dodaj koszt</button></div>
+      </form>
     </div>
   </section>
 
   <section class="sec">
-    <div class="sec-head"><span class="eyebrow">06</span><h2 class="disp">Do ustalenia</h2></div>
-    <p class="sec-lead">Sześć rzeczy, na które potrzebuję waszego zdania. Klikajcie — zaznaczenia zostają w waszej przeglądarce, więc nikt poza wami ich nie widzi. Wyniki i tak wrzućcie na grupę.</p>
-    <div id="questions"></div>
+    <div class="sec-head"><span class="eyebrow">C</span><h2 class="disp">Co już poszło</h2></div>
+    <p class="sec-lead" id="expLead">Jeszcze nic nie wpisano.</p>
+    <div class="panel"><ul class="exp" id="expList"></ul></div>
   </section>
 
-  <footer>
-    Na podstawie planu Michała. Ceny i dostępność sprawdzajcie w linkach — obiekty na Bookingu potrafią zniknąć z dnia na dzień.
-  </footer>
+  <section class="sec">
+    <div class="sec-head"><span class="eyebrow">D</span><h2 class="disp">Bilans</h2></div>
+    <p class="sec-lead">Ile każdy wyłożył, ile powinien był, i co z tego wychodzi. Na zielono ci, którym należy się zwrot.</p>
+    <div class="panel"><ul class="bal" id="balList"></ul></div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head"><span class="eyebrow">E</span><h2 class="disp">Kto komu ile</h2></div>
+    <p class="sec-lead">Najkrótsza możliwa lista przelewów, żeby wszystko się wyrównało.</p>
+    <div class="panel"><ul class="settle" id="settleList"></ul></div>
+    <div class="share">
+      <button type="button" class="btn" id="shareBtn">Udostępnij stan kasy</button>
+      <button type="button" class="btn ghost" id="copyBtn">Kopiuj podsumowanie</button>
+      <button type="button" class="btn ghost" id="resetBtn">Wyczyść wszystko</button>
+      <input type="text" class="linkout" id="linkOut" readonly hidden aria-label="Link do rozliczenia">
+    </div>
+    <div class="note"><strong>Jak to działa:</strong> wpisy siedzą w Twojej przeglądarce, nie na serwerze — nie synchronizują się same. „Udostępnij stan kasy” pakuje całe rozliczenie do linku: wrzuć go na grupę, a reszta kliknie i zobaczy tę samą kasę. Najprościej, gdy jedna osoba jest skarbnikiem i tylko ona wbija koszty.</div>
+  </section>
 </div>
+
+  <footer>Na podstawie planu Michała. Ceny i dostępność sprawdzajcie w linkach — Booking i cenniki potrafią się zmieniać.</footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (function(){
   "use strict";
 
-  var BOOK = {
-    bizon:'https://www.booking.com/hotel/pl/bizon-village.pl.html?label=gen173nr-10CAEoggI46AdIM1gEaLYBiAEBmAEzuAEHyAEN2AED6AEB-AEBiAIBqAIBuAKmr6vUBsACAdICJDJmNDNiZDgwLTMzMzgtNDI1My1hMjA5LTVkNWYzYzc2MjM4YdgCAeACAQ&aid=304142&ucfs=1&checkin=2026-09-26&checkout=2026-09-27&dest_id=1310&dest_type=region&group_adults=8&no_rooms=1&group_children=0&nflt=ht_id%3D220%3Bht_id%3D213%3Bht_id%3D221%3Bprivacy_type%3D3%3Boos%3D1&srpvid=4bff501b1a630641&srepoch=1787484306&all_sr_blocks=1017501803_430704874_8_0_0_48164&highlighted_blocks=1017501803_430704874_8_0_0_48164&matching_block_id=1017501803_430704874_8_0_0_48164&sb_entire_place=1&atlas_src=sr_iw_title',
-    chillout:'https://www.booking.com/hotel/pl/chillout-pod-warszawa.pl.html?label=gen173nr-10CAEoggI46AdIM1gEaLYBiAEBmAEzuAEHyAEN2AED6AEB-AEBiAIBqAIBuAKmr6vUBsACAdICJDJmNDNiZDgwLTMzMzgtNDI1My1hMjA5LTVkNWYzYzc2MjM4YdgCAeACAQ&aid=304142&ucfs=1&checkin=2026-09-26&checkout=2026-09-27&dest_id=1310&dest_type=region&group_adults=8&no_rooms=1&group_children=0&nflt=oos%3D1%3Bprice%3DPLN-min-2200-1%3Bht_id%3D220%3Bht_id%3D213%3Bht_id%3D228%3Bht_id%3D206%3Bht_id%3D223%3Bht_id%3D221%3Bht_id%3D210%3Bht_id%3D212%3Bprivacy_type%3D3%3Bht_id%3D201&srpvid=4bff501b1a630641&srepoch=1787484605&all_sr_blocks=1667830801_438603834_8_0_0&highlighted_blocks=1667830801_438603834_8_0_0&matching_block_id=1667830801_438603834_8_0_0&sb_entire_place=1&atlas_src=sr_iw_title',
-    metropolis:'https://www.booking.com/hotel/pl/metropolis-domki.pl.html?label=gen173nr-10CAEoggI46AdIM1gEaLYBiAEBmAEzuAEHyAEN2AED6AEB-AEBiAIBqAIBuAKmr6vUBsACAdICJDJmNDNiZDgwLTMzMzgtNDI1My1hMjA5LTVkNWYzYzc2MjM4YdgCAeACAQ&aid=304142&ucfs=1&checkin=2026-09-26&checkout=2026-09-27&dest_id=1310&dest_type=region&group_adults=8&no_rooms=1&group_children=0&nflt=oos%3D1%3Bprice%3DPLN-min-2200-1%3Bht_id%3D220%3Bht_id%3D213%3Bht_id%3D228%3Bht_id%3D206%3Bht_id%3D223%3Bht_id%3D221%3Bht_id%3D210%3Bht_id%3D212%3Bprivacy_type%3D3&srpvid=4bff501b1a630641&srepoch=1787486391&all_sr_blocks=113646502_329761780_4_2_0%2C113646502_329761780_4_2_0&highlighted_blocks=113646502_329761780_4_2_0%2C113646502_329761780_4_2_0&matching_block_id=113646502_329761780_4_2_0&sb_entire_place=1&atlas_src=sr_iw_title',
-    seacity:'https://www.booking.com/hotel/pl/sea-amp-city-monte-casinno-apartments-lux-sopot.pl.html?label=gen173nr-10CAEoggI46AdIM1gEaLYBiAEBmAEzuAEHyAEN2AED6AEB-AEBiAIBqAIBuAKmr6vUBsACAdICJDJmNDNiZDgwLTMzMzgtNDI1My1hMjA5LTVkNWYzYzc2MjM4YdgCAeACAQ&aid=304142&ucfs=1&checkin=2026-09-26&checkout=2026-09-27&dest_id=1310&dest_type=region&group_adults=8&no_rooms=1&group_children=0&nflt=oos%3D1%3Bprice%3DPLN-min-2200-1%3Bht_id%3D220%3Bht_id%3D213%3Bht_id%3D228%3Bht_id%3D206%3Bht_id%3D223%3Bht_id%3D221%3Bht_id%3D210%3Bht_id%3D212%3Bprivacy_type%3D3%3Bht_id%3D201&srpvid=4bff501b1a630641&srepoch=1787486562&all_sr_blocks=563220801_212452311_8_0_0&highlighted_blocks=563220801_212452311_8_0_0&matching_block_id=563220801_212452311_8_0_0&sb_entire_place=1&atlas_src=sr_iw_title'
-  };
+  var BIZON = 'https://www.booking.com/hotel/pl/bizon-village.pl.html?label=gen173nr-10CAEoggI46AdIM1gEaLYBiAEBmAEzuAEHyAEN2AED6AEB-AEBiAIBqAIBuAKmr6vUBsACAdICJDJmNDNiZDgwLTMzMzgtNDI1My1hMjA5LTVkNWYzYzc2MjM4YdgCAeACAQ&aid=304142&ucfs=1&checkin=2026-09-26&checkout=2026-09-27&dest_id=1310&dest_type=region&group_adults=8&no_rooms=1&group_children=0&nflt=ht_id%3D220%3Bht_id%3D213%3Bht_id%3D221%3Bprivacy_type%3D3%3Boos%3D1&srpvid=4bff501b1a630641&srepoch=1787484306&all_sr_blocks=1017501803_430704874_8_0_0_48164&highlighted_blocks=1017501803_430704874_8_0_0_48164&matching_block_id=1017501803_430704874_8_0_0_48164&sb_entire_place=1&atlas_src=sr_iw_title';
 
-  var PLAN = {
-    warszawa: {
-      label:'Warszawa',
-      note:'bez dojazdu — mieści się cały plan',
-      lead:'Startujemy w południe i idziemy punkt po punkcie. Nic nie ginie na dojazdach, więc mieszczą się trzy atrakcje plus wieczór na noclegu.',
-      stops:[
-        { time:'11:00', title:'Paintball', place:'ASM Arena', url:'https://asmarena.pl/cennik/',
-          chip:'1400 zł / 10 os.',
-          body:'Pakiet „impreza zamknięta” w sobotę: 1400 zł dla dziesięciu, po 500 kulek na głowę. Przy ośmiu wychodzi 175 zł od osoby.' },
-        { time:'14:00', title:'Gokarty', place:'Pole Position, Janki', url:'https://www.pole-position.pl/?page_id=747',
-          chip:'85 zł / przejazd',
-          body:'Jeden przejazd albo dwa — do ustalenia. Dwa dają szansę na rewanż, ale zjadają godzinę i drugie 85 zł.' },
-        { time:'15:30', title:'Szamka', place:'gdzieś w mieście', url:'',
-          chip:'~70 zł / os. · szac.',
-          body:'Burgery, pizza, cokolwiek szybkiego. Nie rozsiadamy się — jemy i ruszamy dalej.' },
-        { time:'17:00', title:'CS na profesjonalnych stanowiskach', place:'FPS Center, metro Natolin', url:'https://fpscenter.pl',
-          chip:'cena do sprawdzenia',
-          body:'Waldek miał swój epizod z CS-em i coś tam potrafi, więc godzina na porządnym sprzęcie przy metrze Natolin. Bonus, nie obowiązek.',
-          alts:[
-            ['Plan B','Kilka laptopów ze sobą i mini LAN party na noclegu. Po biedzie, ale oryginalnie.'],
-            ['Plan C','Odpuszczamy temat i idziemy prosto na nocleg.']
-          ] },
-        { time:'20:00', title:'Nocleg pod Warszawą', place:'grill, piłkarzyki, jacuzzi', url:'',
-          chip:'reszta wieczoru',
-          body:'Domyślnie zostajemy na miejscu: grill, piłkarzyki, w Bizonie podobno jest jacuzzi. Miasto to alternatywa, nie plan główny.' }
-      ],
-      stays:[
-        { n:'Opcja 1', name:'Bizon Village', desc:'To ta z jacuzzi — jeśli dobrze pamiętam ofertę. Cały obiekt na wyłączność.', url:BOOK.bizon },
-        { n:'Opcja 2', name:'Chillout pod Warszawą', desc:'Druga propozycja pod miastem, też cały obiekt dla ośmiu osób.', url:BOOK.chillout }
-      ],
-      eveLead:'Mój typ to zostać na noclegu, ale wrzucam obie opcje — mówcie, co wolicie.',
-      evening:[
-        { name:'Zostajemy na miejscu', tag:'domyślne', desc:'Grill, piłkarzyki, jacuzzi i własne pomysły na rozrywkę. Bez taksówek i bez pilnowania godzin.' },
-        { name:'Ruszamy w miasto', tag:'alternatywa', desc:'Pub crawl albo nad Wisłę przy muzyce. Kluby raczej odpadają — nie wygląda mi to na klimaty Waldka, ale jak uważacie inaczej, to mnie poprawcie.' }
-      ],
-      calc:[
-        { id:'pb', name:'Paintball ASM Arena', hint:'pakiet impreza zamknięta, 500 kulek', v:1400, per:'grupa', on:true },
-        { id:'gk', name:'Gokarty Pole Position', hint:'za jeden przejazd — podwójcie, jeśli robimy dwa', v:85, per:'osoba', on:true },
-        { id:'food', name:'Jedzenie', hint:'burgery albo pizza', v:70, per:'osoba', on:true, est:true },
-        { id:'cs', name:'FPS Center — CS', hint:'cennika nie znam, wpiszcie po telefonie', v:0, per:'osoba', on:true, est:true },
-        { id:'stay', name:'Nocleg', hint:'cały obiekt za dobę', v:2200, per:'grupa', on:true, est:true },
-        { id:'fuel', name:'Dojazd i paliwo', hint:'wszystko na miejscu', v:0, per:'osoba', on:true, est:true }
-      ]
-    },
-    sopot: {
-      label:'Sopot',
-      note:'pociąg, cztery godziny w jedną stronę — jedna atrakcja odpada',
-      lead:'Ten sam schemat, tylko z czterogodzinną jazdą pociągiem w jedną stronę. To zjada jeden punkt programu, więc CS wypada i zostają dwie atrakcje. Za to nikt nie prowadzi, więc impreza może się zacząć już w przedziale.',
-      stops:[
-        { time:'07:00', title:'Pociąg do Trójmiasta', place:'ok. 4 h w jedną stronę', url:'',
-          chip:'~4 h pociągiem',
-          body:'Trzeba wstać, ale za to nikt nie prowadzi — cztery godziny w przedziale spokojnie liczą się już jako część imprezy. Bilety na osiem osób kupcie mocno z wyprzedzeniem, bo im bliżej terminu, tym drożej.',
-          alts:[
-            ['Pamiętaj','Bez auta na miejscu jeździmy taksówkami albo SKM-ką — paintball jest w Gdańsku, gokarty w jeszcze innym punkcie.']
-          ] },
-        { time:'12:00', title:'Paintball', place:'Trafiony Paintball, Gdańsk', url:'https://trafionypaintball.pl/gdansk/cennik/',
-          chip:'139 zł / os.',
-          body:'139 zł od osoby za 400 kulek. Cenowo podobnie jak w Warszawie, tylko kulek trochę mniej.' },
-        { time:'15:00', title:'Gokarty', place:'Kart Center', url:'https://kartcenter.pl/cennik/',
-          chip:'120 zł / 2 przejazdy',
-          body:'Tu wychodzi taniej niż w Jankach — 120 zł za dwa przejazdy zamiast 85 zł za jeden.' },
-        { time:'18:00', title:'Sopot po godzinach', place:'Monciak, plaża, nocleg', url:'',
-          chip:'reszta wieczoru',
-          body:'W Sopocie raczej nie siedzimy w chałupie. Knajpa na Monciaku albo alkoholowy piknik na plaży — chyba że macie lepszy pomysł.' }
-      ],
-      stays:[
-        { n:'Nocleg 1', name:'Metropolis Domki', desc:'Domki na całą ekipę, osiem osób, obiekt na wyłączność.', url:BOOK.metropolis },
-        { n:'Nocleg 2', name:'Sea & City Monte Cassino Apartments Lux', desc:'Apartamenty w samym Sopocie — bliżej Monciaka i plaży.', url:BOOK.seacity }
-      ],
-      eveLead:'Tu plan wieczoru jest właściwie jeden: wychodzimy.',
-      evening:[
-        { name:'Monciak i knajpa', tag:'domyślne', desc:'Kolacja i drinki w mieście. Sopot we wrześniu jest jeszcze na chodzie, a wszystko masz w zasięgu spaceru.' },
-        { name:'Piknik na plaży', tag:'jeśli pogoda dopisze', desc:'Alkoholowy piknik nad wodą zamiast siedzenia w lokalu. Koniec września nad Bałtykiem bywa różnie — plan zależy od prognozy.' }
-      ],
-      calc:[
-        { id:'pb', name:'Paintball Trafiony', hint:'400 kulek na osobę', v:139, per:'osoba', on:true },
-        { id:'gk', name:'Gokarty Kart Center', hint:'dwa przejazdy', v:120, per:'osoba', on:true },
-        { id:'food', name:'Jedzenie', hint:'obiad plus kolacja w mieście', v:110, per:'osoba', on:true, est:true },
-        { id:'stay', name:'Nocleg', hint:'cały obiekt za dobę', v:2200, per:'grupa', on:true, est:true },
-        { id:'train', name:'Bilety na pociąg', hint:'w dwie strony, kupione z wyprzedzeniem', v:200, per:'osoba', on:true, est:true },
-        { id:'local', name:'Taksówki na miejscu', hint:'dojazdy na paintball i gokarty bez auta', v:60, per:'osoba', on:true, est:true }
-      ]
-    }
-  };
-
-  var QUESTIONS = [
-    { id:'q-city',  q:'Warszawa czy Sopot?', o:['Warszawa','Sopot','Wszystko jedno'] },
-    { id:'q-karts', q:'Gokarty — jeden przejazd czy dwa?', o:['Jeden','Dwa','Olewamy gokarty'] },
-    { id:'q-cs',    q:'Co z CS-em?', o:['FPS Center','LAN party na noclegu','Odpuszczamy'] },
-    { id:'q-eve',   q:'Wieczór — nocleg czy miasto?', o:['Zostajemy na noclegu','Ruszamy w miasto','Pół na pół'] },
-    { id:'q-club',  q:'Kluby wchodzą w grę?', o:['Nie, to nie klimat Waldka','Tak, jedna próba','Jak wyjdzie'] },
-    { id:'q-stay',  q:'Który nocleg?', o:['Pierwszy z listy','Drugi z listy','Szukamy dalej'] }
+  var STOPS = [
+    { time:'11:00', icon:'i-paint', title:'Paintball', place:'ASM Arena', url:'https://asmarena.pl/cennik/',
+      chip:'1400 zł / 10 os.', short:'Paintball', sub:'ASM ARENA',
+      body:'Pakiet „impreza zamknięta” w sobotę: 1400 zł dla dziesięciu, po 500 kulek na głowę. Przy ośmiu wychodzi 175 zł od osoby.' },
+    { time:'14:00', icon:'i-kart', title:'Gokarty', place:'Pole Position, Janki', url:'https://www.pole-position.pl/?page_id=747',
+      chip:'85 zł / przejazd', short:'Gokarty', sub:'JANKI',
+      body:'Jeden przejazd albo dwa — to jedna z dwóch rzeczy, których jeszcze nie ustaliliśmy. Dwa dają szansę na rewanż, ale zjadają godzinę i drugie 85 zł.' },
+    { time:'15:30', icon:'i-food', title:'Szamka', place:'gdzieś w mieście', url:'',
+      chip:'~70 zł / os. · szac.', short:'Szamka', sub:'MIASTO',
+      body:'Burgery, pizza, cokolwiek szybkiego. Nie rozsiadamy się — jemy i ruszamy dalej.' },
+    { time:'17:00', icon:'i-cs', title:'CS na profesjonalnych stanowiskach', place:'FPS Center, metro Natolin', url:'https://fpscenter.pl',
+      chip:'cena do sprawdzenia', short:'CS', sub:'NATOLIN',
+      body:'Waldek miał swój epizod z CS-em i coś tam potrafi, więc godzina na porządnym sprzęcie przy metrze Natolin. Ostatni punkt poza domkiem.',
+      alts:[['Plan B','Kilka laptopów ze sobą i mini LAN party już w domku. Po biedzie, ale oryginalnie.']] },
+    { time:'20:00', icon:'i-house', title:'Wracamy do Bizon Village', place:'i nigdzie już nie jedziemy', url:'',
+      chip:'do rana', short:'Bizon Village', sub:'NOCLEG',
+      body:'Koniec jeżdżenia — żadnego pub crawlingu. Reszta wieczoru dzieje się przy domku: ognisko, konsola, beer pong, ping pong i darty.' }
   ];
 
-  var $ = function(s){ return document.querySelector(s); };
+  var FUN = [
+    { icon:'i-fire',  name:'Ognisko i grill', desc:'Punkt obowiązkowy. Ogień, kiełbasa i miejsce, w którym wszyscy i tak wylądują koło północy.', need:'Dowieźć: jedzenie, węgiel, podpałka' },
+    { icon:'i-ps',    name:'FIFA na PS4',     desc:'Turniej albo zwykłe pucharowe granie na kanapie. Idealne na moment, gdy połowa ekipy nie chce już wstawać.', need:'Sprawdzić: czy w domku jest telewizor' },
+    { icon:'i-beer',  name:'Beer pong',       desc:'Stół, kubki, piłeczki. Kalibruje resztę wieczoru szybciej niż cokolwiek innego.', need:'Dowieźć: kubki i piłeczki' },
+    { icon:'i-pong',  name:'Ping pong',       desc:'Jak jest stół, robi się z tego turniej na dwie godziny. Dobre między ogniskiem a konsolą.', need:'Sprawdzić: czy stół jest na miejscu' },
+    { icon:'i-darts', name:'Darty',           desc:'Najmniej wymagająca atrakcja wieczoru — działa nawet wtedy, gdy nikt nie ma już siły stać prosto.', need:'Dowieźć: tarcza i lotki' }
+  ];
+
+  var CALC = [
+    { id:'pb',    name:'Paintball ASM Arena',   hint:'pakiet impreza zamknięta, 500 kulek', v:1400, per:'grupa', on:true },
+    { id:'gk',    name:'Gokarty Pole Position', hint:'za jeden przejazd — podwójcie, jeśli robimy dwa', v:85, per:'osoba', on:true },
+    { id:'food',  name:'Jedzenie w mieście',    hint:'burgery albo pizza', v:70, per:'osoba', on:true, est:true },
+    { id:'cs',    name:'FPS Center — CS',       hint:'cennika nie znam, wpiszcie po telefonie', v:0, per:'osoba', on:true, est:true },
+    { id:'stay',  name:'Nocleg Bizon Village',  hint:'cały obiekt za dobę', v:2200, per:'grupa', on:true, est:true },
+    { id:'grill', name:'Zapasy na wieczór',     hint:'grill, picie, kubki, lotki', v:120, per:'osoba', on:true, est:true }
+  ];
+
+  var QUESTIONS = [
+    { id:'q-karts', q:'Gokarty — jeden przejazd czy dwa?', o:['Jeden','Dwa','Olewamy gokarty'] },
+    { id:'q-cs',    q:'CS — jedziemy do FPS Center czy LAN party w domku?', o:['FPS Center','LAN w domku','Odpuszczamy'] }
+  ];
+
+  var $  = function(s){ return document.querySelector(s); };
+  var $$ = function(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); };
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-  function zl(n){ return Math.round(n).toLocaleString('pl-PL') + ' zł'; }
-
-  var city = 'warszawa';
-  var people = 8;
-  var state = {};   // city -> { id: {on, v} }
-
-  function store(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
+  function zl(n){ return (Math.round(n*100)/100).toLocaleString('pl-PL',{minimumFractionDigits:0,maximumFractionDigits:2}) + ' zł'; }
+  function store(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
   function load(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---------- countdown ---------- */
+  var toastT;
+  function toast(msg){
+    var t = $('#toast'); t.textContent = msg; t.classList.add('on');
+    clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('on'); }, 2600);
+  }
+
+  $('#bizonLink').href = BIZON;
+
   (function(){
-    var target = new Date('2026-09-26T11:00:00+02:00').getTime();
-    var el = $('#countdown');
+    var target = new Date('2026-09-26T11:00:00+02:00').getTime(), el = $('#countdown');
     function tick(){
-      var d = Math.ceil((target - Date.now()) / 86400000);
+      var d = Math.ceil((target - Date.now())/86400000);
       el.textContent = d > 1 ? ('za ' + d + ' dni') : d === 1 ? 'jutro' : d === 0 ? 'dziś' : '26.09.2026';
     }
-    tick();
-    setInterval(tick, 60000);
+    tick(); setInterval(tick, 60000);
   })();
 
-  /* ---------- render plan ---------- */
-  function renderPlan(){
-    var p = PLAN[city];
-    $('#planLead').textContent = p.lead;
-    $('#switchNote').textContent = p.note;
-    $('#factCity').textContent = p.label;
-    $('#calcCity').textContent = 'Wariant: ' + p.label;
+  /* ── tabs ────────────────────────────────────────────────────────── */
+  var NOTES = { 'tab-plan':'zostały dwie drobne decyzje', 'tab-kasa':'wpisy zapisują się w Twojej przeglądarce' };
+  $$('[role="tab"]').forEach(function(t){
+    t.addEventListener('click', function(){
+      $$('[role="tab"]').forEach(function(x){
+        var sel = x === t;
+        x.setAttribute('aria-selected', sel ? 'true' : 'false');
+        document.getElementById(x.getAttribute('aria-controls')).hidden = !sel;
+      });
+      $('#tabnote').textContent = NOTES[t.id];
+      store('kw:tab', t.id);
+    });
+  });
 
-    $('#timeline').innerHTML = p.stops.map(function(s, i){
-      var head = s.url
-        ? '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a>'
-        : esc(s.title);
-      var alts = s.alts ? '<div class="alts">' + s.alts.map(function(a){
-        return '<div class="alt"><b>' + esc(a[0]) + '</b><span>' + esc(a[1]) + '</span></div>';
-      }).join('') + '</div>' : '';
-      return '<li class="fade" style="animation-delay:' + (i * 45) + 'ms">' +
-        '<div class="tl-time"><span>' + esc(s.time) + '</span></div>' +
-        '<div class="card">' +
-          '<div class="card-top"><h3>' + head + '</h3><span class="chip">' + esc(s.chip) + '</span></div>' +
-          '<div class="where">' + esc(s.place) + '</div>' +
-          '<p class="body">' + esc(s.body) + '</p>' + alts +
-        '</div></li>';
+  /* ── map ─────────────────────────────────────────────────────────── */
+  var NODEXY = [[60,205],[200,105],[350,205],[500,105],[650,205]];
+  (function(){
+    var road = $('#road'), rider = $('#rider'), len = road.getTotalLength();
+    $('#nodes').innerHTML = STOPS.map(function(s, i){
+      var x = NODEXY[i][0], y = NODEXY[i][1], up = y < 150;
+      var ly = up ? y - 48 : y + 58, sy = up ? y - 66 : y + 76;
+      return '<g class="node" data-i="' + i + '" role="button" tabindex="0" aria-label="' + esc(s.short) + ', ' + esc(s.time) + '">' +
+        '<circle class="node-disc" cx="' + x + '" cy="' + y + '" r="27"/>' +
+        '<svg class="node-ico" x="' + (x-16) + '" y="' + (y-16) + '" width="32" height="32"><use href="#' + s.icon + '"/></svg>' +
+        '<text class="node-lab" x="' + x + '" y="' + ly + '">' + esc(s.short) + '</text>' +
+        '<text class="node-sub" x="' + x + '" y="' + sy + '">' + esc(s.time) + ' · ' + esc(s.sub) + '</text></g>';
     }).join('');
 
-    $('#stays').innerHTML = p.stays.map(function(s, i){
-      return '<div class="card stay fade" style="animation-delay:' + (i * 60) + 'ms">' +
-        '<span class="eyebrow num">' + esc(s.n) + '</span>' +
-        '<h3>' + esc(s.name) + '</h3>' +
-        '<p class="body" style="margin-top:0">' + esc(s.desc) + '</p>' +
-        '<a class="go" href="' + esc(s.url) + '" target="_blank" rel="noopener">Zobacz na Bookingu →</a>' +
-      '</div>';
-    }).join('');
-
-    $('#eveLead').textContent = p.eveLead;
-    $('#evening').innerHTML = p.evening.map(function(e, i){
-      return '<div class="card fade" style="animation-delay:' + (i * 60) + 'ms">' +
-        '<div class="card-top"><h3>' + esc(e.name) + '</h3><span class="chip plain">' + esc(e.tag) + '</span></div>' +
-        '<p class="body">' + esc(e.desc) + '</p></div>';
-    }).join('');
-  }
-
-  /* ---------- calculator ---------- */
-  function cityState(){
-    if(!state[city]){
-      state[city] = {};
-      PLAN[city].calc.forEach(function(r){ state[city][r.id] = { on:r.on, v:r.v }; });
+    var nodes = $$('#map .node');
+    function jump(i){
+      if($('#tab-plan').getAttribute('aria-selected') !== 'true') $('#tab-plan').click();
+      var el = document.getElementById('stop-' + i);
+      if(el) el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block:'center' });
     }
-    return state[city];
-  }
+    nodes.forEach(function(n){
+      n.addEventListener('click', function(){ jump(+n.dataset.i); });
+      n.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); jump(+n.dataset.i); }
+      });
+    });
 
-  function renderCalc(){
-    var st = cityState();
-    $('#calcRows').innerHTML = PLAN[city].calc.map(function(r){
-      var s = st[r.id];
-      return '<li class="' + (s.on ? '' : 'off') + '" data-row="' + r.id + '">' +
-        '<input type="checkbox" ' + (s.on ? 'checked' : '') + ' aria-label="Wliczaj: ' + esc(r.name) + '">' +
-        '<span class="rname"><strong>' + esc(r.name) + (r.est ? '<span class="tag">szac.</span>' : '') + '</strong>' +
-        '<span>' + esc(r.hint) + '</span></span>' +
-        '<span class="rprice"><input type="number" min="0" step="10" value="' + s.v + '" aria-label="Kwota: ' + esc(r.name) + '">' +
-        '<small>zł / ' + (r.per === 'grupa' ? 'grupa' : 'os.') + '</small></span>' +
-        '<span class="rout" data-out="' + r.id + '"></span>' +
-      '</li>';
-    }).join('');
-    recalc();
-  }
+    var raf, playing = false;
+    function play(){
+      if(playing) return;
+      if(reduced){ nodes.forEach(function(n){ n.classList.add('on'); }); return; }
+      playing = true;
+      nodes.forEach(function(n){ n.classList.remove('on'); });
+      void $('#map').offsetWidth;
+      rider.classList.add('go');
+      var t0 = null, dur = 4200, last = nodes.length - 1;
+      function step(ts){
+        if(t0 === null) t0 = ts;
+        var p = Math.min(1, (ts - t0)/dur);
+        var e = p < .5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2)/2;
+        var pt = road.getPointAtLength(e * len);
+        rider.setAttribute('transform', 'translate(' + pt.x + ',' + pt.y + ')');
+        nodes.forEach(function(n, i){ if(e >= i/last - 0.001) n.classList.add('on'); });
+        if(p < 1){ raf = requestAnimationFrame(step); }
+        else { playing = false; rider.classList.remove('go'); }
+      }
+      cancelAnimationFrame(raf); raf = requestAnimationFrame(step);
+    }
+    $('#replay').addEventListener('click', play);
+
+    if('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(en){ if(en[0].isIntersecting){ play(); io.disconnect(); } }, { threshold:.35 });
+      io.observe($('#map'));
+    } else { play(); }
+  })();
+
+  /* ── timeline + fun ──────────────────────────────────────────────── */
+  $('#timeline').innerHTML = STOPS.map(function(s, i){
+    var head = s.url ? '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a>' : esc(s.title);
+    var alts = s.alts ? '<div class="alts">' + s.alts.map(function(a){
+      return '<div class="alt"><b>' + esc(a[0]) + '</b><span>' + esc(a[1]) + '</span></div>'; }).join('') + '</div>' : '';
+    return '<li id="stop-' + i + '"><div class="tl-time"><span>' + esc(s.time) + '</span></div>' +
+      '<div class="card"><div class="card-ico"><svg aria-hidden="true"><use href="#' + s.icon + '"/></svg>' +
+      '<div style="min-width:0;flex:1">' +
+      '<div class="card-top"><h3>' + head + '</h3><span class="chip">' + esc(s.chip) + '</span></div>' +
+      '<div class="where">' + esc(s.place) + '</div><p class="body">' + esc(s.body) + '</p>' + alts +
+      '</div></div></div></li>';
+  }).join('');
+
+  $('#fun').innerHTML = FUN.map(function(f, i){
+    return '<div class="card fun fade" style="animation-delay:' + (i*55) + 'ms">' +
+      '<svg aria-hidden="true"><use href="#' + f.icon + '"/></svg><h3>' + esc(f.name) + '</h3>' +
+      '<p>' + esc(f.desc) + '</p><span class="need">' + esc(f.need) + '</span></div>';
+  }).join('');
+
+  /* ── budget ──────────────────────────────────────────────────────── */
+  var people = 8, cstate = {};
+  CALC.forEach(function(r){ cstate[r.id] = { on:r.on, v:r.v }; });
+  $('#calcRows').innerHTML = CALC.map(function(r){
+    return '<li data-row="' + r.id + '"><input type="checkbox" checked aria-label="Wliczaj: ' + esc(r.name) + '">' +
+      '<span class="rname"><strong>' + esc(r.name) + (r.est ? '<span class="tag">szac.</span>' : '') + '</strong>' +
+      '<span>' + esc(r.hint) + '</span></span>' +
+      '<span class="rprice"><input type="number" min="0" step="10" value="' + r.v + '" aria-label="Kwota: ' + esc(r.name) + '">' +
+      '<small>zł / ' + (r.per === 'grupa' ? 'grupa' : 'os.') + '</small></span>' +
+      '<span class="rout" data-out="' + r.id + '"></span></li>';
+  }).join('');
 
   function recalc(){
-    var st = cityState(), sum = 0;
-    PLAN[city].calc.forEach(function(r){
-      var s = st[r.id];
-      var head = s.on ? (r.per === 'grupa' ? s.v / people : s.v) : 0;
+    var sum = 0;
+    CALC.forEach(function(r){
+      var s = cstate[r.id], head = s.on ? (r.per === 'grupa' ? s.v/people : s.v) : 0;
       if(s.on) sum += head;
-      var out = document.querySelector('[data-out="' + r.id + '"]');
-      if(out) out.textContent = s.on ? zl(head) : '—';
+      var o = document.querySelector('[data-out="' + r.id + '"]');
+      if(o) o.textContent = s.on ? zl(head) : '—';
     });
     $('#perHead').textContent = zl(sum);
     $('#totalAll').textContent = zl(sum * people);
   }
-
-  $('#calcRows').addEventListener('change', function(e){
-    var li = e.target.closest('li'); if(!li) return;
-    var st = cityState(), id = li.dataset.row;
-    if(e.target.type === 'checkbox'){ st[id].on = e.target.checked; li.classList.toggle('off', !e.target.checked); }
-    else { st[id].v = Math.max(0, Number(e.target.value) || 0); }
-    recalc();
-  });
   $('#calcRows').addEventListener('input', function(e){
-    if(e.target.type !== 'number') return;
     var li = e.target.closest('li'); if(!li) return;
-    cityState()[li.dataset.row].v = Math.max(0, Number(e.target.value) || 0);
+    var s = cstate[li.dataset.row];
+    if(e.target.type === 'checkbox'){ s.on = e.target.checked; li.classList.toggle('off', !e.target.checked); }
+    else { s.v = Math.max(0, Number(e.target.value) || 0); }
     recalc();
   });
-
-  function setPeople(n){
-    people = Math.min(24, Math.max(2, n || 8));
-    $('#peopleInput').value = people;
-    recalc();
-  }
+  function setPeople(n){ people = Math.min(24, Math.max(2, n || 8)); $('#peopleInput').value = people; recalc(); }
   $('#minus').addEventListener('click', function(){ setPeople(people - 1); });
   $('#plus').addEventListener('click', function(){ setPeople(people + 1); });
   $('#peopleInput').addEventListener('input', function(){ var n = Number(this.value); if(n >= 2 && n <= 24){ people = n; recalc(); } });
   $('#peopleInput').addEventListener('blur', function(){ setPeople(Number(this.value)); });
+  recalc();
 
-  /* ---------- questions ---------- */
+  /* ── questions ───────────────────────────────────────────────────── */
   $('#questions').innerHTML = QUESTIONS.map(function(q){
     var saved = load('kw:' + q.id);
     return '<div class="q"><p>' + esc(q.q) + '</p><div class="opts" data-q="' + q.id + '">' +
-      q.o.map(function(o){
-        return '<button type="button" class="opt" aria-pressed="' + (saved === o ? 'true' : 'false') + '">' + esc(o) + '</button>';
-      }).join('') + '</div></div>';
+      q.o.map(function(o){ return '<button type="button" class="opt" aria-pressed="' + (saved === o ? 'true' : 'false') + '">' + esc(o) + '</button>'; }).join('') +
+      '</div></div>';
   }).join('');
-
   $('#questions').addEventListener('click', function(e){
     var b = e.target.closest('.opt'); if(!b) return;
-    var group = b.parentNode, already = b.getAttribute('aria-pressed') === 'true';
-    group.querySelectorAll('.opt').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
-    if(already){ store('kw:' + group.dataset.q, ''); }
-    else { b.setAttribute('aria-pressed','true'); store('kw:' + group.dataset.q, b.textContent); }
+    var g = b.parentNode, was = b.getAttribute('aria-pressed') === 'true';
+    g.querySelectorAll('.opt').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+    if(was){ store('kw:' + g.dataset.q, ''); }
+    else { b.setAttribute('aria-pressed','true'); store('kw:' + g.dataset.q, b.textContent); }
   });
 
-  /* ---------- city switch ---------- */
-  document.querySelectorAll('.seg button').forEach(function(b){
-    b.addEventListener('click', function(){
-      if(b.dataset.city === city) return;
-      city = b.dataset.city;
-      document.documentElement.setAttribute('data-city', city);
-      document.querySelectorAll('.seg button').forEach(function(x){
-        x.setAttribute('aria-pressed', x.dataset.city === city ? 'true' : 'false');
-      });
-      store('kw:city', city);
-      renderPlan();
-      renderCalc();
-    });
-  });
-
-  var savedCity = load('kw:city');
-  if(savedCity === 'sopot'){
-    city = 'sopot';
-    document.documentElement.setAttribute('data-city','sopot');
-    document.querySelectorAll('.seg button').forEach(function(x){
-      x.setAttribute('aria-pressed', x.dataset.city === 'sopot' ? 'true' : 'false');
+  /* ══ ROZLICZENIA ═════════════════════════════════════════════════ */
+  var DATA;
+  function blank(){
+    var p = []; for(var i = 1; i <= 8; i++) p.push('Osoba ' + i);
+    return { people:p, exp:[], seq:1 };
+  }
+  function b64e(o){ return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+  function b64d(s){
+    s = s.replace(/-/g,'+').replace(/_/g,'/');
+    while(s.length % 4) s += '=';
+    return JSON.parse(decodeURIComponent(escape(atob(s))));
+  }
+  function valid(d){
+    if(!d || !Array.isArray(d.people) || d.people.length < 2 || !Array.isArray(d.exp)) return false;
+    return d.exp.every(function(e){
+      return e && typeof e.amount === 'number' && isFinite(e.amount) && e.amount > 0 &&
+        Array.isArray(e.who) && e.who.length &&
+        e.who.every(function(i){ return Number.isInteger(i) && i >= 0 && i < d.people.length; }) &&
+        Number.isInteger(e.payer) && e.payer >= 0 && e.payer < d.people.length;
     });
   }
+  function save(){ store('kw:kasa', JSON.stringify(DATA)); }
+  function nm(i){ return (DATA.people[i] || ('Osoba ' + (i+1))); }
 
-  renderPlan();
-  renderCalc();
+  var fromLink = null, local = null;
+  var m = location.hash.match(/[#&]k=([A-Za-z0-9_-]+)/);
+  if(m){ try{ var d = b64d(m[1]); if(valid(d)) fromLink = d; }catch(e){} }
+  try{ var l = JSON.parse(load('kw:kasa') || 'null'); if(valid(l)) local = l; }catch(e){}
+
+  if(fromLink && (!local || !local.exp.length)){ DATA = fromLink; save(); }
+  else { DATA = local || blank(); }
+
+  function renderCrew(){
+    $('#crew').innerHTML = DATA.people.map(function(n, i){
+      return '<input type="text" data-p="' + i + '" value="' + esc(n) + '" aria-label="Imię osoby ' + (i+1) + '" maxlength="24">';
+    }).join('');
+    $('#fPayer').innerHTML = DATA.people.map(function(n, i){ return '<option value="' + i + '">' + esc(n) + '</option>'; }).join('');
+    $('#fWho').innerHTML = DATA.people.map(function(n, i){
+      return '<label><input type="checkbox" value="' + i + '" checked>' + esc(n) + '</label>';
+    }).join('');
+  }
+  $('#crew').addEventListener('input', function(e){
+    var i = e.target.dataset.p; if(i === undefined) return;
+    DATA.people[+i] = e.target.value.trim() || ('Osoba ' + (+i + 1));
+    save();
+    $('#fPayer').options[+i].textContent = DATA.people[+i];
+    $$('#fWho label')[+i].lastChild.nodeValue = DATA.people[+i];
+    renderRest();
+  });
+
+  function renderExp(){
+    var list = $('#expList');
+    if(!DATA.exp.length){
+      list.innerHTML = '<li><div class="empty">Pusto. Pierwszy koszt wbijcie formularzem wyżej.</div></li>';
+      $('#expLead').textContent = 'Jeszcze nic nie wpisano.';
+      return;
+    }
+    var n = DATA.exp.length, tot = DATA.exp.reduce(function(a, e){ return a + e.amount; }, 0);
+    var word = n === 1 ? 'wpis' : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 'wpisy' : 'wpisów';
+    $('#expLead').textContent = n + ' ' + word + ' na łączną kwotę ' + zl(tot) + '.';
+    list.innerHTML = DATA.exp.map(function(e){
+      var who = e.who.length === DATA.people.length ? 'za wszystkich' : 'za: ' + e.who.map(nm).join(', ');
+      return '<li><div class="what"><strong>' + esc(e.what) + '</strong><span>' + esc(nm(e.payer)) +
+        ' · ' + esc(who) + ' · ' + zl(e.amount / e.who.length) + '/os.</span></div>' +
+        '<span class="amt">' + zl(e.amount) + '</span>' +
+        '<button type="button" class="del" data-del="' + e.id + '" aria-label="Usuń wpis">×</button></li>';
+    }).join('');
+  }
+  $('#expList').addEventListener('click', function(e){
+    var b = e.target.closest('[data-del]'); if(!b) return;
+    DATA.exp = DATA.exp.filter(function(x){ return x.id !== +b.dataset.del; });
+    save(); renderRest(); toast('Wpis usunięty');
+  });
+
+  function balances(){
+    var b = DATA.people.map(function(){ return 0; });
+    DATA.exp.forEach(function(e){
+      b[e.payer] += e.amount;
+      var each = e.amount / e.who.length;
+      e.who.forEach(function(i){ b[i] -= each; });
+    });
+    return b;
+  }
+  function paidBy(){
+    var p = DATA.people.map(function(){ return 0; });
+    DATA.exp.forEach(function(e){ p[e.payer] += e.amount; });
+    return p;
+  }
+  function renderBal(){
+    var b = balances(), paid = paidBy();
+    $('#balList').innerHTML = DATA.people.map(function(n, i){
+      var v = Math.round(b[i]*100)/100;
+      var cls = v > 0.005 ? 'up' : v < -0.005 ? 'down' : 'zero';
+      var txt = v > 0.005 ? '+' + zl(v) : v < -0.005 ? '−' + zl(-v) : zl(0);
+      return '<li><span class="nm">' + esc(n) + '<small>wyłożył ' + zl(paid[i]) +
+        ' · powinien ' + zl(paid[i] - b[i]) + '</small></span><span class="v ' + cls + '">' + txt + '</span></li>';
+    }).join('');
+  }
+  function settle(){
+    var b = balances().map(function(v, i){ return { i:i, v:Math.round(v*100)/100 }; });
+    var deb = b.filter(function(x){ return x.v < -0.005; }).sort(function(a,c){ return a.v - c.v; });
+    var cre = b.filter(function(x){ return x.v >  0.005; }).sort(function(a,c){ return c.v - a.v; });
+    var out = [], di = 0, ci = 0;
+    while(di < deb.length && ci < cre.length){
+      var amt = Math.min(-deb[di].v, cre[ci].v);
+      if(amt > 0.005) out.push({ from:deb[di].i, to:cre[ci].i, amt:amt });
+      deb[di].v += amt; cre[ci].v -= amt;
+      if(Math.abs(deb[di].v) < 0.005) di++;
+      if(Math.abs(cre[ci].v) < 0.005) ci++;
+    }
+    return out;
+  }
+  function renderSettle(){
+    var s = settle();
+    $('#settleList').innerHTML = s.length
+      ? s.map(function(t){ return '<li><span>' + esc(nm(t.from)) + '</span><span class="arrow">→</span><span>' +
+          esc(nm(t.to)) + '</span><b>' + zl(t.amt) + '</b></li>'; }).join('')
+      : '<li><div class="empty">Nic do wyrównania — na razie wszyscy są na zero.</div></li>';
+  }
+  function renderRest(){ renderExp(); renderBal(); renderSettle(); }
+
+  $('#allBtn').addEventListener('click', function(){ $$('#fWho input').forEach(function(c){ c.checked = true; }); });
+  $('#noneBtn').addEventListener('click', function(){ $$('#fWho input').forEach(function(c){ c.checked = false; }); });
+
+  $('#expForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var what = $('#fWhat').value.trim();
+    var amount = Number($('#fAmount').value);
+    var who = $$('#fWho input:checked').map(function(c){ return +c.value; });
+    if(!what){ toast('Wpisz, za co był ten koszt'); $('#fWhat').focus(); return; }
+    if(!(amount > 0)){ toast('Kwota musi być większa od zera'); $('#fAmount').focus(); return; }
+    if(!who.length){ toast('Zaznacz, za kogo był ten koszt'); return; }
+    DATA.exp.push({ id:DATA.seq++, what:what, amount:amount, payer:+$('#fPayer').value, who:who });
+    save(); renderRest();
+    $('#fWhat').value = ''; $('#fAmount').value = '';
+    $$('#fWho input').forEach(function(c){ c.checked = true; });
+    $('#fWhat').focus();
+    toast('Dodano: ' + what);
+  });
+
+  $('#shareBtn').addEventListener('click', function(){
+    var url = location.origin + location.pathname + '#k=' + b64e(DATA);
+    if(url.length > 7000){ toast('Za dużo wpisów jak na jeden link — rozliczcie się etapami'); return; }
+    var out = $('#linkOut');
+    out.hidden = false; out.value = url;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(
+        function(){ toast('Link skopiowany — wrzuć go na grupę'); },
+        function(){ out.select(); toast('Skopiuj link zaznaczony poniżej'); });
+    } else { out.select(); toast('Skopiuj link zaznaczony poniżej'); }
+  });
+
+  function summary(){
+    var b = balances(), paid = paidBy(), s = settle();
+    var tot = DATA.exp.reduce(function(a, e){ return a + e.amount; }, 0);
+    var L = ['KAWALERSKI WALDKA — ROZLICZENIE', 'Razem wydane: ' + zl(tot), '', 'Kto ile wyłożył:'];
+    DATA.people.forEach(function(n, i){
+      var v = Math.round(b[i]*100)/100;
+      L.push('  ' + n + ': ' + zl(paid[i]) + '  (bilans ' + (v >= 0 ? '+' : '-') + zl(Math.abs(v)) + ')');
+    });
+    L.push('', 'Przelewy:');
+    if(s.length){ s.forEach(function(t){ L.push('  ' + nm(t.from) + ' -> ' + nm(t.to) + ': ' + zl(t.amt)); }); }
+    else { L.push('  brak - wszyscy na zero'); }
+    return L.join('\n');
+  }
+  $('#copyBtn').addEventListener('click', function(){
+    if(!DATA.exp.length){ toast('Najpierw dodajcie jakieś koszty'); return; }
+    var txt = summary();
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(
+        function(){ toast('Podsumowanie skopiowane'); },
+        function(){ toast('Nie udało się skopiować'); });
+    } else { toast('Przeglądarka nie pozwala kopiować automatycznie'); }
+  });
+
+  $('#resetBtn').addEventListener('click', function(){
+    if(!confirm('Skasować wszystkie wpisy i imiona? Tego nie da się cofnąć.')) return;
+    DATA = blank(); save();
+    if(location.hash) history.replaceState(null, '', location.pathname);
+    renderCrew(); renderRest(); toast('Wyczyszczono');
+  });
+
+  renderCrew(); renderRest();
+
+  if(fromLink && local && local.exp.length){
+    var bn = document.createElement('div');
+    bn.className = 'banner';
+    bn.innerHTML = '<span>Ten link zawiera rozliczenie od kogoś z ekipy (' + fromLink.exp.length +
+      ' wpisów). Wczytać je zamiast Twoich ' + local.exp.length + '?</span>' +
+      '<span style="display:flex;gap:8px"><button type="button" class="btn" id="loadLink">Wczytaj</button>' +
+      '<button type="button" class="btn ghost" id="keepMine">Zostaw moje</button></span>';
+    $('#v-kasa').prepend(bn);
+    bn.querySelector('#loadLink').addEventListener('click', function(){
+      DATA = fromLink; save(); bn.remove(); renderCrew(); renderRest(); toast('Wczytano rozliczenie z linku');
+    });
+    bn.querySelector('#keepMine').addEventListener('click', function(){ bn.remove(); });
+  }
+
+  if(load('kw:tab') === 'tab-kasa' || location.hash.indexOf('k=') > -1) $('#tab-kasa').click();
 })();
 </script>
 
