@@ -106,7 +106,12 @@ p{margin:0}
   transition:background .2s ease,color .2s ease}
 .seg button:hover{color:var(--ink)}
 .seg button[aria-selected="true"]{background:var(--accent); color:var(--on-accent)}
-.tabnote{color:var(--ink-3); font-size:12px}
+.tabnote{color:var(--ink-3); font-size:12px; display:flex; align-items:center; min-width:0}
+.dot{display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:7px; flex:none;
+  background:var(--ink-3)}
+.dot.live{background:var(--pos); animation:pulse 2.6s ease-in-out infinite}
+.dot.off{background:var(--accent)}
+@keyframes pulse{0%,100%{opacity:1} 50%{opacity:.3}}
 [role="tabpanel"][hidden]{display:none}
 
 /* ── sections ──────────────────────────────────────────────────────── */
@@ -573,7 +578,8 @@ footer{margin:54px 0 44px; padding-top:22px; border-top:1px solid var(--line-sof
       <button type="button" class="btn ghost" id="resetBtn">Wyczyść wszystko</button>
       <input type="text" class="linkout" id="linkOut" readonly hidden aria-label="Link do rozliczenia">
     </div>
-    <div class="note"><strong>Jak to działa:</strong> wpisy siedzą w Twojej przeglądarce, nie na serwerze — nie synchronizują się same. „Udostępnij stan kasy” pakuje całe rozliczenie do linku: wrzuć go na grupę, a reszta kliknie i zobaczy tę samą kasę. Najprościej, gdy jedna osoba jest skarbnikiem i tylko ona wbija koszty.</div>
+    <div class="note" id="noteOnline" hidden><strong>Wspólna kasa:</strong> wpisy lecą prosto do bazy, więc cała ekipa widzi to samo — bez wysyłania linków. Zmiany od innych dociągają się co kilka sekund. Gdyby baza przestała odpowiadać, strona sama przejdzie w tryb offline i nic nie zginie.</div>
+    <div class="note" id="noteOffline"><strong>Tryb offline:</strong> wpisy siedzą tylko w Twojej przeglądarce. „Udostępnij stan kasy” pakuje całe rozliczenie do linku — wrzuć go na grupę, a reszta kliknie i zobaczy tę samą kasę.</div>
   </section>
 </div>
 
@@ -663,8 +669,8 @@ footer{margin:54px 0 44px; padding-top:22px; border-top:1px solid var(--line-sof
         x.setAttribute('aria-selected', sel ? 'true' : 'false');
         document.getElementById(x.getAttribute('aria-controls')).hidden = !sel;
       });
-      $('#tabnote').textContent = NOTES[t.id];
       store('kw:tab', t.id);
+      setStatus();
     });
   });
 
@@ -796,6 +802,12 @@ footer{margin:54px 0 44px; padding-top:22px; border-top:1px solid var(--line-sof
   });
 
   /* ══ ROZLICZENIA ═════════════════════════════════════════════════ */
+  var SB = {
+    url: 'https://gbrdkpelkkyvnaptiqls.supabase.co',
+    key: 'sb_publishable_utJHBqvPvcqcXd3OpzSnbg_Go4aSxLG'
+  };
+  var online = false, busy = 0, renameT = null;
+
   var DATA;
   function blank(){
     var p = []; for(var i = 1; i <= 8; i++) p.push('Osoba ' + i);
@@ -817,32 +829,97 @@ footer{margin:54px 0 44px; padding-top:22px; border-top:1px solid var(--line-sof
     });
   }
   function save(){ store('kw:kasa', JSON.stringify(DATA)); }
-  function nm(i){ return (DATA.people[i] || ('Osoba ' + (i+1))); }
+  function nm(i){ return (DATA.people[i] || ('Osoba ' + (i + 1))); }
 
+  /* ── warstwa Supabase ────────────────────────────────────────────── */
+  function sbFetch(path, opts){
+    opts = opts || {};
+    var h = { apikey:SB.key, Authorization:'Bearer ' + SB.key, 'Content-Type':'application/json' };
+    for(var k in (opts.headers || {})) h[k] = opts.headers[k];
+    opts.headers = h;
+    return fetch(SB.url + '/rest/v1/' + path, opts).then(function(r){
+      if(!r.ok) return r.text().then(function(t){ throw new Error(r.status + ' ' + t); });
+      return r.status === 204 ? null : r.json();
+    });
+  }
+  function rowToExp(r){
+    return { id:r.id, what:r.co, amount:Number(r.kwota), payer:r.platnik - 1,
+             who:(r.za_kogo || []).map(function(i){ return i - 1; }) };
+  }
+  function pull(){
+    return Promise.all([
+      sbFetch('ekipa?select=idx,imie&order=idx.asc'),
+      sbFetch('wydatki?select=id,co,kwota,platnik,za_kogo&order=id.asc')
+    ]).then(function(res){
+      var ek = res[0] || [], wy = res[1] || [];
+      if(ek.length >= 2){
+        var typing = document.activeElement && document.activeElement.dataset &&
+                     document.activeElement.dataset.p !== undefined;
+        if(!typing) DATA.people = ek.map(function(r){ return r.imie || ('Osoba ' + r.idx); });
+      }
+      DATA.exp = wy.map(rowToExp);
+      return true;
+    });
+  }
+  function goOffline(err){
+    if(online) toast('Brak łączności z bazą — przechodzę w tryb offline');
+    online = false; setStatus();
+    if(err && window.console) console.warn('Supabase:', err.message || err);
+  }
+  function setStatus(){
+    var el = $('#tabnote');
+    if($('#tab-kasa').getAttribute('aria-selected') !== 'true'){
+      el.textContent = NOTES['tab-plan'];
+    } else {
+      el.innerHTML = online
+        ? '<span class="dot live"></span>wspólna kasa — cała ekipa widzi to samo'
+        : '<span class="dot off"></span>tryb offline — kasa tylko w tej przeglądarce';
+    }
+    $('#shareBtn').hidden = online;
+    $('#noteOnline').hidden = !online;
+    $('#noteOffline').hidden = online;
+    $('#resetBtn').textContent = online ? 'Wyczyść wspólną kasę' : 'Wyczyść wszystko';
+  }
+
+  /* ── stan startowy ───────────────────────────────────────────────── */
   var fromLink = null, local = null;
   var m = location.hash.match(/[#&]k=([A-Za-z0-9_-]+)/);
   if(m){ try{ var d = b64d(m[1]); if(valid(d)) fromLink = d; }catch(e){} }
   try{ var l = JSON.parse(load('kw:kasa') || 'null'); if(valid(l)) local = l; }catch(e){}
-
   if(fromLink && (!local || !local.exp.length)){ DATA = fromLink; save(); }
   else { DATA = local || blank(); }
 
   function renderCrew(){
     $('#crew').innerHTML = DATA.people.map(function(n, i){
-      return '<input type="text" data-p="' + i + '" value="' + esc(n) + '" aria-label="Imię osoby ' + (i+1) + '" maxlength="24">';
+      return '<input type="text" data-p="' + i + '" value="' + esc(n) + '" aria-label="Imię osoby ' + (i + 1) + '" maxlength="24">';
     }).join('');
     $('#fPayer').innerHTML = DATA.people.map(function(n, i){ return '<option value="' + i + '">' + esc(n) + '</option>'; }).join('');
     $('#fWho').innerHTML = DATA.people.map(function(n, i){
       return '<label><input type="checkbox" value="' + i + '" checked>' + esc(n) + '</label>';
     }).join('');
   }
+  function refreshNames(){
+    $$('#crew input').forEach(function(inp, i){
+      if(document.activeElement !== inp && inp.value !== DATA.people[i]) inp.value = DATA.people[i];
+    });
+    var opts = $('#fPayer').options, labs = $$('#fWho label');
+    DATA.people.forEach(function(n, i){
+      if(opts[i]) opts[i].textContent = n;
+      if(labs[i]) labs[i].lastChild.nodeValue = n;
+    });
+  }
   $('#crew').addEventListener('input', function(e){
     var i = e.target.dataset.p; if(i === undefined) return;
-    DATA.people[+i] = e.target.value.trim() || ('Osoba ' + (+i + 1));
-    save();
-    $('#fPayer').options[+i].textContent = DATA.people[+i];
-    $$('#fWho label')[+i].lastChild.nodeValue = DATA.people[+i];
-    renderRest();
+    i = +i;
+    DATA.people[i] = e.target.value.trim() || ('Osoba ' + (i + 1));
+    save(); refreshNames(); renderRest();
+    if(online){
+      clearTimeout(renameT);
+      renameT = setTimeout(function(){
+        sbFetch('ekipa?idx=eq.' + (i + 1), { method:'PATCH', body:JSON.stringify({ imie:DATA.people[i] }) })
+          .catch(goOffline);
+      }, 700);
+    }
   });
 
   function renderExp(){
@@ -865,8 +942,15 @@ footer{margin:54px 0 44px; padding-top:22px; border-top:1px solid var(--line-sof
   }
   $('#expList').addEventListener('click', function(e){
     var b = e.target.closest('[data-del]'); if(!b) return;
-    DATA.exp = DATA.exp.filter(function(x){ return x.id !== +b.dataset.del; });
+    var id = +b.dataset.del;
+    DATA.exp = DATA.exp.filter(function(x){ return x.id !== id; });
     save(); renderRest(); toast('Wpis usunięty');
+    if(online){
+      busy++;
+      sbFetch('wydatki?id=eq.' + id, { method:'DELETE' })
+        .catch(goOffline)
+        .then(function(){ busy--; });
+    }
   });
 
   function balances(){
@@ -886,7 +970,7 @@ footer{margin:54px 0 44px; padding-top:22px; border-top:1px solid var(--line-sof
   function renderBal(){
     var b = balances(), paid = paidBy();
     $('#balList').innerHTML = DATA.people.map(function(n, i){
-      var v = Math.round(b[i]*100)/100;
+      var v = Math.round(b[i] * 100) / 100;
       var cls = v > 0.005 ? 'up' : v < -0.005 ? 'down' : 'zero';
       var txt = v > 0.005 ? '+' + zl(v) : v < -0.005 ? '−' + zl(-v) : zl(0);
       return '<li><span class="nm">' + esc(n) + '<small>wyłożył ' + zl(paid[i]) +
@@ -894,9 +978,9 @@ footer{margin:54px 0 44px; padding-top:22px; border-top:1px solid var(--line-sof
     }).join('');
   }
   function settle(){
-    var b = balances().map(function(v, i){ return { i:i, v:Math.round(v*100)/100 }; });
-    var deb = b.filter(function(x){ return x.v < -0.005; }).sort(function(a,c){ return a.v - c.v; });
-    var cre = b.filter(function(x){ return x.v >  0.005; }).sort(function(a,c){ return c.v - a.v; });
+    var b = balances().map(function(v, i){ return { i:i, v:Math.round(v * 100) / 100 }; });
+    var deb = b.filter(function(x){ return x.v < -0.005; }).sort(function(a, c){ return a.v - c.v; });
+    var cre = b.filter(function(x){ return x.v >  0.005; }).sort(function(a, c){ return c.v - a.v; });
     var out = [], di = 0, ci = 0;
     while(di < deb.length && ci < cre.length){
       var amt = Math.min(-deb[di].v, cre[ci].v);
@@ -919,20 +1003,40 @@ footer{margin:54px 0 44px; padding-top:22px; border-top:1px solid var(--line-sof
   $('#allBtn').addEventListener('click', function(){ $$('#fWho input').forEach(function(c){ c.checked = true; }); });
   $('#noneBtn').addEventListener('click', function(){ $$('#fWho input').forEach(function(c){ c.checked = false; }); });
 
+  function clearForm(){
+    $('#fWhat').value = ''; $('#fAmount').value = '';
+    $$('#fWho input').forEach(function(c){ c.checked = true; });
+    $('#fWhat').focus();
+  }
   $('#expForm').addEventListener('submit', function(e){
     e.preventDefault();
     var what = $('#fWhat').value.trim();
-    var amount = Number($('#fAmount').value);
+    var amount = Math.round(Number($('#fAmount').value) * 100) / 100;
+    var payer = +$('#fPayer').value;
     var who = $$('#fWho input:checked').map(function(c){ return +c.value; });
     if(!what){ toast('Wpisz, za co był ten koszt'); $('#fWhat').focus(); return; }
     if(!(amount > 0)){ toast('Kwota musi być większa od zera'); $('#fAmount').focus(); return; }
     if(!who.length){ toast('Zaznacz, za kogo był ten koszt'); return; }
-    DATA.exp.push({ id:DATA.seq++, what:what, amount:amount, payer:+$('#fPayer').value, who:who });
-    save(); renderRest();
-    $('#fWhat').value = ''; $('#fAmount').value = '';
-    $$('#fWho input').forEach(function(c){ c.checked = true; });
-    $('#fWhat').focus();
-    toast('Dodano: ' + what);
+
+    if(online){
+      busy++;
+      sbFetch('wydatki', { method:'POST', headers:{ Prefer:'return=representation' },
+        body:JSON.stringify({ co:what, kwota:amount, platnik:payer + 1,
+                              za_kogo:who.map(function(i){ return i + 1; }) }) })
+        .then(function(rows){
+          DATA.exp.push(rowToExp(rows[0]));
+          save(); renderRest(); clearForm(); toast('Dodano: ' + what);
+        })
+        .catch(function(err){
+          goOffline(err);
+          DATA.exp.push({ id:DATA.seq++, what:what, amount:amount, payer:payer, who:who });
+          save(); renderRest(); clearForm();
+        })
+        .then(function(){ busy--; });
+    } else {
+      DATA.exp.push({ id:DATA.seq++, what:what, amount:amount, payer:payer, who:who });
+      save(); renderRest(); clearForm(); toast('Dodano: ' + what);
+    }
   });
 
   $('#shareBtn').addEventListener('click', function(){
@@ -952,7 +1056,7 @@ footer{margin:54px 0 44px; padding-top:22px; border-top:1px solid var(--line-sof
     var tot = DATA.exp.reduce(function(a, e){ return a + e.amount; }, 0);
     var L = ['KAWALERSKI WALDKA — ROZLICZENIE', 'Razem wydane: ' + zl(tot), '', 'Kto ile wyłożył:'];
     DATA.people.forEach(function(n, i){
-      var v = Math.round(b[i]*100)/100;
+      var v = Math.round(b[i] * 100) / 100;
       L.push('  ' + n + ': ' + zl(paid[i]) + '  (bilans ' + (v >= 0 ? '+' : '-') + zl(Math.abs(v)) + ')');
     });
     L.push('', 'Przelewy:');
@@ -971,15 +1075,40 @@ footer{margin:54px 0 44px; padding-top:22px; border-top:1px solid var(--line-sof
   });
 
   $('#resetBtn').addEventListener('click', function(){
-    if(!confirm('Skasować wszystkie wpisy i imiona? Tego nie da się cofnąć.')) return;
-    DATA = blank(); save();
-    if(location.hash) history.replaceState(null, '', location.pathname);
-    renderCrew(); renderRest(); toast('Wyczyszczono');
+    var msg = online
+      ? 'To skasuje wspólną kasę DLA CAŁEJ EKIPY — wszystkie wpisy znikną każdemu. Na pewno?'
+      : 'Skasować wszystkie wpisy i imiona? Tego nie da się cofnąć.';
+    if(!confirm(msg)) return;
+    if(online){
+      busy++;
+      sbFetch('wydatki?id=gt.0', { method:'DELETE' })
+        .then(function(){ DATA.exp = []; save(); renderRest(); toast('Wspólna kasa wyczyszczona'); })
+        .catch(goOffline)
+        .then(function(){ busy--; });
+    } else {
+      DATA = blank(); save();
+      if(location.hash) history.replaceState(null, '', location.pathname);
+      renderCrew(); renderRest(); toast('Wyczyszczono');
+    }
   });
 
-  renderCrew(); renderRest();
+  renderCrew(); renderRest(); setStatus();
 
-  if(fromLink && local && local.exp.length){
+  /* ── podłączenie i odpytywanie ───────────────────────────────────── */
+  pull().then(function(){
+    online = true; setStatus(); renderCrew(); renderRest();
+  }).catch(function(err){
+    online = false; setStatus();
+    if(window.console) console.warn('Supabase niedostępny, tryb offline:', err.message || err);
+  });
+
+  setInterval(function(){
+    if(!online || busy || document.hidden) return;
+    if($('#tab-kasa').getAttribute('aria-selected') !== 'true') return;
+    pull().then(function(){ refreshNames(); renderRest(); }).catch(goOffline);
+  }, 7000);
+
+  if(fromLink && local && local.exp.length && !online){
     var bn = document.createElement('div');
     bn.className = 'banner';
     bn.innerHTML = '<span>Ten link zawiera rozliczenie od kogoś z ekipy (' + fromLink.exp.length +
@@ -994,6 +1123,7 @@ footer{margin:54px 0 44px; padding-top:22px; border-top:1px solid var(--line-sof
   }
 
   if(load('kw:tab') === 'tab-kasa' || location.hash.indexOf('k=') > -1) $('#tab-kasa').click();
+
 })();
 </script>
 
