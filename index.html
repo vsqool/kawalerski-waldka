@@ -868,6 +868,16 @@ footer{margin:110px 0 60px; padding-top:26px; border-top:1px solid var(--line-2)
       revealIO.observe(el);
     });
   }
+  // zabezpieczenie: cokolwiek jest już w polu widzenia, odsłoń od razu —
+  // bez tego przywrócona pozycja przewijania mogłaby zostawić pustą sekcję
+  function sweep(){
+    $$('.rv:not(.in)').forEach(function(el){
+      var r = el.getBoundingClientRect();
+      if(r.top < innerHeight * 1.15 && r.bottom > -60) el.classList.add('in');
+    });
+  }
+  addEventListener('load', sweep);
+  setTimeout(sweep, 1400);
 
 
   /* ── zakładki + szyna nawigacji ──────────────────────────────────── */
@@ -900,6 +910,7 @@ footer{margin:110px 0 60px; padding-top:26px; border-top:1px solid var(--line-2)
     store('kw:tab', t.id);
     buildRail(t.id);
     watchReveals();
+    requestAnimationFrame(sweep);
     setStatus();
   }
   $$('[role="tab"]').forEach(function(t){
@@ -1428,7 +1439,7 @@ footer{margin:110px 0 60px; padding-top:26px; border-top:1px solid var(--line-2)
   }
 
   /* ── start ───────────────────────────────────────────────────────── */
-  buildRail('tab-plan'); setStatus(); watchReveals();
+  buildRail('tab-plan'); setStatus(); watchReveals(); sweep();
   if(load('kw:tab') === 'tab-kasa' || location.hash.indexOf('k=') > -1) showTab($('#tab-kasa'));
 })();
 </script>
