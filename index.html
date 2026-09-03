@@ -392,6 +392,11 @@ input:focus,select:focus{border-color:var(--paint); outline:none; box-shadow:0 0
 .note{margin-top:16px; padding:15px 17px; border:1px solid var(--line); border-left:2px solid var(--cyan);
   border-radius:var(--r); color:var(--dim); font-size:14.5px; background:var(--panel)}
 .note.warn{border-left-color:var(--gold)}
+.note pre{margin:12px 0 0; padding:12px 14px; background:var(--sunk); border:1px solid var(--line);
+  border-radius:var(--r); overflow-x:auto; font-family:'JetBrains Mono',monospace; font-size:11.5px;
+  line-height:1.65; color:var(--bone); white-space:pre; -webkit-user-select:all; user-select:all}
+.note .acts{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px}
+.note a.mini{text-decoration:none}
 .note strong{color:var(--bone)}
 .toast{position:fixed; left:50%; bottom:28px; transform:translateX(-50%) translateY(16px);
   background:var(--bone); color:var(--void); padding:12px 20px; border-radius:var(--r); font-size:14.5px;
@@ -623,6 +628,16 @@ footer{margin:110px 0 60px; padding-top:26px; border-top:1px solid var(--line-2)
     <div class="panel rv">
       <div class="crew" id="crew"></div>
       <div class="crew-foot"><button type="button" class="mini" id="addPerson">+ dodaj osobę</button><span id="crewCount"></span></div>
+    </div>
+    <div class="note warn" id="sqlHelp" hidden>
+      <strong>Baza nie pozwala jeszcze dopisywać osób.</strong> Trzeba raz — jeden jedyny — uruchomić poniższy SQL w panelu Supabase. Potem ten przycisk będzie działał zawsze i nikt nie będzie musiał już zaglądać do panelu.
+      <pre id="sqlText">drop policy if exists ekipa_insert on ekipa;
+create policy ekipa_insert on ekipa
+  for insert to anon with check (true);</pre>
+      <div class="acts">
+        <button type="button" class="mini" id="sqlCopy">kopiuj SQL</button>
+        <a class="mini" href="https://supabase.com/dashboard/project/gbrdkpelkkyvnaptiqls/sql/new" target="_blank" rel="noopener">otwórz SQL Editor →</a>
+      </div>
     </div>
   </section>
 
@@ -1249,10 +1264,22 @@ footer{margin:110px 0 60px; padding-top:26px; border-top:1px solid var(--line-2)
       .then(function(){ DATA.people.push(imie); save(); renderCrew(); renderRest(); toast('Dodano ' + imie + ' — widzą to wszyscy'); })
       .catch(function(err){
         var m = String(err.message);
-        if(m.indexOf('42501') > -1 || m.indexOf('401') > -1) toast('Baza nie pozwala dopisywać osób — brakuje polityki ekipa_insert');
-        else goOffline(err);
+        if(m.indexOf('42501') > -1 || m.indexOf('401') > -1){
+          var h = $('#sqlHelp');
+          h.hidden = false;
+          h.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block:'center' });
+          toast('Baza odmawia — instrukcja poniżej, to jedno wklejenie');
+        } else goOffline(err);
       })
       .then(function(){ busy--; });
+  });
+
+  $('#sqlCopy').addEventListener('click', function(){
+    var txt = $('#sqlText').textContent;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){ toast('SQL skopiowany — wklej go w SQL Editor i wciśnij Run'); },
+        function(){ toast('Zaznacz SQL i skopiuj ręcznie'); });
+    } else toast('Zaznacz SQL i skopiuj ręcznie');
   });
 
   function renderExp(){
