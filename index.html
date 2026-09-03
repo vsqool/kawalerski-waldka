@@ -52,6 +52,7 @@
 }
 
 *{box-sizing:border-box}
+[hidden]{display:none !important}
 html{scroll-behavior:smooth}
 body{
   margin:0; background:var(--void); color:var(--bone);
@@ -378,6 +379,41 @@ input:focus,select:focus{border-color:var(--paint); outline:none; box-shadow:0 0
 .bal .v{font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums; font-weight:700;
   font-size:16px; text-align:right; min-width:96px}
 .v.up{color:var(--cyan)} .v.down{color:var(--paint-ink)} .v.zero{color:var(--dimmer)}
+/* ── klasyfikacja turnieju ─────────────────────────────────────────── */
+.board{list-style:none; margin:0; padding:0; counter-reset:pos}
+.board li{display:grid; grid-template-columns:44px 1fr auto; gap:16px; align-items:center;
+  padding:15px 18px; border-bottom:1px solid var(--line-2); position:relative}
+.board li:last-child{border-bottom:0}
+.board .pos{font-family:'Anton',sans-serif; font-size:24px; line-height:1; color:var(--dimmer); text-align:center}
+.board li.p1 .pos{color:#FFD24A} .board li.p2 .pos{color:#CBD3DE} .board li.p3 .pos{color:#D89A5C}
+.board li.p1{background:linear-gradient(90deg,rgba(255,210,74,.07),transparent 42%)}
+.board .who2{min-width:0}
+.board .who2 b{display:block; font-family:'Anton',sans-serif; font-size:20px; text-transform:uppercase;
+  letter-spacing:.02em; line-height:1.1}
+.board .bar{height:4px; background:var(--sunk); border-radius:3px; margin-top:8px; overflow:hidden}
+.board .bar i{display:block; height:100%; background:linear-gradient(90deg,var(--paint),var(--gold));
+  border-radius:3px; transition:width .8s var(--ease)}
+.board .tags{display:flex; flex-wrap:wrap; gap:5px; margin-top:8px}
+.board .tags span{font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.07em;
+  text-transform:uppercase; padding:2px 7px; border-radius:2px; background:var(--sunk); color:var(--dimmer)}
+.board .pts{font-family:'Anton',sans-serif; font-size:30px; line-height:1; font-variant-numeric:tabular-nums;
+  color:var(--bone); text-align:right; min-width:74px}
+.board .pts small{display:block; font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.14em;
+  color:var(--dimmer); margin-top:4px}
+.rules{list-style:none; margin:0; padding:0}
+.rules li{display:grid; grid-template-columns:38px 1fr auto; gap:15px; align-items:center;
+  padding:14px 18px; border-bottom:1px solid var(--line-2)}
+.rules li:last-child{border-bottom:0}
+.rules svg{width:26px; height:26px; color:var(--rc,var(--paint))}
+.rules b{display:block; font-family:'Anton',sans-serif; font-size:18px; text-transform:uppercase; letter-spacing:.02em}
+.rules span{display:block; font-size:13px; color:var(--dimmer); margin-top:2px}
+.rules .max{font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums; font-size:15px;
+  font-weight:700; color:var(--rc,var(--paint)); white-space:nowrap}
+@media (max-width:720px){
+  .board li{grid-template-columns:34px 1fr auto; gap:11px; padding:13px 14px}
+  .board .pts{font-size:24px; min-width:58px}
+  .board .who2 b{font-size:17px}
+}
 .settle{list-style:none; margin:0; padding:0}
 .settle li{display:flex; flex-wrap:wrap; align-items:center; gap:11px; padding:15px 18px;
   border-bottom:1px solid var(--line-2); font-size:16px}
@@ -542,6 +578,7 @@ footer{margin:110px 0 60px; padding-top:26px; border-top:1px solid var(--line-2)
     <div class="seg" role="tablist" aria-label="Widok">
       <button type="button" role="tab" id="tab-plan" aria-controls="v-plan" aria-selected="true">Plan</button>
       <button type="button" role="tab" id="tab-kasa" aria-controls="v-kasa" aria-selected="false">Kasa</button>
+      <button type="button" role="tab" id="tab-turniej" aria-controls="v-turniej" aria-selected="false">Turniej</button>
     </div>
     <span class="tabnote" id="tabnote"></span>
   </div>
@@ -700,6 +737,82 @@ create policy ekipa_insert on ekipa
   </section>
 </div>
 
+<div role="tabpanel" id="v-turniej" aria-labelledby="tab-turniej" hidden style="view-transition-name:panel">
+
+  <section class="sec" id="t-tabela">
+    <div class="sec-head"><span class="eyebrow">I</span><h2 class="disp">Klasyfikacja</h2></div>
+    <div class="hr"></div>
+    <p class="sec-lead" id="tLead">Jeszcze nikt nie zdobył punktu.</p>
+    <div class="panel rv"><ol class="board" id="board"></ol></div>
+  </section>
+
+  <section class="sec" id="t-dodaj">
+    <div class="sec-head"><span class="eyebrow">II</span><h2 class="disp">Dopisz wynik</h2></div>
+    <div class="hr"></div>
+    <p class="sec-lead">Wybierzcie konkurencję i wynik — punkty naliczą się same wg tabeli niżej. Przy drużynówkach zaznaczcie od razu całą drużynę.</p>
+    <div class="panel rv">
+      <form class="form" id="scoreForm">
+        <div class="field">
+          <label for="eEvent">Konkurencja</label>
+          <select id="eEvent"></select>
+        </div>
+        <div class="field">
+          <label for="eResult">Wynik</label>
+          <select id="eResult"></select>
+        </div>
+        <div class="field full" id="bonusWrap" hidden>
+          <label for="eNote">Za co i ile punktów</label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <input type="text" id="eNote" placeholder="np. pierwsza krew w paintballu" style="flex:1 1 220px" autocomplete="off">
+            <input type="number" id="ePts" placeholder="pkt" step="1" min="-50" max="100" style="width:96px">
+          </div>
+        </div>
+        <div class="field full">
+          <label>Kto <span id="whoHint" class="mono" style="text-transform:none;letter-spacing:0;color:var(--dimmer)"></span></label>
+          <div class="who" id="eWho"></div>
+        </div>
+        <div class="field full"><button type="submit" class="btn solid">Dopisz punkty</button></div>
+      </form>
+    </div>
+    <div class="note warn" id="sqlHelpT" hidden>
+      <strong>Brakuje tabeli turnieju w bazie.</strong> Trzeba raz uruchomić poniższy SQL w panelu Supabase — dopiero wtedy wyniki będą się zapisywać dla całej ekipy.
+      <pre id="sqlTextT">create table if not exists turniej (
+  id        bigint generated always as identity primary key,
+  osoba     int  not null references ekipa(idx),
+  konkurs   text not null,
+  wynik     text not null,
+  punkty    int  not null check (punkty between -50 and 100),
+  utworzono timestamptz not null default now()
+);
+alter table turniej enable row level security;
+drop policy if exists turniej_select on turniej;
+drop policy if exists turniej_insert on turniej;
+drop policy if exists turniej_delete on turniej;
+create policy turniej_select on turniej for select to anon using (true);
+create policy turniej_insert on turniej for insert to anon with check (true);
+create policy turniej_delete on turniej for delete to anon using (true);</pre>
+      <div class="acts">
+        <button type="button" class="mini" id="sqlCopyT">kopiuj SQL</button>
+        <a class="mini" href="https://supabase.com/dashboard/project/gbrdkpelkkyvnaptiqls/sql/new" target="_blank" rel="noopener">otwórz SQL Editor →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="t-wyniki">
+    <div class="sec-head"><span class="eyebrow">III</span><h2 class="disp">Wyniki</h2></div>
+    <div class="hr"></div>
+    <p class="sec-lead" id="sLead">Pusto.</p>
+    <div class="panel rv"><ul class="exp" id="scoreList"></ul></div>
+  </section>
+
+  <section class="sec" id="t-zasady">
+    <div class="sec-head"><span class="eyebrow">IV</span><h2 class="disp">Punktacja</h2></div>
+    <div class="hr"></div>
+    <p class="sec-lead">Dzień waży więcej niż wieczór: gokarty i paintball to 45 z 84 możliwych punktów. Za przegraną w drużynówce też są punkty, bo składu się nie wybiera. Za udział w wieczornych grach są trzy punkty, żeby nikt nie tracił przez pójście spać.</p>
+    <div class="panel rv"><ul class="rules" id="rules"></ul></div>
+  </section>
+</div>
+
   <footer>Na podstawie planu Michała. Ceny i dostępność sprawdzajcie w linkach — Booking i cenniki potrafią się zmieniać. Mapa: OpenStreetMap.</footer>
 </div>
 </div>
@@ -761,7 +874,9 @@ create policy ekipa_insert on ekipa
     'tab-plan':[['s-trasa','01','Trasa'],['s-plan','02','Plan dnia'],['s-baza','03','Baza'],
                 ['s-wieczor','04','Wieczór'],['s-budzet','05','Budżet']],
     'tab-kasa':[['s-ekipa','A','Ekipa'],['s-dodaj','B','Dorzuć'],['s-lista','C','Co poszło'],
-                ['s-bilans','D','Bilans'],['s-przelewy','E','Przelewy']]
+                ['s-bilans','D','Bilans'],['s-przelewy','E','Przelewy']],
+    'tab-turniej':[['t-tabela','I','Klasyfikacja'],['t-dodaj','II','Dopisz wynik'],
+                ['t-wyniki','III','Wyniki'],['t-zasady','IV','Punktacja']]
   };
 
   /* ── narzędzia ───────────────────────────────────────────────────── */
@@ -896,7 +1011,7 @@ create policy ekipa_insert on ekipa
 
 
   /* ── zakładki + szyna nawigacji ──────────────────────────────────── */
-  var NOTES = { 'tab-plan':'ceny domku, gokartów i paintballa potwierdzone', 'tab-kasa':'' };
+  var NOTES = { 'tab-plan':'ceny domku, gokartów i paintballa potwierdzone' };
   var railIO = null;
 
   function buildRail(tab){
@@ -1202,12 +1317,18 @@ create policy ekipa_insert on ekipa
   }
   function setStatus(){
     var el = $('#tabnote');
-    if($('#tab-kasa').getAttribute('aria-selected') !== 'true'){
+    var kasa = $('#tab-kasa').getAttribute('aria-selected') === 'true';
+    var turn = $('#tab-turniej').getAttribute('aria-selected') === 'true';
+    if(!kasa && !turn){
       el.innerHTML = '<span class="dot"></span>' + NOTES['tab-plan'];
+    } else if(turn){
+      el.innerHTML = tOnline
+        ? '<span class="dot live"></span>tabela odświeża się na żywo'
+        : '<span class="dot off"></span>wyniki tylko w tej przeglądarce — brakuje tabeli w bazie';
+    } else if(online){
+      el.innerHTML = '<span class="dot live"></span>wspólna kasa — cała ekipa widzi to samo';
     } else {
-      el.innerHTML = online
-        ? '<span class="dot live"></span>wspólna kasa — cała ekipa widzi to samo'
-        : '<span class="dot off"></span>tryb offline — kasa tylko w tej przeglądarce';
+      el.innerHTML = '<span class="dot off"></span>tryb offline — dane tylko w tej przeglądarce';
     }
     $('#shareBtn').hidden = online;
     $('#noteOnline').hidden = !online;
@@ -1224,6 +1345,7 @@ create policy ekipa_insert on ekipa
 
 
   function renderCrew(){
+    if(document.getElementById('eWho')) buildWho();
     $('#crewCount').textContent = DATA.people.length + ' os. w rozliczeniu';
     $('#crew').innerHTML = DATA.people.map(function(n, i){
       return '<input type="text" data-p="' + i + '" value="' + esc(n) + '" aria-label="Imię osoby ' + (i + 1) + '" maxlength="24">';
@@ -1242,6 +1364,8 @@ create policy ekipa_insert on ekipa
       if(opts[i]) opts[i].textContent = n;
       if(labs[i]) labs[i].lastChild.nodeValue = n;
     });
+    $$('#eWho label').forEach(function(l, i){ if(DATA.people[i]) l.lastChild.nodeValue = DATA.people[i]; });
+    renderTurniej();
   }
   $('#crew').addEventListener('input', function(e){
     var i = e.target.dataset.p; if(i === undefined) return;
@@ -1441,7 +1565,7 @@ create policy ekipa_insert on ekipa
 
   renderCrew(); renderRest();
 
-  pull().then(function(){ online = true; setStatus(); renderCrew(); renderRest(); })
+  pull().then(function(){ online = true; setStatus(); renderCrew(); renderRest(); renderTurniej(); })
         .catch(function(err){ online = false; setStatus();
           if(window.console) console.warn('Supabase niedostępny, tryb offline:', err.message || err); });
 
@@ -1464,6 +1588,226 @@ create policy ekipa_insert on ekipa
     });
     bn.querySelector('#keepMine').addEventListener('click', function(){ bn.remove(); });
   }
+
+  /* ══ TURNIEJ ═════════════════════════════════════════════════════ */
+  var EVENTS = {
+    gokarty:  { name:'Gokarty', icon:'i-kart', c:PIG[1], multi:false, why:'jedyna w pełni mierzalna konkurencja indywidualna — punkty za każde miejsce',
+      opts:[['1. miejsce',25],['2. miejsce',18],['3. miejsce',14],['4. miejsce',11],['5. miejsce',9],
+            ['6. miejsce',7],['7. miejsce',5],['8. miejsce',3],['9. miejsce i dalej',2]] },
+    paintball:{ name:'Paintball', icon:'i-paint', c:PIG[2], multi:true, why:'rdzeń dnia, ale drużynowy — przegrani też punktują, bo składu się nie wybiera',
+      opts:[['zwycięska drużyna',20],['przegrana drużyna',8]] },
+    cs:       { name:'CS', icon:'i-cs', c:PIG[4], multi:true, why:'udział niepewny, a Waldek ma tu przewagę — dlatego mniej niż paintball',
+      opts:[['zwycięska drużyna',15],['przegrana drużyna',6]] },
+    beerpong: { name:'Beer pong', icon:'i-beer', c:PIG[3], multi:true, why:'wieczorne i nieobowiązkowe — trzy punkty należą się za samo granie',
+      opts:[['1. miejsce',12],['2. miejsce',7],['udział',3]] },
+    darty:    { name:'Darty', icon:'i-darts', c:PIG[0], multi:false, why:'jw. — nikt nie ma tracić za to, że poszedł spać',
+      opts:[['1. miejsce',12],['2. miejsce',7],['udział',3]] },
+    bonus:    { name:'Bonus', icon:'i-fire', c:PIG[4], multi:true, free:true, why:'dowolne punkty za wyczyny, których nie przewidziała tabela',
+      opts:[] }
+  };
+  var EV_KEYS = ['gokarty','paintball','cs','beerpong','darty','bonus'];
+  var SCORES = [], tOnline = false, tBusy = 0;
+
+  function tSave(){ store('kw:turniej', JSON.stringify(SCORES)); }
+  function tValid(a){
+    return Array.isArray(a) && a.every(function(x){
+      return x && Number.isInteger(x.osoba) && typeof x.punkty === 'number' && isFinite(x.punkty) &&
+             typeof x.konkurs === 'string' && typeof x.wynik === 'string';
+    });
+  }
+  (function(){
+    try{ var v = JSON.parse(load('kw:turniej') || 'null'); if(tValid(v)) SCORES = v; }catch(e){}
+  })();
+
+  function tPull(){
+    return sbFetch('turniej?select=id,osoba,konkurs,wynik,punkty&order=id.asc').then(function(rows){
+      SCORES = (rows || []).map(function(r){
+        return { id:r.id, osoba:r.osoba - 1, konkurs:r.konkurs, wynik:r.wynik, punkty:Number(r.punkty) };
+      });
+      tOnline = true;
+      return true;
+    });
+  }
+
+  function buildEventSelect(){
+    $('#eEvent').innerHTML = EV_KEYS.map(function(k){
+      return '<option value="' + k + '">' + esc(EVENTS[k].name) + '</option>';
+    }).join('');
+    syncEvent();
+  }
+  function syncEvent(){
+    var k = $('#eEvent').value, ev = EVENTS[k];
+    $('#bonusWrap').hidden = !ev.free;
+    $('#eResult').parentNode.hidden = !!ev.free;
+    if(!ev.free){
+      $('#eResult').innerHTML = ev.opts.map(function(o){
+        return '<option value="' + o[1] + '">' + esc(o[0]) + ' — ' + o[1] + ' pkt</option>';
+      }).join('');
+    }
+    $('#whoHint').textContent = ev.multi || ev.free ? '(można zaznaczyć kilka osób)' : '(jedna osoba)';
+    $$('#eWho input').forEach(function(c){ c.checked = false; });
+  }
+  function buildWho(){
+    $('#eWho').innerHTML = DATA.people.map(function(n, i){
+      return '<label><input type="checkbox" value="' + i + '">' + esc(n) + '</label>';
+    }).join('');
+  }
+  $('#eEvent').addEventListener('change', syncEvent);
+
+  function renderRules(){
+    $('#rules').innerHTML = EV_KEYS.map(function(k){
+      var ev = EVENTS[k];
+      var max = ev.opts.length ? Math.max.apply(null, ev.opts.map(function(o){ return o[1]; })) : null;
+      var detail = ev.opts.length
+        ? ev.opts.map(function(o){ return o[0] + ' ' + o[1] + ' pkt'; }).join(' · ')
+        : 'punkty wpisywane ręcznie';
+      return '<li style="--rc:' + ev.c + '"><svg aria-hidden="true"><use href="#' + ev.icon + '"/></svg>' +
+        '<div><b>' + esc(ev.name) + '</b><span>' + esc(detail) + '</span>' +
+        '<span style="margin-top:4px;font-style:italic">' + esc(ev.why) + '</span></div>' +
+        '<span class="max">' + (max === null ? '—' : 'max ' + max) + '</span></li>';
+    }).join('');
+  }
+
+  function renderBoard(){
+    var tot = DATA.people.map(function(){ return 0; });
+    var per = DATA.people.map(function(){ return {}; });
+    SCORES.forEach(function(x){
+      if(x.osoba < 0 || x.osoba >= tot.length) return;
+      tot[x.osoba] += x.punkty;
+      per[x.osoba][x.konkurs] = (per[x.osoba][x.konkurs] || 0) + x.punkty;
+    });
+    var rows = DATA.people.map(function(n, i){ return { i:i, n:n, p:tot[i], per:per[i] }; })
+      .sort(function(a, b){ return b.p - a.p || a.i - b.i; });
+    var lead = Math.max(1, rows.length ? rows[0].p : 1);
+    var any = SCORES.length;
+    $('#tLead').textContent = !tOnline && !SCORES.length ? 'Tabela czeka na pierwszy wynik. Maksimum do wzięcia to 84 punkty.' : any
+      ? SCORES.length + (SCORES.length === 1 ? ' wynik wpisany. Prowadzi ' : ' wyników wpisanych. Prowadzi ') +
+        rows[0].n + ' z ' + rows[0].p + ' pkt.'
+      : 'Jeszcze nikt nie zdobył punktu. Maksimum do wzięcia to 84.';
+    var place = 0, prev = null;
+    $('#board').innerHTML = rows.map(function(r, idx){
+      if(r.p !== prev){ place = idx + 1; prev = r.p; }
+      var shown = r.p > 0 ? place : '·';
+      var tags = Object.keys(r.per).map(function(k){
+        return '<span style="color:' + (EVENTS[k] ? EVENTS[k].c : 'var(--dimmer)') + '">' +
+          esc(EVENTS[k] ? EVENTS[k].name : k) + ' ' + r.per[k] + '</span>';
+      }).join('');
+      return '<li class="' + (r.p > 0 && place <= 3 ? 'p' + place : '') + '">' +
+        '<span class="pos">' + shown + '</span>' +
+        '<span class="who2"><b>' + esc(r.n) + '</b>' +
+        '<span class="bar"><i style="width:' + (r.p > 0 ? r.p / lead * 100 : 0) + '%"></i></span>' +
+        (tags ? '<span class="tags">' + tags + '</span>' : '') + '</span>' +
+        '<span class="pts">' + r.p + '<small>pkt</small></span></li>';
+    }).join('');
+  }
+
+  function renderScores(){
+    var list = $('#scoreList');
+    if(!SCORES.length){
+      list.innerHTML = '<li><div class="empty">Pusto. Pierwszy wynik wbijcie formularzem wyżej.</div></li>';
+      $('#sLead').textContent = 'Pusto.';
+      return;
+    }
+    $('#sLead').textContent = SCORES.length + ' wpisanych wyników.';
+    list.innerHTML = SCORES.slice().reverse().map(function(x){
+      var ev = EVENTS[x.konkurs];
+      return '<li><div class="what"><strong>' + esc(nm(x.osoba)) + '</strong><span style="color:' +
+        (ev ? ev.c : 'var(--dimmer)') + '">' + esc(ev ? ev.name : x.konkurs) + ' · ' + esc(x.wynik) + '</span></div>' +
+        '<span class="amt">' + (x.punkty >= 0 ? '+' : '') + x.punkty + ' pkt</span>' +
+        '<button type="button" class="del" data-ds="' + x.id + '" aria-label="Usuń wynik">×</button></li>';
+    }).join('');
+  }
+  function renderTurniej(){ renderBoard(); renderScores(); }
+
+  $('#scoreList').addEventListener('click', function(e){
+    var b = e.target.closest('[data-ds]'); if(!b) return;
+    var id = b.dataset.ds;
+    SCORES = SCORES.filter(function(x){ return String(x.id) !== String(id); });
+    tSave(); renderTurniej(); toast('Wynik usunięty');
+    if(tOnline){ tBusy++; sbFetch('turniej?id=eq.' + id, { method:'DELETE' }).catch(function(){}).then(function(){ tBusy--; }); }
+  });
+
+  $('#scoreForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var k = $('#eEvent').value, ev = EVENTS[k];
+    var who = $$('#eWho input:checked').map(function(c){ return +c.value; });
+    if(!who.length){ toast('Zaznacz, kto zdobył te punkty'); return; }
+    if(!ev.multi && !ev.free && who.length > 1){ toast('Tu wpisujemy jedną osobę — to konkurencja indywidualna'); return; }
+    var pts, label;
+    if(ev.free){
+      label = $('#eNote').value.trim();
+      pts = Math.round(Number($('#ePts').value));
+      if(!label){ toast('Napisz, za co są te punkty'); $('#eNote').focus(); return; }
+      if(!isFinite(pts) || pts === 0){ toast('Wpisz liczbę punktów'); $('#ePts').focus(); return; }
+      if(pts < -50 || pts > 100){ toast('Trzymajmy się zakresu od −50 do 100'); return; }
+    } else {
+      var sel = $('#eResult');
+      pts = Number(sel.value);
+      label = sel.options[sel.selectedIndex].textContent.split(' — ')[0];
+    }
+    var made = who.map(function(i){
+      return { id:'l' + Date.now() + '-' + i, osoba:i, konkurs:k, wynik:label, punkty:pts };
+    });
+
+    function finish(msg){
+      tSave(); renderTurniej();
+      $('#eNote').value = ''; $('#ePts').value = '';
+      $$('#eWho input').forEach(function(c){ c.checked = false; });
+      toast(msg);
+    }
+    if(tOnline){
+      tBusy++;
+      sbFetch('turniej', { method:'POST', headers:{ Prefer:'return=representation' },
+        body:JSON.stringify(who.map(function(i){
+          return { osoba:i + 1, konkurs:k, wynik:label, punkty:pts };
+        })) })
+        .then(function(rows){
+          rows.forEach(function(r){
+            SCORES.push({ id:r.id, osoba:r.osoba - 1, konkurs:r.konkurs, wynik:r.wynik, punkty:Number(r.punkty) });
+          });
+          finish(who.length > 1 ? 'Dopisano ' + who.length + ' wyniki' : 'Dopisano: ' + nm(who[0]) + ' ' + (pts >= 0 ? '+' : '') + pts + ' pkt');
+        })
+        .catch(function(err){
+          if(missingTable(err) || String(err.message).indexOf('42501') > -1){
+            tOnline = false; setStatus();
+            var h = $('#sqlHelpT'); h.hidden = false;
+            h.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block:'center' });
+            SCORES = SCORES.concat(made); finish('Zapisano lokalnie — do wspólnej tabeli brakuje jednego SQL-a');
+          } else {
+            tOnline = false; setStatus();
+            SCORES = SCORES.concat(made); finish('Brak łączności — zapisano lokalnie');
+          }
+        })
+        .then(function(){ tBusy--; });
+    } else {
+      SCORES = SCORES.concat(made);
+      finish(who.length > 1 ? 'Dopisano ' + who.length + ' wyniki' : 'Dopisano: ' + nm(who[0]) + ' ' + (pts >= 0 ? '+' : '') + pts + ' pkt');
+    }
+  });
+
+  $('#sqlCopyT').addEventListener('click', function(){
+    var txt = $('#sqlTextT').textContent;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){ toast('SQL skopiowany — wklej w SQL Editor i wciśnij Run'); },
+        function(){ toast('Zaznacz SQL i skopiuj ręcznie'); });
+    } else toast('Zaznacz SQL i skopiuj ręcznie');
+  });
+
+  buildEventSelect(); buildWho(); renderRules(); renderTurniej();
+  function missingTable(err){
+    var m = String(err && err.message);
+    return m.indexOf('PGRST205') > -1 || m.indexOf('42P01') > -1 || m.indexOf('404') > -1;
+  }
+  tPull().then(function(){ renderTurniej(); setStatus(); }).catch(function(err){
+    tOnline = false; setStatus();
+    if(missingTable(err)) $('#sqlHelpT').hidden = false;
+    if(window.console) console.warn('Turniej offline:', err.message || err);
+  });
+  setInterval(function(){
+    if(!tOnline || tBusy || document.hidden) return;
+    if($('#tab-turniej').getAttribute('aria-selected') !== 'true') return;
+    tPull().then(renderTurniej).catch(function(){ tOnline = false; setStatus(); });
+  }, 6000);
 
   /* ── start ───────────────────────────────────────────────────────── */
   buildRail('tab-plan'); setStatus(); watchReveals(); sweep();
