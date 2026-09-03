@@ -255,7 +255,10 @@ input:focus,select:focus{border-color:var(--accent); outline:none}
 .opt[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--on-accent); font-weight:600}
 
 /* ── rozliczenia ───────────────────────────────────────────────────── */
-.crew{display:flex; flex-wrap:wrap; gap:8px; padding:16px 18px}
+.crew{display:flex; flex-wrap:wrap; gap:8px; padding:16px 18px 0}
+.crew-foot{display:flex; align-items:center; gap:12px; padding:14px 18px 16px}
+#crewCount{font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-3)}
 .crew input{width:120px; padding:6px 9px; font-size:14.5px; text-align:left;
   font-family:'Source Serif 4',serif; background:var(--surface)}
 .form{display:grid; grid-template-columns:1fr 130px; gap:12px; padding:16px 18px}
@@ -561,8 +564,9 @@ a.replay{text-decoration:none; display:inline-flex; align-items:center}
 
   <section class="sec">
     <div class="sec-head"><span class="eyebrow">A</span><h2 class="disp">Ekipa</h2></div>
-    <p class="sec-lead">Wpiszcie imiona zamiast zaślepek — zapiszą się same i podstawią wszędzie niżej.</p>
-    <div class="panel"><div class="crew" id="crew"></div></div>
+    <p class="sec-lead">Wpiszcie imiona zamiast zaślepek — zapiszą się same i podstawią wszędzie niżej. Kogoś brakuje? Dorzućcie przyciskiem pod spodem.</p>
+    <div class="panel"><div class="crew" id="crew"></div>
+      <div class="crew-foot"><button type="button" class="mini" id="addPerson">+ dodaj osobę</button><span id="crewCount"></span></div></div>
   </section>
 
   <section class="sec">
@@ -1032,6 +1036,7 @@ a.replay{text-decoration:none; display:inline-flex; align-items:center}
   else { DATA = local || blank(); }
 
   function renderCrew(){
+    $('#crewCount').textContent = DATA.people.length + ' os. w rozliczeniu';
     $('#crew').innerHTML = DATA.people.map(function(n, i){
       return '<input type="text" data-p="' + i + '" value="' + esc(n) + '" aria-label="Imię osoby ' + (i + 1) + '" maxlength="24">';
     }).join('');
@@ -1062,6 +1067,28 @@ a.replay{text-decoration:none; display:inline-flex; align-items:center}
           .catch(goOffline);
       }, 700);
     }
+  });
+
+  $('#addPerson').addEventListener('click', function(){
+    if(DATA.people.length >= 24){ toast('Dwadzieścia cztery osoby to już wesele, nie kawalerski'); return; }
+    var idx = DATA.people.length + 1, imie = 'Osoba ' + idx;
+    if(!online){
+      DATA.people.push(imie); save(); renderCrew(); renderRest();
+      toast('Dodano ' + imie); return;
+    }
+    busy++;
+    sbFetch('ekipa', { method:'POST', headers:{ Prefer:'return=representation' },
+      body:JSON.stringify({ idx:idx, imie:imie }) })
+      .then(function(){
+        DATA.people.push(imie); save(); renderCrew(); renderRest();
+        toast('Dodano ' + imie + ' — widzą to wszyscy');
+      })
+      .catch(function(err){
+        if(String(err.message).indexOf('42501') > -1 || String(err.message).indexOf('401') > -1){
+          toast('Baza nie pozwala dopisywać osób — trzeba raz uruchomić SQL z polityką ekipa_insert');
+        } else { goOffline(err); }
+      })
+      .then(function(){ busy--; });
   });
 
   function renderExp(){
