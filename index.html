@@ -287,12 +287,6 @@ a:hover{color:var(--bone)}
   background:var(--panel-2); border-bottom:1px solid var(--line)}
 .pfoot{display:flex; flex-wrap:wrap; gap:16px 30px; justify-content:space-between; align-items:flex-end;
   padding:20px 18px; background:var(--panel-2); border-top:1px solid var(--line)}
-.stepper{display:flex; align-items:center; border:1px solid var(--line); border-radius:var(--r); overflow:hidden; background:var(--sunk)}
-.stepper button{appearance:none; border:0; background:transparent; color:var(--dim); cursor:pointer;
-  width:32px; height:34px; font-size:18px; line-height:1; transition:background .2s, color .2s}
-.stepper button:hover{background:var(--paint-soft); color:var(--paint-ink)}
-.stepper input{width:48px; height:34px; border:0; background:transparent; text-align:center; color:var(--bone);
-  font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:700; font-variant-numeric:tabular-nums}
 .lbl{font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:500; letter-spacing:.18em;
   text-transform:uppercase; color:var(--dimmer)}
 .saveline{margin-left:auto; display:flex; align-items:center; gap:11px}
@@ -304,7 +298,7 @@ a:hover{color:var(--bone)}
   letter-spacing:.1em; text-transform:uppercase; transition:border-color .25s, color .25s}
 .mini:hover{border-color:var(--paint); color:var(--paint-ink)}
 .rows{list-style:none; margin:0; padding:0}
-.rows li{display:grid; grid-template-columns:22px 1fr 126px 104px; gap:14px; align-items:center;
+.rows li{display:grid; grid-template-columns:22px 1fr 122px 82px 122px; gap:14px; align-items:center;
   padding:13px 18px; border-bottom:1px solid var(--line-2); transition:background .25s, opacity .25s}
 .rows li:last-child{border-bottom:0}
 .rows li:hover{background:var(--panel-2)}
@@ -316,8 +310,11 @@ a:hover{color:var(--bone)}
   letter-spacing:.1em; text-transform:uppercase; color:var(--gold); border:1px solid var(--gold-soft);
   background:var(--gold-soft); border-radius:2px; padding:1px 5px; vertical-align:1px}
 .rprice{display:flex; align-items:center; gap:6px; justify-content:flex-end}
-.rout{text-align:right; font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:500;
+.rppl{display:flex; align-items:center; gap:6px; justify-content:flex-end}
+.rout{display:flex; flex-direction:column; align-items:flex-end; gap:2px}
+.rout b{font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:500;
   font-variant-numeric:tabular-nums}
+.rout small{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--dimmer); white-space:nowrap}
 .total{display:flex; flex-direction:column; gap:5px}
 .total b{font-family:'Anton',sans-serif; font-size:46px; line-height:.9; letter-spacing:.01em;
   font-variant-numeric:tabular-nums; color:var(--paint)}
@@ -331,6 +328,8 @@ input[type="number"]{font-family:'JetBrains Mono',monospace; font-variant-numeri
 input:focus,select:focus{border-color:var(--paint); outline:none; box-shadow:0 0 0 3px var(--paint-soft)}
 .rprice input{width:74px; padding:6px 8px; font-size:14px}
 .rprice small{font-size:10.5px; color:var(--dimmer); font-family:'JetBrains Mono',monospace; white-space:nowrap}
+.rppl input{width:50px; padding:6px 8px; font-size:14px}
+.rppl small{font-size:10.5px; color:var(--dimmer); font-family:'JetBrains Mono',monospace; white-space:nowrap}
 </style>
 
 <style>
@@ -466,9 +465,11 @@ footer{margin:110px 0 60px; padding-top:26px; border-top:1px solid var(--line-2)
   .stop{grid-template-columns:1fr}
   .stop-t{flex-direction:row; justify-content:flex-start; gap:12px; padding:12px 18px;
     border-right:0; border-bottom:1px solid var(--line)}
-  .rows li{grid-template-columns:18px 1fr; gap:8px 12px}
-  .rows li .rprice{grid-column:2; justify-content:flex-start}
-  .rows li .rout{grid-column:2; text-align:left}
+  .rows li{grid-template-columns:18px 1fr auto; gap:8px 12px}
+  .rows li .rname{grid-area:1 / 2 / 2 / 4}
+  .rows li .rprice{grid-area:2 / 2 / 3 / 3; justify-content:flex-start}
+  .rows li .rppl{grid-area:2 / 3 / 3 / 4; justify-content:flex-start}
+  .rows li .rout{grid-area:3 / 2 / 4 / 4; align-items:flex-start}
   .bal li{grid-template-columns:1fr auto}
   .bal .meter{display:none}
   .form{grid-template-columns:1fr}
@@ -566,7 +567,7 @@ footer{margin:110px 0 60px; padding-top:26px; border-top:1px solid var(--line-2)
     <dl class="facts">
       <div class="fact"><dt class="eyebrow">Zbiórka</dt><dd>11:00, Stokłosy</dd></div>
       <div class="fact"><dt class="eyebrow">Powrót</dt><dd>ndz. 27.09</dd></div>
-      <div class="fact"><dt class="eyebrow">Podział</dt><dd>7 osób</dd></div>
+      <div class="fact"><dt class="eyebrow">Podział</dt><dd>5–8 osób</dd></div>
       <div class="fact"><dt class="eyebrow">Baza</dt><dd>Bizon Village</dd></div>
     </dl>
     <div class="cue"><i></i><span class="eyebrow">Przewiń</span></div>
@@ -606,7 +607,7 @@ footer{margin:110px 0 60px; padding-top:26px; border-top:1px solid var(--line-2)
   <section class="sec" id="s-plan">
     <div class="sec-head"><span class="eyebrow">02</span><h2 class="disp">Plan dnia</h2></div>
     <div class="hr"></div>
-    <p class="sec-lead">Zbiórka, gokarty i paintball mają potwierdzone godziny. Reszta układa się po paintballu — jedzenie, CS i przejazd do domku nie mają jeszcze sztywnych ram.</p>
+    <p class="sec-lead">Zbiórka, gokarty, paintball i CS mają potwierdzone godziny — FPS Center trzyma nam stanowiska na 18:30. Obiad wciska się między paintball a CS, a przejazd do domku układa się po CS-ie.</p>
     <ol class="tl" id="timeline"></ol>
   </section>
 
@@ -617,9 +618,9 @@ footer{margin:110px 0 60px; padding-top:26px; border-top:1px solid var(--line-2)
       <svg aria-hidden="true"><use href="#i-house"/></svg>
       <div>
         <div class="stop-head"><h3>Bizon Village</h3>
-          <span class="chiprow"><span class="chip">1600 zł</span><span class="chip ok">potwierdzone</span></span></div>
+          <span class="chiprow"><span class="chip">1600 zł</span><span class="chip">5 osób</span><span class="chip ok">potwierdzone</span></span></div>
         <div class="where" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--dimmer)">Wczasowa 1, Zalesie Górne</div>
-        <p style="margin-top:12px;color:var(--dim)">Cały domek na wyłączność, jakieś 25 km na południe od Ursynowa. 1600 zł za dobę, czyli 228,57 zł od osoby przy siedmiu. Tu wracamy po CS-ie i zostajemy do rana.</p>
+        <p style="margin-top:12px;color:var(--dim)">Cały domek na wyłączność, jakieś 25 km na południe od Ursynowa. Domek jest pięcioosobowy, więc 1600 zł za dobę dzieli się na pięciu — 320 zł od osoby. Tu wracamy po CS-ie i zostajemy do rana.</p>
         <a class="btn solid" style="margin-top:16px" id="bizonLink" href="#" target="_blank" rel="noopener">Zobacz na Bookingu →</a>
       </div>
     </div>
@@ -635,21 +636,16 @@ footer{margin:110px 0 60px; padding-top:26px; border-top:1px solid var(--line-2)
   <section class="sec" id="s-budzet">
     <div class="sec-head"><span class="eyebrow">05</span><h2 class="disp">Budżet</h2></div>
     <div class="hr"></div>
-    <p class="sec-lead">Gokarty, paintball i domek mają ceny potwierdzone. Reszta to szacunki — kliknijcie w kwotę i wpiszcie swoją, zapisze się sama i przetrwa odświeżenie. Jedzenia tu nie ma, bo każdy płaci za siebie.</p>
+    <p class="sec-lead">Każda pozycja ma teraz własną liczbę osób, bo nie wszyscy są na wszystkim: domek na pięć, gokarty na siedem, paintball, obiad i CS na osiem. Gokarty, paintball i domek mają ceny potwierdzone — obiad i FPS Center jeszcze nie. Kliknijcie w kwotę albo w liczbę osób i wpiszcie swoje, zapisze się samo i przetrwa odświeżenie.</p>
     <div class="panel rv">
       <div class="phead">
-        <span class="lbl">Osób do podziału</span>
-        <div class="stepper">
-          <button type="button" id="minus" aria-label="Mniej osób">−</button>
-          <input id="peopleInput" type="number" min="2" max="24" value="7" inputmode="numeric">
-          <button type="button" id="plus" aria-label="Więcej osób">+</button>
-        </div>
+        <span class="lbl">Kwota · ile osób · na osobę</span>
         <span class="saveline"><span id="saveState">zapis automatyczny</span>
           <button type="button" class="mini" id="calcReset">domyślne</button></span>
       </div>
       <ul class="rows" id="calcRows"></ul>
       <div class="pfoot">
-        <div class="total"><span class="lbl">Na osobę</span><b id="perHead">0 zł</b></div>
+        <div class="total"><span class="lbl">Na osobę — pełny udział</span><b id="perHead">0 zł</b></div>
         <div class="total sm"><span class="lbl">Cała ekipa</span><b id="totalAll">0 zł</b></div>
       </div>
     </div>
@@ -835,22 +831,23 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
       body:'Stąd startujemy wszyscy razem. Kto się spóźni, dogania na własną rękę do Janek.' },
     { time:'12:00', icon:'i-kart', title:'Gokarty', place:'Pole Position, Graniczna 15, Janki', pin:'Pole Position, Janki',
       url:'https://www.pole-position.pl/?page_id=747', lat:52.12340, lng:20.88968, ok:true, short:'Gokarty', c:PIG[1],
-      chip:'85 zł / przejazd',
-      body:'Jeden przejazd to osiem minut na torze. Cena i godzina potwierdzone.' },
+      chip:'85 zł / przejazd', who:'7 osób',
+      body:'Jeden przejazd to osiem minut na torze, jedziemy w siedmiu. Cena i godzina potwierdzone.' },
     { time:'14:30', icon:'i-paint', title:'Paintball', place:'ASM Arena, ul. Kadetów, Wawer', pin:'ASM Arena, Wawer',
       url:'https://asmarena.pl/cennik/', lat:52.21660, lng:21.11925, ok:true, short:'Paintball', c:PIG[2],
-      chip:'1400 zł / 10 os.',
-      body:'Pakiet „impreza zamknięta": 1400 zł, po 500 kulek na głowę. Cena i godzina potwierdzone.' },
-    { time:'—', icon:'i-food', title:'Jedzenie', place:'każdy płaci za siebie', pin:'',
-      url:'', lat:52.22996, lng:21.01218, ok:false, short:'Jedzenie', c:PIG[3],
-      body:'Coś szybkiego po paintballu. Każdy płaci za siebie, więc nie wciągamy tego do wspólnego budżetu.' },
-    { time:'—', icon:'i-cs', title:'CS na profesjonalnych stanowiskach', place:'FPS Center, al. KEN 36', pin:'FPS Center, al. KEN 36',
-      url:'https://fpscenter.pl', lat:52.13962, lng:21.05904, ok:false, short:'CS', c:PIG[4],
-      body:'Waldek miał swój epizod z CS-em, więc godzina na porządnym sprzęcie. Godzina i cena do potwierdzenia.',
-      alt:['Plan B','Kilka laptopów ze sobą i mini LAN party już w domku.'] },
+      chip:'1400 zł za grupę', who:'8 osób',
+      body:'Pakiet „impreza zamknięta": 1400 zł, po 500 kulek na głowę. W ośmiu wychodzi 175 zł od osoby. Cena i godzina potwierdzone.' },
+    { time:'—', icon:'i-food', title:'Obiad', place:'miejsce do ustalenia', pin:'',
+      url:'', lat:52.22996, lng:21.01218, ok:false, short:'Obiad', c:PIG[3],
+      who:'8 osób',
+      body:'Obiad po paintballu, w ośmiu. Ceny jeszcze nie znamy — pozycja jest już w budżecie, wystarczy wpisać kwotę, jak będzie wiadomo.' },
+    { time:'18:30', icon:'i-cs', title:'CS na profesjonalnych stanowiskach', place:'FPS Center, al. KEN 36', pin:'FPS Center, al. KEN 36',
+      url:'https://fpscenter.pl', lat:52.13962, lng:21.05904, ok:true, short:'CS', c:PIG[4],
+      who:'8 osób',
+      body:'Waldek miał swój epizod z CS-em, więc godzina na porządnym sprzęcie. Stanowiska dla ośmiu na 18:30 są potwierdzone — została tylko cena, cennika jeszcze nie znamy.' },
     { time:'—', icon:'i-house', title:'Bizon Village', place:'Wczasowa 1, Zalesie Górne', pin:'Zalesie Górne',
       url:'', lat:52.03028, lng:21.04605, ok:true, short:'Nocleg', c:PIG[5],
-      chip:'1600 zł za domek',
+      chip:'1600 zł za domek', who:'5 osób',
       body:'Koniec jeżdżenia. Reszta wieczoru dzieje się przy domku: ognisko, konsola, beer pong, ping pong i darty.' }
   ];
 
@@ -863,11 +860,12 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
   ];
 
   var CALC = [
-    { id:'gk',    name:'Gokarty Pole Position', hint:'85 zł za przejazd — podwójcie, jeśli robimy dwa', v:85, per:'osoba', on:true },
-    { id:'pb',    name:'Paintball ASM Arena',   hint:'pakiet impreza zamknięta, 500 kulek', v:1400, per:'grupa', on:true },
-    { id:'stay',  name:'Domek Bizon Village',   hint:'cały obiekt za dobę', v:1600, per:'grupa', on:true },
-    { id:'cs',    name:'FPS Center — CS',       hint:'cennika jeszcze nie znamy', v:0, per:'osoba', on:true, est:true },
-    { id:'grill', name:'Zapasy na wieczór',     hint:'grill, picie, kubki, lotki', v:120, per:'osoba', on:true, est:true }
+    { id:'gk',    name:'Gokarty Pole Position', hint:'85 zł za przejazd — podwójcie, jeśli robimy dwa', v:85, per:'osoba', n:7, on:true },
+    { id:'pb',    name:'Paintball ASM Arena',   hint:'pakiet impreza zamknięta, 500 kulek', v:1400, per:'grupa', n:8, on:true },
+    { id:'food',  name:'Obiad po paintballu',   hint:'ceny jeszcze nie znamy — wpiszcie, jak będzie wiadomo', v:0, per:'osoba', n:8, on:true, est:true },
+    { id:'cs',    name:'FPS Center — CS',       hint:'18:30 potwierdzone, cennika jeszcze nie znamy', v:0, per:'osoba', n:8, on:true, est:true },
+    { id:'stay',  name:'Domek Bizon Village',   hint:'domek pięcioosobowy, cały obiekt za dobę', v:1600, per:'grupa', n:5, on:true },
+    { id:'grill', name:'Zapasy na wieczór',     hint:'grill, picie, kubki, lotki — dla nocujących', v:120, per:'osoba', n:5, on:true, est:true }
   ];
 
   var RAILS = {
@@ -1011,7 +1009,7 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
 
 
   /* ── zakładki + szyna nawigacji ──────────────────────────────────── */
-  var NOTES = { 'tab-plan':'ceny domku, gokartów i paintballa potwierdzone' };
+  var NOTES = { 'tab-plan':'godziny potwierdzone — obiad i FPS Center bez ceny' };
   var railIO = null;
 
   function buildRail(tab){
@@ -1158,6 +1156,7 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
     var head = s.url ? '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a>' : esc(s.title);
     var alt = s.alt ? '<div class="altbox"><b>' + esc(s.alt[0]) + '</b><span>' + esc(s.alt[1]) + '</span></div>' : '';
     var chips = (s.chip ? '<span class="chip">' + esc(s.chip) + '</span>' : '') +
+      (s.who ? '<span class="chip">' + esc(s.who) + '</span>' : '') +
       (s.ok ? '<span class="chip ok">potwierdzone</span>' : '<span class="chip tbd">do potwierdzenia</span>');
     return '<li id="stop-' + i + '" class="rv"><div class="stop" style="--sc:' + s.c + '">' +
       '<div class="stop-t"><b' + (s.time === '—' ? ' class="tbd"' : '') + '>' + esc(s.time) + '</b>' +
@@ -1177,8 +1176,8 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
 
 
   /* ── budżet z autozapisem ────────────────────────────────────────── */
-  var people = 7, cstate = {};
-  function calcDefaults(){ var o = {}; CALC.forEach(function(r){ o[r.id] = { on:r.on, v:r.v }; }); return o; }
+  var cstate = {};
+  function calcDefaults(){ var o = {}; CALC.forEach(function(r){ o[r.id] = { on:r.on, v:r.v, n:r.n }; }); return o; }
   (function calcLoad(){
     cstate = calcDefaults();
     try{
@@ -1186,16 +1185,17 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
       if(raw && raw.rows){
         CALC.forEach(function(r){
           var x = raw.rows[r.id];
-          if(x && typeof x.v === 'number' && isFinite(x.v) && x.v >= 0) cstate[r.id] = { on:x.on !== false, v:x.v };
+          if(!x) return;
+          if(typeof x.v === 'number' && isFinite(x.v) && x.v >= 0){ cstate[r.id].v = x.v; cstate[r.id].on = x.on !== false; }
+          if(Number.isInteger(x.n) && x.n >= 1 && x.n <= 24) cstate[r.id].n = x.n;
         });
-        if(Number.isInteger(raw.people) && raw.people >= 2 && raw.people <= 24) people = raw.people;
       }
     }catch(e){}
   })();
   var saveT;
   function calcSave(){
     var rows = {}; CALC.forEach(function(r){ rows[r.id] = cstate[r.id]; });
-    store('kw:budzet', JSON.stringify({ people:people, rows:rows }));
+    store('kw:budzet', JSON.stringify({ rows:rows }));
     var el = $('#saveState');
     el.textContent = 'zapisano'; el.classList.add('saved');
     clearTimeout(saveT);
@@ -1208,11 +1208,12 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
         '<input type="checkbox"' + (st.on ? ' checked' : '') + ' aria-label="Wliczaj: ' + esc(r.name) + '">' +
         '<span class="rname"><strong>' + esc(r.name) + (r.est ? '<span class="tag">szac.</span>' : '') + '</strong>' +
         '<span>' + esc(r.hint) + '</span></span>' +
-        '<span class="rprice"><input type="number" min="0" step="10" value="' + st.v + '" aria-label="Kwota: ' + esc(r.name) + '">' +
+        '<span class="rprice"><input type="number" min="0" step="10" value="' + st.v + '" data-f="v" aria-label="Kwota: ' + esc(r.name) + '">' +
         '<small>zł / ' + (r.per === 'grupa' ? 'grupa' : 'os.') + '</small></span>' +
+        '<span class="rppl"><input type="number" min="1" max="24" step="1" value="' + st.n + '" data-f="n" aria-label="Ile osób: ' + esc(r.name) + '">' +
+        '<small>os.</small></span>' +
         '<span class="rout" data-out="' + r.id + '"></span></li>';
     }).join('');
-    $('#peopleInput').value = people;
   }
   // licznik przewijający się do nowej wartości
   var counters = {};
@@ -1230,32 +1231,35 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
     requestAnimationFrame(step);
   }
   function recalc(){
-    var sum = 0;
+    var full = 0, all = 0;
     CALC.forEach(function(r){
-      var st = cstate[r.id], head = st.on ? (r.per === 'grupa' ? st.v / people : st.v) : 0;
-      if(st.on) sum += head;
+      var st = cstate[r.id],
+          head = r.per === 'grupa' ? (st.n ? st.v / st.n : 0) : st.v,
+          tot  = r.per === 'grupa' ? st.v : st.v * st.n;
+      if(st.on){ full += head; all += tot; }
       var o = document.querySelector('[data-out="' + r.id + '"]');
-      if(o) o.textContent = st.on ? zl(head) : '—';
+      if(o) o.innerHTML = st.on
+        ? '<b>' + esc(zl(head)) + '</b><small>razem ' + esc(zl(tot)) + '</small>'
+        : '<b>—</b>';
     });
-    countTo($('#perHead'), sum);
-    countTo($('#totalAll'), sum * people);
+    countTo($('#perHead'), full);
+    countTo($('#totalAll'), all);
   }
   $('#calcRows').addEventListener('input', function(e){
     var li = e.target.closest('li'); if(!li) return;
     var st = cstate[li.dataset.row];
     if(e.target.type === 'checkbox'){ st.on = e.target.checked; li.classList.toggle('off', !e.target.checked); }
+    else if(e.target.dataset.f === 'n') st.n = Math.min(24, Math.max(1, Math.round(Number(e.target.value) || 1)));
     else st.v = Math.max(0, Number(e.target.value) || 0);
     recalc(); calcSave();
   });
-  function setPeople(n){ people = Math.min(24, Math.max(2, n || 7)); $('#peopleInput').value = people; recalc(); calcSave(); }
-  $('#minus').addEventListener('click', function(){ setPeople(people - 1); });
-  $('#plus').addEventListener('click', function(){ setPeople(people + 1); });
-  $('#peopleInput').addEventListener('input', function(){
-    var n = Number(this.value); if(n >= 2 && n <= 24){ people = n; recalc(); calcSave(); }
+  // po wyjściu z pola wracamy do wartości, która naprawdę wpadła do stanu
+  $('#calcRows').addEventListener('change', function(e){
+    var li = e.target.closest('li');
+    if(li && e.target.dataset.f === 'n') e.target.value = cstate[li.dataset.row].n;
   });
-  $('#peopleInput').addEventListener('blur', function(){ setPeople(Number(this.value)); });
   $('#calcReset').addEventListener('click', function(){
-    cstate = calcDefaults(); people = 7; paintRows(); recalc(); calcSave(); toast('Przywrócono domyślne kwoty');
+    cstate = calcDefaults(); paintRows(); recalc(); calcSave(); toast('Przywrócono domyślne kwoty i liczby osób');
   });
   paintRows(); recalc();
 
@@ -1596,7 +1600,7 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
             ['6. miejsce',7],['7. miejsce',5],['8. miejsce',3],['9. miejsce i dalej',2]] },
     paintball:{ name:'Paintball', icon:'i-paint', c:PIG[2], multi:true, why:'rdzeń dnia, ale drużynowy — przegrani też punktują, bo składu się nie wybiera',
       opts:[['zwycięska drużyna',20],['przegrana drużyna',8]] },
-    cs:       { name:'CS', icon:'i-cs', c:PIG[4], multi:true, why:'udział niepewny, a Waldek ma tu przewagę — dlatego mniej niż paintball',
+    cs:       { name:'CS', icon:'i-cs', c:PIG[4], multi:true, why:'godzina potwierdzona, ale Waldek ma tu przewagę — dlatego mniej niż paintball',
       opts:[['zwycięska drużyna',15],['przegrana drużyna',6]] },
     beerpong: { name:'Beer pong', icon:'i-beer', c:PIG[3], multi:true, why:'wieczorne i nieobowiązkowe — trzy punkty należą się za samo granie',
       opts:[['1. miejsce',12],['2. miejsce',7],['udział',3]] },
