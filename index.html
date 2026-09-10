@@ -304,7 +304,7 @@ a:hover{color:var(--bone)}
   letter-spacing:.1em; text-transform:uppercase; transition:border-color .25s, color .25s}
 .mini:hover{border-color:var(--paint); color:var(--paint-ink)}
 .rows{list-style:none; margin:0; padding:0}
-.rows li{display:grid; grid-template-columns:22px 1fr 126px 104px; gap:14px; align-items:center;
+.rows li{display:grid; grid-template-columns:22px 1fr 196px 104px; gap:14px; align-items:center;
   padding:13px 18px; border-bottom:1px solid var(--line-2); transition:background .25s, opacity .25s}
 .rows li:last-child{border-bottom:0}
 .rows li:hover{background:var(--panel-2)}
@@ -331,6 +331,9 @@ input[type="number"]{font-family:'JetBrains Mono',monospace; font-variant-numeri
 input:focus,select:focus{border-color:var(--paint); outline:none; box-shadow:0 0 0 3px var(--paint-soft)}
 .rprice input{width:74px; padding:6px 8px; font-size:14px}
 .rprice small{font-size:10.5px; color:var(--dimmer); font-family:'JetBrains Mono',monospace; white-space:nowrap}
+.divi{display:inline-flex; align-items:center; gap:4px; font-family:'JetBrains Mono',monospace;
+  font-size:11px; color:var(--dimmer); white-space:nowrap}
+.divi input{width:42px; padding:5px 4px; font-size:13px; text-align:center}
 </style>
 
 <style>
@@ -617,9 +620,9 @@ footer{margin:110px 0 60px; padding-top:26px; border-top:1px solid var(--line-2)
       <svg aria-hidden="true"><use href="#i-house"/></svg>
       <div>
         <div class="stop-head"><h3>Bizon Village</h3>
-          <span class="chiprow"><span class="chip">1600 zł</span><span class="chip ok">potwierdzone</span></span></div>
+          <span class="chiprow"><span class="chip">1600 zł ÷ 6</span><span class="chip ok">potwierdzone</span></span></div>
         <div class="where" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--dimmer)">Wczasowa 1, Zalesie Górne</div>
-        <p style="margin-top:12px;color:var(--dim)">Cały domek na wyłączność, jakieś 25 km na południe od Ursynowa. 1600 zł za dobę, czyli 228,57 zł od osoby przy siedmiu. Tu wracamy po CS-ie i zostajemy do rana.</p>
+        <p style="margin-top:12px;color:var(--dim)">Cały domek na wyłączność, jakieś 25 km na południe od Ursynowa. 1600 zł za dobę, dzielone na sześć osób, czyli 266,67 zł na głowę. Tu wracamy po CS-ie i zostajemy do rana.</p>
         <a class="btn solid" style="margin-top:16px" id="bizonLink" href="#" target="_blank" rel="noopener">Zobacz na Bookingu →</a>
       </div>
     </div>
@@ -635,7 +638,7 @@ footer{margin:110px 0 60px; padding-top:26px; border-top:1px solid var(--line-2)
   <section class="sec" id="s-budzet">
     <div class="sec-head"><span class="eyebrow">05</span><h2 class="disp">Budżet</h2></div>
     <div class="hr"></div>
-    <p class="sec-lead">Gokarty, paintball i domek mają ceny potwierdzone. Reszta to szacunki — kliknijcie w kwotę i wpiszcie swoją, zapisze się sama i przetrwa odświeżenie. Jedzenia tu nie ma, bo każdy płaci za siebie.</p>
+    <p class="sec-lead">Gokarty, paintball i domek mają ceny potwierdzone. Reszta to szacunki — kliknijcie w kwotę i wpiszcie swoją, zapisze się sama i przetrwa odświeżenie. Jedzenia tu nie ma, bo w COGITO każdy płaci za siebie. Domek dzielimy na sześć osób, reszta kosztów na siedem — dlatego przy kosztach grupowych stoi pole z dzielnikiem, które możecie zmienić.</p>
     <div class="panel rv">
       <div class="phead">
         <span class="lbl">Osób do podziału</span>
@@ -649,8 +652,8 @@ footer{margin:110px 0 60px; padding-top:26px; border-top:1px solid var(--line-2)
       </div>
       <ul class="rows" id="calcRows"></ul>
       <div class="pfoot">
-        <div class="total"><span class="lbl">Na osobę</span><b id="perHead">0 zł</b></div>
-        <div class="total sm"><span class="lbl">Cała ekipa</span><b id="totalAll">0 zł</b></div>
+        <div class="total"><span class="lbl">Na osobę, kto wchodzi we wszystko</span><b id="perHead">0 zł</b></div>
+        <div class="total sm"><span class="lbl">Do wydania razem</span><b id="totalAll">0 zł</b></div>
       </div>
     </div>
   </section>
@@ -841,16 +844,16 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
       url:'https://asmarena.pl/cennik/', lat:52.21660, lng:21.11925, ok:true, short:'Paintball', c:PIG[2],
       chip:'1400 zł / 10 os.',
       body:'Pakiet „impreza zamknięta": 1400 zł, po 500 kulek na głowę. Cena i godzina potwierdzone.' },
-    { time:'—', icon:'i-food', title:'Jedzenie', place:'każdy płaci za siebie', pin:'',
-      url:'', lat:52.22996, lng:21.01218, ok:false, short:'Jedzenie', c:PIG[3],
-      body:'Coś szybkiego po paintballu. Każdy płaci za siebie, więc nie wciągamy tego do wspólnego budżetu.' },
+    { time:'17:00', icon:'i-food', title:'COGITO Craft Beer & Pizza', place:'ul. Migdałowa, Ursynów', pin:'COGITO, Ursynów',
+      url:'', lat:52.14552, lng:21.05796, ok:true, short:'Jedzenie', c:PIG[3],
+      body:'Pizza i kraftowe piwo. Każdy płaci za siebie, więc tego nie ma we wspólnym budżecie. Stamtąd do FPS Center jest siedemset metrów — na CS-a idziemy piechotą.' },
     { time:'—', icon:'i-cs', title:'CS na profesjonalnych stanowiskach', place:'FPS Center, al. KEN 36', pin:'FPS Center, al. KEN 36',
       url:'https://fpscenter.pl', lat:52.13962, lng:21.05904, ok:false, short:'CS', c:PIG[4],
-      body:'Waldek miał swój epizod z CS-em, więc godzina na porządnym sprzęcie. Godzina i cena do potwierdzenia.',
+      body:'Waldek miał swój epizod z CS-em, więc godzina na porządnym sprzęcie. Dwa kroki od COGITO, więc idziemy piechotą. Godzina i cena wciąż do potwierdzenia.',
       alt:['Plan B','Kilka laptopów ze sobą i mini LAN party już w domku.'] },
     { time:'—', icon:'i-house', title:'Bizon Village', place:'Wczasowa 1, Zalesie Górne', pin:'Zalesie Górne',
       url:'', lat:52.03028, lng:21.04605, ok:true, short:'Nocleg', c:PIG[5],
-      chip:'1600 zł za domek',
+      chip:'1600 zł \u00f7 6 os.',
       body:'Koniec jeżdżenia. Reszta wieczoru dzieje się przy domku: ognisko, konsola, beer pong, ping pong i darty.' }
   ];
 
@@ -865,7 +868,7 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
   var CALC = [
     { id:'gk',    name:'Gokarty Pole Position', hint:'85 zł za przejazd — podwójcie, jeśli robimy dwa', v:85, per:'osoba', on:true },
     { id:'pb',    name:'Paintball ASM Arena',   hint:'pakiet impreza zamknięta, 500 kulek', v:1400, per:'grupa', on:true },
-    { id:'stay',  name:'Domek Bizon Village',   hint:'cały obiekt za dobę', v:1600, per:'grupa', on:true },
+    { id:'stay',  name:'Domek Bizon Village',   hint:'cały obiekt za dobę, dzielony na 6 osób', v:1600, per:'grupa', div:6, on:true },
     { id:'cs',    name:'FPS Center — CS',       hint:'cennika jeszcze nie znamy', v:0, per:'osoba', on:true, est:true },
     { id:'grill', name:'Zapasy na wieczór',     hint:'grill, picie, kubki, lotki', v:120, per:'osoba', on:true, est:true }
   ];
@@ -1178,7 +1181,7 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
 
   /* ── budżet z autozapisem ────────────────────────────────────────── */
   var people = 7, cstate = {};
-  function calcDefaults(){ var o = {}; CALC.forEach(function(r){ o[r.id] = { on:r.on, v:r.v }; }); return o; }
+  function calcDefaults(){ var o = {}; CALC.forEach(function(r){ o[r.id] = { on:r.on, v:r.v, div:r.div || null }; }); return o; }
   (function calcLoad(){
     cstate = calcDefaults();
     try{
@@ -1186,7 +1189,10 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
       if(raw && raw.rows){
         CALC.forEach(function(r){
           var x = raw.rows[r.id];
-          if(x && typeof x.v === 'number' && isFinite(x.v) && x.v >= 0) cstate[r.id] = { on:x.on !== false, v:x.v };
+          if(x && typeof x.v === 'number' && isFinite(x.v) && x.v >= 0){
+            var dv = Number.isInteger(x.div) && x.div >= 1 && x.div <= 24 ? x.div : (r.div || null);
+            cstate[r.id] = { on:x.on !== false, v:x.v, div:dv };
+          }
         });
         if(Number.isInteger(raw.people) && raw.people >= 2 && raw.people <= 24) people = raw.people;
       }
@@ -1194,13 +1200,14 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
   })();
   var saveT;
   function calcSave(){
-    var rows = {}; CALC.forEach(function(r){ rows[r.id] = cstate[r.id]; });
+    var rows = {}; CALC.forEach(function(r){ rows[r.id] = { on:cstate[r.id].on, v:cstate[r.id].v, div:cstate[r.id].div }; });
     store('kw:budzet', JSON.stringify({ people:people, rows:rows }));
     var el = $('#saveState');
     el.textContent = 'zapisano'; el.classList.add('saved');
     clearTimeout(saveT);
     saveT = setTimeout(function(){ el.textContent = 'zapis automatyczny'; el.classList.remove('saved'); }, 2200);
   }
+  function divOf(r){ var d = cstate[r.id].div; return d && d >= 1 ? d : people; }
   function paintRows(){
     $('#calcRows').innerHTML = CALC.map(function(r){
       var st = cstate[r.id];
@@ -1209,7 +1216,11 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
         '<span class="rname"><strong>' + esc(r.name) + (r.est ? '<span class="tag">szac.</span>' : '') + '</strong>' +
         '<span>' + esc(r.hint) + '</span></span>' +
         '<span class="rprice"><input type="number" min="0" step="10" value="' + st.v + '" aria-label="Kwota: ' + esc(r.name) + '">' +
-        '<small>zł / ' + (r.per === 'grupa' ? 'grupa' : 'os.') + '</small></span>' +
+        '<small>zł / ' + (r.per === 'grupa' ? 'grupa' : 'os.') + '</small>' +
+        (r.per === 'grupa'
+          ? '<span class="divi">\u00f7 <input type="number" class="divin" min="1" max="24" value="' + divOf(r) +
+            '" aria-label="Na ile osob dzielimy: ' + esc(r.name) + '"></span>'
+          : '') + '</span>' +
         '<span class="rout" data-out="' + r.id + '"></span></li>';
     }).join('');
     $('#peopleInput').value = people;
@@ -1230,20 +1241,26 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
     requestAnimationFrame(step);
   }
   function recalc(){
-    var sum = 0;
+    var head = 0, group = 0;
     CALC.forEach(function(r){
-      var st = cstate[r.id], head = st.on ? (r.per === 'grupa' ? st.v / people : st.v) : 0;
-      if(st.on) sum += head;
+      var st = cstate[r.id];
+      var perOsoba = r.per === 'grupa' ? st.v / divOf(r) : st.v;
+      var caly     = r.per === 'grupa' ? st.v : st.v * people;
+      if(st.on){ head += perOsoba; group += caly; }
       var o = document.querySelector('[data-out="' + r.id + '"]');
-      if(o) o.textContent = st.on ? zl(head) : '—';
+      if(o) o.textContent = st.on ? zl(perOsoba) : '—';
     });
-    countTo($('#perHead'), sum);
-    countTo($('#totalAll'), sum * people);
+    countTo($('#perHead'), head);
+    countTo($('#totalAll'), group);
   }
   $('#calcRows').addEventListener('input', function(e){
     var li = e.target.closest('li'); if(!li) return;
     var st = cstate[li.dataset.row];
     if(e.target.type === 'checkbox'){ st.on = e.target.checked; li.classList.toggle('off', !e.target.checked); }
+    else if(e.target.classList.contains('divin')){
+      var d = Math.round(Number(e.target.value));
+      st.div = (d >= 1 && d <= 24) ? d : null;
+    }
     else st.v = Math.max(0, Number(e.target.value) || 0);
     recalc(); calcSave();
   });
