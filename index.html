@@ -340,6 +340,7 @@ input:focus,select:focus{border-color:var(--paint); outline:none; box-shadow:0 0
 #crewCount{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.14em;
   text-transform:uppercase; color:var(--dimmer)}
 .form{display:grid; grid-template-columns:1fr 150px; gap:15px; padding:18px}
+.form.pay{grid-template-columns:1fr 1fr 150px}
 .field{display:flex; flex-direction:column; gap:6px; min-width:0}
 .field > label{display:flex; align-items:center; gap:9px; font-family:'JetBrains Mono',monospace;
   font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--dimmer)}
@@ -472,7 +473,7 @@ footer{margin:110px 0 60px; padding-top:26px; border-top:1px solid var(--line-2)
   .rows li .rout{grid-area:3 / 2 / 4 / 4; align-items:flex-start}
   .bal li{grid-template-columns:1fr auto}
   .bal .meter{display:none}
-  .form{grid-template-columns:1fr}
+  .form,.form.pay{grid-template-columns:1fr}
   .base{grid-template-columns:1fr}
   .base > svg{width:56px; height:56px}
   .unit{min-width:70px; padding:9px 12px}
@@ -710,17 +711,69 @@ create policy ekipa_insert on ekipa
     <div class="panel rv"><ul class="exp" id="expList"></ul></div>
   </section>
 
-  <section class="sec" id="s-bilans">
-    <div class="sec-head"><span class="eyebrow">D</span><h2 class="disp">Bilans</h2></div>
+  <section class="sec" id="s-wplaty">
+    <div class="sec-head"><span class="eyebrow">D</span><h2 class="disp">Wpłaty</h2></div>
     <div class="hr"></div>
-    <p class="sec-lead">Ile każdy wyłożył, ile powinien był, i co z tego wychodzi. Na cyjanowo ci, którym należy się zwrot.</p>
+    <p class="sec-lead">Ktoś oddał swoją część? Wbijcie to tutaj, a bilans i lista przelewów od razu to uwzględnią. Kolejne koszty dopisujcie normalnie wyżej — wpłaty zostaną na miejscu, a do wyrównania zostanie tylko różnica.</p>
+    <div class="panel rv">
+      <form class="form pay" id="payForm">
+        <div class="field">
+          <label for="pFrom">Kto wpłacił</label>
+          <select id="pFrom"></select>
+        </div>
+        <div class="field">
+          <label for="pTo">Komu</label>
+          <select id="pTo"></select>
+        </div>
+        <div class="field">
+          <label for="pAmount">Kwota w zł</label>
+          <input type="number" id="pAmount" min="0.01" step="0.01" placeholder="0">
+        </div>
+        <div class="field full">
+          <label for="pNote">Notatka — opcjonalnie</label>
+          <input type="text" id="pNote" placeholder="np. blik jeszcze przed wyjazdem" autocomplete="off" maxlength="60">
+        </div>
+        <div class="field full"><button type="submit" class="btn solid">Zapisz wpłatę</button></div>
+      </form>
+    </div>
+    <p class="sec-lead" id="payLead" style="margin:26px 0 12px">Jeszcze nikt nic nie wpłacił.</p>
+    <div class="panel rv"><ul class="exp" id="payList"></ul></div>
+    <div class="note warn" id="sqlHelpP" hidden>
+      <strong>Brakuje tabeli wpłat w bazie.</strong> Wpłaty zapisują się na razie tylko w tej przeglądarce. Trzeba raz uruchomić poniższy SQL w panelu Supabase — dopiero wtedy zobaczy je cała ekipa.
+      <pre id="sqlTextP">create table if not exists wplaty (
+  id        bigint generated always as identity primary key,
+  od_kogo   int not null references ekipa(idx),
+  do_kogo   int not null references ekipa(idx),
+  kwota     numeric(10,2) not null check (kwota > 0),
+  notatka   text,
+  utworzono timestamptz not null default now(),
+  check (od_kogo &lt;&gt; do_kogo)
+);
+alter table wplaty enable row level security;
+drop policy if exists wplaty_select on wplaty;
+drop policy if exists wplaty_insert on wplaty;
+drop policy if exists wplaty_delete on wplaty;
+create policy wplaty_select on wplaty for select to anon using (true);
+create policy wplaty_insert on wplaty for insert to anon with check (true);
+create policy wplaty_delete on wplaty for delete to anon using (true);</pre>
+      <div class="acts">
+        <button type="button" class="mini" id="sqlCopyP">kopiuj SQL</button>
+        <a class="mini" href="https://supabase.com/dashboard/project/gbrdkpelkkyvnaptiqls/sql/new" target="_blank" rel="noopener">otwórz SQL Editor →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="s-bilans">
+    <div class="sec-head"><span class="eyebrow">E</span><h2 class="disp">Bilans</h2></div>
+    <div class="hr"></div>
+    <p class="sec-lead">Ile każdy wyłożył, ile wynosi jego udział i co z tego wychodzi po wpłatach. Na cyjanowo ci, którym należy się zwrot.</p>
     <div class="panel rv"><ul class="bal" id="balList"></ul></div>
   </section>
 
   <section class="sec" id="s-przelewy">
-    <div class="sec-head"><span class="eyebrow">E</span><h2 class="disp">Kto komu ile</h2></div>
+    <div class="sec-head"><span class="eyebrow">F</span><h2 class="disp">Kto komu ile</h2></div>
     <div class="hr"></div>
-    <p class="sec-lead">Najkrótsza możliwa lista przelewów, żeby wszystko się wyrównało.</p>
+    <p class="sec-lead">Najkrótsza możliwa lista przelewów, żeby wszystko się wyrównało — już po odjęciu tego, co ktoś wpłacił. Jak ktoś odda swoją część, wciśnijcie przy niej „zapłacone", a wpłata zapisze się sama.</p>
     <div class="panel rv"><ul class="settle" id="settleList"></ul></div>
     <div class="share">
       <button type="button" class="btn" id="shareBtn">Udostępnij stan kasy</button>
@@ -872,7 +925,7 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
     'tab-plan':[['s-trasa','01','Trasa'],['s-plan','02','Plan dnia'],['s-baza','03','Baza'],
                 ['s-wieczor','04','Wieczór'],['s-budzet','05','Budżet']],
     'tab-kasa':[['s-ekipa','A','Ekipa'],['s-dodaj','B','Dorzuć'],['s-lista','C','Co poszło'],
-                ['s-bilans','D','Bilans'],['s-przelewy','E','Przelewy']],
+                ['s-wplaty','D','Wpłaty'],['s-bilans','E','Bilans'],['s-przelewy','F','Przelewy']],
     'tab-turniej':[['t-tabela','I','Klasyfikacja'],['t-dodaj','II','Dopisz wynik'],
                 ['t-wyniki','III','Wyniki'],['t-zasady','IV','Punktacja']]
   };
@@ -1266,8 +1319,9 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
   /* ══ KASA ════════════════════════════════════════════════════════ */
   var SB = { url:'https://gbrdkpelkkyvnaptiqls.supabase.co', key:'sb_publishable_utJHBqvPvcqcXd3OpzSnbg_Go4aSxLG' };
   var online = false, busy = 0, renameT = null, DATA;
+  var payOnline = false, payErr = null;
 
-  function blank(){ var p = []; for(var i = 1; i <= 9; i++) p.push('Osoba ' + i); return { people:p, exp:[], seq:1 }; }
+  function blank(){ var p = []; for(var i = 1; i <= 9; i++) p.push('Osoba ' + i); return { people:p, exp:[], pay:[], seq:1 }; }
   function b64e(o){ return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
   function b64d(s){
     s = s.replace(/-/g,'+').replace(/_/g,'/');
@@ -1276,11 +1330,18 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
   }
   function valid(d){
     if(!d || !Array.isArray(d.people) || d.people.length < 2 || !Array.isArray(d.exp)) return false;
-    return d.exp.every(function(e){
+    if(d.pay !== undefined && !Array.isArray(d.pay)) return false;
+    var okExp = d.exp.every(function(e){
       return e && typeof e.amount === 'number' && isFinite(e.amount) && e.amount > 0 &&
         Array.isArray(e.who) && e.who.length &&
         e.who.every(function(i){ return Number.isInteger(i) && i >= 0 && i < d.people.length; }) &&
         Number.isInteger(e.payer) && e.payer >= 0 && e.payer < d.people.length;
+    });
+    if(!okExp) return false;
+    return (d.pay || []).every(function(x){
+      return x && typeof x.amount === 'number' && isFinite(x.amount) && x.amount > 0 &&
+        Number.isInteger(x.from) && x.from >= 0 && x.from < d.people.length &&
+        Number.isInteger(x.to)   && x.to   >= 0 && x.to   < d.people.length;
     });
   }
   function save(){ store('kw:kasa', JSON.stringify(DATA)); }
@@ -1300,17 +1361,27 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
     return { id:r.id, what:r.co, amount:Number(r.kwota), payer:r.platnik - 1,
              who:(r.za_kogo || []).map(function(i){ return i - 1; }) };
   }
+  function rowToPay(r){
+    return { id:r.id, from:r.od_kogo - 1, to:r.do_kogo - 1, amount:Number(r.kwota), note:r.notatka || '' };
+  }
   function pull(){
     return Promise.all([
       sbFetch('ekipa?select=idx,imie&order=idx.asc'),
-      sbFetch('wydatki?select=id,co,kwota,platnik,za_kogo&order=id.asc')
+      sbFetch('wydatki?select=id,co,kwota,platnik,za_kogo&order=id.asc'),
+      // brak tabeli wplat nie moze zabrac calej kasy do offline'u — wpisy zostaja wtedy lokalne
+      sbFetch('wplaty?select=id,od_kogo,do_kogo,kwota,notatka&order=id.asc')
+        .then(function(rows){ payErr = null; return rows || []; })
+        .catch(function(err){ payErr = err; return null; })
     ]).then(function(res){
-      var ek = res[0] || [], wy = res[1] || [];
+      var ek = res[0] || [], wy = res[1] || [], wp = res[2];
       if(ek.length >= 2){
         var typing = document.activeElement && document.activeElement.dataset && document.activeElement.dataset.p !== undefined;
         if(!typing) DATA.people = ek.map(function(r){ return r.imie || ('Osoba ' + r.idx); });
       }
       DATA.exp = wy.map(rowToExp);
+      payOnline = wp !== null;
+      if(wp) DATA.pay = wp.map(rowToPay);
+      $('#sqlHelpP').hidden = !(payErr && missingTable(payErr));
       return true;
     });
   }
@@ -1346,6 +1417,7 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
   try{ var ll = JSON.parse(load('kw:kasa') || 'null'); if(valid(ll)) local = ll; }catch(e){}
   if(fromLink && (!local || !local.exp.length)){ DATA = fromLink; save(); }
   else DATA = local || blank();
+  if(!Array.isArray(DATA.pay)) DATA.pay = [];
 
 
   function renderCrew(){
@@ -1354,7 +1426,12 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
     $('#crew').innerHTML = DATA.people.map(function(n, i){
       return '<input type="text" data-p="' + i + '" value="' + esc(n) + '" aria-label="Imię osoby ' + (i + 1) + '" maxlength="24">';
     }).join('');
-    $('#fPayer').innerHTML = DATA.people.map(function(n, i){ return '<option value="' + i + '">' + esc(n) + '</option>'; }).join('');
+    var opts = DATA.people.map(function(n, i){ return '<option value="' + i + '">' + esc(n) + '</option>'; }).join('');
+    $('#fPayer').innerHTML = opts;
+    var pf = $('#pFrom'), pt = $('#pTo'), keepF = pf.value, keepT = pt.value;
+    pf.innerHTML = opts; pt.innerHTML = opts;
+    pf.value = keepF && keepF < DATA.people.length ? keepF : 0;
+    pt.value = keepT && keepT < DATA.people.length ? keepT : (DATA.people.length > 1 ? 1 : 0);
     $('#fWho').innerHTML = DATA.people.map(function(n, i){
       return '<label><input type="checkbox" value="' + i + '" checked>' + esc(n) + '</label>';
     }).join('');
@@ -1364,9 +1441,12 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
       if(document.activeElement !== inp && inp.value !== DATA.people[i]) inp.value = DATA.people[i];
     });
     var opts = $('#fPayer').options, labs = $$('#fWho label');
+    var from = $('#pFrom').options, to = $('#pTo').options;
     DATA.people.forEach(function(n, i){
       if(opts[i]) opts[i].textContent = n;
       if(labs[i]) labs[i].lastChild.nodeValue = n;
+      if(from[i]) from[i].textContent = n;
+      if(to[i])   to[i].textContent = n;
     });
     $$('#eWho label').forEach(function(l, i){ if(DATA.people[i]) l.lastChild.nodeValue = DATA.people[i]; });
     renderTurniej();
@@ -1436,22 +1516,86 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
     if(online){ busy++; sbFetch('wydatki?id=eq.' + id, { method:'DELETE' }).catch(goOffline).then(function(){ busy--; }); }
   });
 
-  function balances(){
-    var b = DATA.people.map(function(){ return 0; });
+  // wylozone minus wlasny udzial, skorygowane o to, co ktos juz wplacil albo dostal
+  function tally(){
+    var n = DATA.people.length, i;
+    var t = { paid:[], share:[], sent:[], got:[], bal:[] };
+    for(i = 0; i < n; i++){ t.paid[i] = 0; t.share[i] = 0; t.sent[i] = 0; t.got[i] = 0; }
     DATA.exp.forEach(function(e){
-      b[e.payer] += e.amount;
+      t.paid[e.payer] += e.amount;
       var each = e.amount / e.who.length;
-      e.who.forEach(function(i){ b[i] -= each; });
+      e.who.forEach(function(k){ t.share[k] += each; });
     });
-    return b;
+    DATA.pay.forEach(function(x){
+      if(x.from < 0 || x.from >= n || x.to < 0 || x.to >= n) return;
+      t.sent[x.from] += x.amount; t.got[x.to] += x.amount;
+    });
+    for(i = 0; i < n; i++) t.bal[i] = t.paid[i] - t.share[i] + t.sent[i] - t.got[i];
+    return t;
   }
-  function paidBy(){
-    var p = DATA.people.map(function(){ return 0; });
-    DATA.exp.forEach(function(e){ p[e.payer] += e.amount; });
-    return p;
+  function balances(){ return tally().bal; }
+
+  function renderPay(){
+    var list = $('#payList');
+    if(!DATA.pay.length){
+      list.innerHTML = '<li><div class="empty">Jeszcze żadnej wpłaty. Jak ktoś odda swoją część, wbijcie ją tutaj.</div></li>';
+      $('#payLead').textContent = 'Jeszcze nikt nic nie wpłacił.';
+      return;
+    }
+    var n = DATA.pay.length, tot = DATA.pay.reduce(function(a, x){ return a + x.amount; }, 0);
+    var word = n === 1 ? 'wpłata' : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 'wpłaty' : 'wpłat';
+    $('#payLead').textContent = n + ' ' + word + ' na łączną kwotę ' + zl(tot) + '.';
+    list.innerHTML = DATA.pay.map(function(x){
+      return '<li><div class="what"><strong>' + esc(nm(x.from)) + ' → ' + esc(nm(x.to)) + '</strong>' +
+        (x.note ? '<span>' + esc(x.note) + '</span>' : '') + '</div>' +
+        '<span class="amt">' + zl(x.amount) + '</span>' +
+        '<button type="button" class="del" data-delpay="' + x.id + '" aria-label="Usuń wpłatę">×</button></li>';
+    }).join('');
   }
+  $('#payList').addEventListener('click', function(e){
+    var b = e.target.closest('[data-delpay]'); if(!b) return;
+    var id = +b.dataset.delpay;
+    DATA.pay = DATA.pay.filter(function(x){ return x.id !== id; });
+    save(); renderRest(); toast('Wpłata usunięta');
+    if(online && payOnline){ busy++; sbFetch('wplaty?id=eq.' + id, { method:'DELETE' }).catch(goOffline).then(function(){ busy--; }); }
+  });
+  function addPay(from, to, amount, note){
+    amount = Math.round(amount * 100) / 100;
+    if(!(amount > 0)){ toast('Kwota musi być większa od zera'); return; }
+    if(from === to){ toast('Wpłata do samego siebie nic nie zmienia'); return; }
+    var done = 'Zapisano wpłatę: ' + nm(from) + ' → ' + nm(to) + ' ' + zl(amount);
+    function keepLocal(){ DATA.pay.push({ id:DATA.seq++, from:from, to:to, amount:amount, note:note || '' }); save(); renderRest(); }
+    if(online && payOnline){
+      busy++;
+      sbFetch('wplaty', { method:'POST', headers:{ Prefer:'return=representation' },
+        body:JSON.stringify({ od_kogo:from + 1, do_kogo:to + 1, kwota:amount, notatka:note || null }) })
+        .then(function(rows){ DATA.pay.push(rowToPay(rows[0])); save(); renderRest(); toast(done + ' — widzi to cała ekipa'); })
+        .catch(function(err){
+          if(missingTable(err)){ payOnline = false; $('#sqlHelpP').hidden = false; toast('Brakuje tabeli wpłat — zapisuję tylko u Ciebie'); }
+          else goOffline(err);
+          keepLocal();
+        })
+        .then(function(){ busy--; });
+    } else { keepLocal(); toast(done); }
+  }
+  $('#payForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var from = +$('#pFrom').value, to = +$('#pTo').value;
+    var amount = Math.round(Number($('#pAmount').value) * 100) / 100;
+    if(!(amount > 0)){ toast('Kwota musi być większa od zera'); $('#pAmount').focus(); return; }
+    if(from === to){ toast('Wybierz dwie różne osoby — wpłata do samego siebie nic nie zmienia'); return; }
+    addPay(from, to, amount, $('#pNote').value.trim());
+    $('#pAmount').value = ''; $('#pNote').value = ''; $('#pAmount').focus();
+  });
+  $('#sqlCopyP').addEventListener('click', function(){
+    var txt = $('#sqlTextP').textContent;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){ toast('SQL skopiowany — wklej go w SQL Editor i wciśnij Run'); },
+        function(){ toast('Zaznacz SQL i skopiuj ręcznie'); });
+    } else toast('Zaznacz SQL i skopiuj ręcznie');
+  });
   function renderBal(){
-    var b = balances(), paid = paidBy();
+    var t = tally(), b = t.bal;
     var peak = Math.max(1, Math.max.apply(null, b.map(function(v){ return Math.abs(v); })));
     $('#balList').innerHTML = DATA.people.map(function(n, i){
       var v = Math.round(b[i] * 100) / 100;
@@ -1459,7 +1603,9 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
       var txt = v > 0.005 ? '+' + zl(v) : v < -0.005 ? '−' + zl(-v) : zl(0);
       var w = Math.abs(v) / peak * 50;
       var style = v >= 0 ? 'left:50%;width:' + w + '%' : 'left:' + (50 - w) + '%;width:' + w + '%';
-      return '<li><span class="nm">' + esc(n) + '<small>wyłożył ' + zl(paid[i]) + ' · powinien ' + zl(paid[i] - b[i]) + '</small></span>' +
+      var extra = (t.sent[i] > 0.005 ? ' · wpłacił ' + zl(t.sent[i]) : '') +
+                  (t.got[i]  > 0.005 ? ' · dostał ' + zl(t.got[i])  : '');
+      return '<li><span class="nm">' + esc(n) + '<small>wyłożył ' + zl(t.paid[i]) + ' · udział ' + zl(t.share[i]) + extra + '</small></span>' +
         '<span class="meter"><i class="' + cls + '" style="' + style + '"></i></span>' +
         '<span class="v ' + cls + '">' + txt + '</span></li>';
     }).join('');
@@ -1482,10 +1628,16 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
     var s = settle();
     $('#settleList').innerHTML = s.length
       ? s.map(function(t){ return '<li><span class="from">' + esc(nm(t.from)) + '</span><span class="arrow"></span>' +
-          '<span class="to">' + esc(nm(t.to)) + '</span><b>' + zl(t.amt) + '</b></li>'; }).join('')
+          '<span class="to">' + esc(nm(t.to)) + '</span><b>' + zl(t.amt) + '</b>' +
+          '<button type="button" class="mini" data-paid data-from="' + t.from + '" data-to="' + t.to +
+          '" data-amt="' + (Math.round(t.amt * 100) / 100) + '">zapłacone</button></li>'; }).join('')
       : '<li><div class="empty">Nic do wyrównania — na razie wszyscy są na zero.</div></li>';
   }
-  function renderRest(){ renderExp(); renderBal(); renderSettle(); }
+  $('#settleList').addEventListener('click', function(e){
+    var b = e.target.closest('[data-paid]'); if(!b) return;
+    addPay(+b.dataset.from, +b.dataset.to, Number(b.dataset.amt), 'wyrównanie z listy przelewów');
+  });
+  function renderRest(){ renderExp(); renderPay(); renderBal(); renderSettle(); }
 
   $('#allBtn').addEventListener('click', function(){ $$('#fWho input').forEach(function(c){ c.checked = true; }); });
   $('#noneBtn').addEventListener('click', function(){ $$('#fWho input').forEach(function(c){ c.checked = false; }); });
@@ -1532,33 +1684,39 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
     } else { out.select(); toast('Skopiuj link zaznaczony poniżej'); }
   });
   function summary(){
-    var b = balances(), paid = paidBy(), s = settle();
+    var t = tally(), b = t.bal, s = settle();
     var tot = DATA.exp.reduce(function(a, e){ return a + e.amount; }, 0);
     var L = ['KAWALERSKI WALDKA — ROZLICZENIE', 'Razem wydane: ' + zl(tot), '', 'Kto ile wylozyl:'];
     DATA.people.forEach(function(n, i){
       var v = Math.round(b[i] * 100) / 100;
-      L.push('  ' + n + ': ' + zl(paid[i]) + '  (bilans ' + (v >= 0 ? '+' : '-') + zl(Math.abs(v)) + ')');
+      L.push('  ' + n + ': ' + zl(t.paid[i]) + '  (bilans ' + (v >= 0 ? '+' : '-') + zl(Math.abs(v)) + ')');
     });
-    L.push('', 'Przelewy:');
+    if(DATA.pay.length){
+      L.push('', 'Wplaty (juz przekazane):');
+      DATA.pay.forEach(function(x){ L.push('  ' + nm(x.from) + ' -> ' + nm(x.to) + ': ' + zl(x.amount) + (x.note ? '  (' + x.note + ')' : '')); });
+    }
+    L.push('', 'Zostalo do przelania:');
     if(s.length) s.forEach(function(t){ L.push('  ' + nm(t.from) + ' -> ' + nm(t.to) + ': ' + zl(t.amt)); });
     else L.push('  brak - wszyscy na zero');
     return L.join('\n');
   }
   $('#copyBtn').addEventListener('click', function(){
-    if(!DATA.exp.length){ toast('Najpierw dodajcie jakieś koszty'); return; }
+    if(!DATA.exp.length && !DATA.pay.length){ toast('Najpierw dodajcie jakieś koszty'); return; }
     if(navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(summary()).then(function(){ toast('Podsumowanie skopiowane'); },
         function(){ toast('Nie udało się skopiować'); });
     } else toast('Przeglądarka nie pozwala kopiować automatycznie');
   });
   $('#resetBtn').addEventListener('click', function(){
-    var msg = online ? 'To skasuje wspólną kasę DLA CAŁEJ EKIPY — wszystkie wpisy znikną każdemu. Na pewno?'
-                     : 'Skasować wszystkie wpisy i imiona? Tego nie da się cofnąć.';
+    var msg = online ? 'To skasuje wspólną kasę DLA CAŁEJ EKIPY — wszystkie koszty i wpłaty znikną każdemu. Na pewno?'
+                     : 'Skasować wszystkie koszty, wpłaty i imiona? Tego nie da się cofnąć.';
     if(!confirm(msg)) return;
     if(online){
       busy++;
-      sbFetch('wydatki?id=gt.0', { method:'DELETE' })
-        .then(function(){ DATA.exp = []; save(); renderRest(); toast('Wspólna kasa wyczyszczona'); })
+      Promise.all([
+        sbFetch('wydatki?id=gt.0', { method:'DELETE' }),
+        payOnline ? sbFetch('wplaty?id=gt.0', { method:'DELETE' }) : Promise.resolve(null)
+      ]).then(function(){ DATA.exp = []; DATA.pay = []; save(); renderRest(); toast('Wspólna kasa wyczyszczona'); })
         .catch(goOffline).then(function(){ busy--; });
     } else {
       DATA = blank(); save();
