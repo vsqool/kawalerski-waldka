@@ -568,7 +568,7 @@ footer{margin:110px 0 60px; padding-top:26px; border-top:1px solid var(--line-2)
     <dl class="facts">
       <div class="fact"><dt class="eyebrow">Zbiórka</dt><dd>11:00, Stokłosy</dd></div>
       <div class="fact"><dt class="eyebrow">Powrót</dt><dd>ndz. 27.09</dd></div>
-      <div class="fact"><dt class="eyebrow">Podział</dt><dd>5–8 osób</dd></div>
+      <div class="fact"><dt class="eyebrow">Podział</dt><dd>6–8 osób</dd></div>
       <div class="fact"><dt class="eyebrow">Baza</dt><dd>Bizon Village</dd></div>
     </dl>
     <div class="cue"><i></i><span class="eyebrow">Przewiń</span></div>
@@ -619,9 +619,9 @@ footer{margin:110px 0 60px; padding-top:26px; border-top:1px solid var(--line-2)
       <svg aria-hidden="true"><use href="#i-house"/></svg>
       <div>
         <div class="stop-head"><h3>Bizon Village</h3>
-          <span class="chiprow"><span class="chip">1600 zł</span><span class="chip">5 osób</span><span class="chip ok">potwierdzone</span></span></div>
+          <span class="chiprow"><span class="chip">1600 zł</span><span class="chip">6 osób</span><span class="chip ok">potwierdzone</span></span></div>
         <div class="where" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--dimmer)">Wczasowa 1, Zalesie Górne</div>
-        <p style="margin-top:12px;color:var(--dim)">Cały domek na wyłączność, jakieś 25 km na południe od Ursynowa. Domek jest pięcioosobowy, więc 1600 zł za dobę dzieli się na pięciu — 320 zł od osoby. Tu wracamy po CS-ie i zostajemy do rana.</p>
+        <p style="margin-top:12px;color:var(--dim)">Cały domek na wyłączność, jakieś 25 km na południe od Ursynowa. 1600 zł za dobę dzielimy na sześć osób, czyli 266,67 zł na głowę. Tu wracamy po CS-ie i zostajemy do rana.</p>
         <a class="btn solid" style="margin-top:16px" id="bizonLink" href="#" target="_blank" rel="noopener">Zobacz na Bookingu →</a>
       </div>
     </div>
@@ -637,7 +637,7 @@ footer{margin:110px 0 60px; padding-top:26px; border-top:1px solid var(--line-2)
   <section class="sec" id="s-budzet">
     <div class="sec-head"><span class="eyebrow">05</span><h2 class="disp">Budżet</h2></div>
     <div class="hr"></div>
-    <p class="sec-lead">Każda pozycja ma teraz własną liczbę osób, bo nie wszyscy są na wszystkim: domek na pięć, gokarty na siedem, paintball, obiad i CS na osiem. Gokarty, paintball i domek mają ceny potwierdzone — obiad i FPS Center jeszcze nie. Kliknijcie w kwotę albo w liczbę osób i wpiszcie swoje, zapisze się samo i przetrwa odświeżenie.</p>
+    <p class="sec-lead">Każda pozycja ma własną liczbę osób, bo nie wszyscy są na wszystkim: domek na sześć, gokarty na siedem, paintball i CS na osiem, zapasy na pięć. Gokarty, paintball i domek mają ceny potwierdzone — FPS Center jeszcze nie. Jedzenia tu nie ma, bo w COGITO każdy płaci za siebie. Kliknijcie w kwotę albo w liczbę osób i wpiszcie swoje, zapisze się samo i przetrwa odświeżenie.</p>
     <div class="panel rv">
       <div class="phead">
         <span class="lbl">Kwota · ile osób · na osobę</span>
@@ -890,17 +890,17 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
       url:'https://asmarena.pl/cennik/', lat:52.21660, lng:21.11925, ok:true, short:'Paintball', c:PIG[2],
       chip:'1400 zł za grupę', who:'8 osób',
       body:'Pakiet „impreza zamknięta": 1400 zł, po 500 kulek na głowę. W ośmiu wychodzi 175 zł od osoby. Cena i godzina potwierdzone.' },
-    { time:'—', icon:'i-food', title:'Obiad', place:'miejsce do ustalenia', pin:'',
-      url:'', lat:52.22996, lng:21.01218, ok:false, short:'Obiad', c:PIG[3],
-      who:'8 osób',
-      body:'Obiad po paintballu, w ośmiu. Ceny jeszcze nie znamy — pozycja jest już w budżecie, wystarczy wpisać kwotę, jak będzie wiadomo.' },
+    { time:'17:00', icon:'i-food', title:'COGITO Craft Beer & Pizza', place:'ul. Migdałowa, Ursynów',
+      pin:'COGITO, Ursynów', url:'', lat:52.14552, lng:21.05796, ok:true, short:'Jedzenie', c:PIG[3],
+      who:'każdy za siebie',
+      body:'Pizza i kraftowe piwo. Każdy płaci za siebie, więc tego nie ma we wspólnym budżecie. Do FPS Center jest stamtąd siedemset metrów — na CS-a idziemy piechotą.' },
     { time:'18:30', icon:'i-cs', title:'CS na profesjonalnych stanowiskach', place:'FPS Center, al. KEN 36', pin:'FPS Center, al. KEN 36',
       url:'https://fpscenter.pl', lat:52.13962, lng:21.05904, ok:true, short:'CS', c:PIG[4],
       who:'8 osób',
       body:'Waldek miał swój epizod z CS-em, więc godzina na porządnym sprzęcie. Stanowiska dla ośmiu na 18:30 są potwierdzone — została tylko cena, cennika jeszcze nie znamy.' },
     { time:'—', icon:'i-house', title:'Bizon Village', place:'Wczasowa 1, Zalesie Górne', pin:'Zalesie Górne',
       url:'', lat:52.03028, lng:21.04605, ok:true, short:'Nocleg', c:PIG[5],
-      chip:'1600 zł za domek', who:'5 osób',
+      chip:'1600 zł za domek', who:'6 osób',
       body:'Koniec jeżdżenia. Reszta wieczoru dzieje się przy domku: ognisko, konsola, beer pong, ping pong i darty.' }
   ];
 
@@ -915,9 +915,8 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
   var CALC = [
     { id:'gk',    name:'Gokarty Pole Position', hint:'85 zł za przejazd — podwójcie, jeśli robimy dwa', v:85, per:'osoba', n:7, on:true },
     { id:'pb',    name:'Paintball ASM Arena',   hint:'pakiet impreza zamknięta, 500 kulek', v:1400, per:'grupa', n:8, on:true },
-    { id:'food',  name:'Obiad po paintballu',   hint:'ceny jeszcze nie znamy — wpiszcie, jak będzie wiadomo', v:0, per:'osoba', n:8, on:true, est:true },
     { id:'cs',    name:'FPS Center — CS',       hint:'18:30 potwierdzone, cennika jeszcze nie znamy', v:0, per:'osoba', n:8, on:true, est:true },
-    { id:'stay',  name:'Domek Bizon Village',   hint:'domek pięcioosobowy, cały obiekt za dobę', v:1600, per:'grupa', n:5, on:true },
+    { id:'stay',  name:'Domek Bizon Village',   hint:'cały obiekt za dobę, dzielony na 6 osób', v:1600, per:'grupa', n:6, on:true },
     { id:'grill', name:'Zapasy na wieczór',     hint:'grill, picie, kubki, lotki — dla nocujących', v:120, per:'osoba', n:5, on:true, est:true }
   ];
 
