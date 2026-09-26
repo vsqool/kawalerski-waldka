@@ -424,6 +424,7 @@ input:focus,select:focus{border-color:var(--paint); outline:none; box-shadow:0 0
   background:repeating-linear-gradient(90deg,var(--line) 0 5px,transparent 5px 10px)}
 .settle b{font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums; font-size:16px}
 .share{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px}
+html.guest #v-kasa{display:none !important}
 .linkout{width:100%; font-family:'JetBrains Mono',monospace; font-size:11.5px; text-align:left}
 .note{margin-top:16px; padding:15px 17px; border:1px solid var(--line); border-left:2px solid var(--cyan);
   border-radius:var(--r); color:var(--dim); font-size:14.5px; background:var(--panel)}
@@ -938,6 +939,18 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
   function load(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
   var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ── tryb gościa ─────────────────────────────────────────────────────
+     Link z ?dla=... (np. ?dla=waldek) pokazuje Plan i Turniej, ale nie
+     Kasę. Zakładka znika z paska, więc panelu nie da się otworzyć, a
+     przeglądarka gościa nie pobiera z bazy ani kosztów, ani wpłat.
+     To kurtuazja, nie zamek — sam adres bez parametru pokazuje wszystko. */
+  var GUEST = /[?&]dla=[^&]/.test(location.search);
+  if(GUEST){
+    var kasaBtn = $('#tab-kasa');
+    if(kasaBtn) kasaBtn.remove();
+    document.documentElement.classList.add('guest');
+  }
+
   var toastT;
   function toast(msg){
     var t = $('#toast'); t.textContent = msg; t.classList.add('on');
@@ -1364,6 +1377,14 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
     return { id:r.id, from:r.od_kogo - 1, to:r.do_kogo - 1, amount:Number(r.kwota), note:r.notatka || '' };
   }
   function pull(){
+    if(GUEST){
+      // zadnego wydatku ani wplaty — do przegladarki goscia nie trafiaja kwoty
+      return sbFetch('ekipa?select=idx,imie&order=idx.asc').then(function(ek){
+        if((ek || []).length >= 2) DATA.people = ek.map(function(r){ return r.imie || ('Osoba ' + r.idx); });
+        DATA.exp = []; DATA.pay = [];
+        return true;
+      });
+    }
     return Promise.all([
       sbFetch('ekipa?select=idx,imie&order=idx.asc'),
       sbFetch('wydatki?select=id,co,kwota,platnik,za_kogo&order=id.asc'),
@@ -1391,7 +1412,8 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
   }
   function setStatus(){
     var el = $('#tabnote');
-    var kasa = $('#tab-kasa').getAttribute('aria-selected') === 'true';
+    var kasaTab = $('#tab-kasa');
+    var kasa = !!kasaTab && kasaTab.getAttribute('aria-selected') === 'true';
     var turn = $('#tab-turniej').getAttribute('aria-selected') === 'true';
     if(!kasa && !turn){
       el.innerHTML = '<span class="dot"></span>' + NOTES['tab-plan'];
@@ -1732,7 +1754,8 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
 
   setInterval(function(){
     if(!online || busy || document.hidden) return;
-    if($('#tab-kasa').getAttribute('aria-selected') !== 'true') return;
+    var kt = $('#tab-kasa');
+    if(!kt || kt.getAttribute('aria-selected') !== 'true') return;
     pull().then(function(){ refreshNames(); renderRest(); }).catch(goOffline);
   }, 7000);
 
@@ -1972,7 +1995,7 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
 
   /* ── start ───────────────────────────────────────────────────────── */
   buildRail('tab-plan'); setStatus(); watchReveals(); sweep();
-  if(load('kw:tab') === 'tab-kasa' || location.hash.indexOf('k=') > -1) showTab($('#tab-kasa'));
+  if(!GUEST && (load('kw:tab') === 'tab-kasa' || location.hash.indexOf('k=') > -1)) showTab($('#tab-kasa'));
 })();
 </script>
 
