@@ -425,6 +425,7 @@ input:focus,select:focus{border-color:var(--paint); outline:none; box-shadow:0 0
 .settle b{font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums; font-size:16px}
 .share{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px}
 html.guest #v-kasa{display:none !important}
+.crew input.offcash{opacity:.5; border-style:dashed}
 /* .cash — wszystko, co mówi o pieniądzach; .nocash — wersja dla gościa */
 .nocash{display:none}
 html.guest .cash{display:none !important}
@@ -1346,7 +1347,10 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
   var online = false, busy = 0, renameT = null, DATA;
   var payOnline = false, payErr = null;
 
-  function blank(){ var p = []; for(var i = 1; i <= 9; i++) p.push('Osoba ' + i); return { people:p, exp:[], pay:[], seq:1 }; }
+  function blank(){
+    var p = []; for(var i = 1; i <= 9; i++) p.push('Osoba ' + i);
+    return { people:p, settles:p.map(function(){ return true; }), exp:[], pay:[], seq:1 };
+  }
   function b64e(o){ return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
   function b64d(s){
     s = s.replace(/-/g,'+').replace(/_/g,'/');
@@ -1356,6 +1360,7 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
   function valid(d){
     if(!d || !Array.isArray(d.people) || d.people.length < 2 || !Array.isArray(d.exp)) return false;
     if(d.pay !== undefined && !Array.isArray(d.pay)) return false;
+    if(d.settles !== undefined && !Array.isArray(d.settles)) return false;
     var okExp = d.exp.every(function(e){
       return e && typeof e.amount === 'number' && isFinite(e.amount) && e.amount > 0 &&
         Array.isArray(e.who) && e.who.length &&
@@ -1371,6 +1376,9 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
   }
   function save(){ store('kw:kasa', JSON.stringify(DATA)); }
   function nm(i){ return DATA.people[i] || ('Osoba ' + (i + 1)); }
+  // Waldek gra w turnieju, ale nie sklada sie na wlasne kawalerskie — kasa go pomija
+  function pays(i){ return !DATA.settles || DATA.settles[i] !== false; }
+  function payList(){ var o = []; DATA.people.forEach(function(n, i){ if(pays(i)) o.push(i); }); return o; }
 
   function sbFetch(path, opts){
     opts = opts || {};
@@ -1392,14 +1400,17 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
   function pull(){
     if(GUEST){
       // zadnego wydatku ani wplaty — do przegladarki goscia nie trafiaja kwoty
-      return sbFetch('ekipa?select=idx,imie&order=idx.asc').then(function(ek){
-        if((ek || []).length >= 2) DATA.people = ek.map(function(r){ return r.imie || ('Osoba ' + r.idx); });
+      return sbFetch('ekipa?select=idx,imie,rozlicza&order=idx.asc').then(function(ek){
+        if((ek || []).length >= 2){
+          DATA.people  = ek.map(function(r){ return r.imie || ('Osoba ' + r.idx); });
+          DATA.settles = ek.map(function(r){ return r.rozlicza !== false; });
+        }
         DATA.exp = []; DATA.pay = [];
         return true;
       });
     }
     return Promise.all([
-      sbFetch('ekipa?select=idx,imie&order=idx.asc'),
+      sbFetch('ekipa?select=idx,imie,rozlicza&order=idx.asc'),
       sbFetch('wydatki?select=id,co,kwota,platnik,za_kogo&order=id.asc'),
       // brak tabeli wplat nie moze zabrac calej kasy do offline'u — wpisy zostaja wtedy lokalne
       sbFetch('wplaty?select=id,od_kogo,do_kogo,kwota,notatka&order=id.asc')
@@ -1410,6 +1421,7 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
       if(ek.length >= 2){
         var typing = document.activeElement && document.activeElement.dataset && document.activeElement.dataset.p !== undefined;
         if(!typing) DATA.people = ek.map(function(r){ return r.imie || ('Osoba ' + r.idx); });
+        DATA.settles = ek.map(function(r){ return r.rozlicza !== false; });
       }
       DATA.exp = wy.map(rowToExp);
       payOnline = wp !== null;
@@ -1452,36 +1464,46 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
   if(fromLink && (!local || !local.exp.length)){ DATA = fromLink; save(); }
   else DATA = local || blank();
   if(!Array.isArray(DATA.pay)) DATA.pay = [];
+  if(!Array.isArray(DATA.settles)) DATA.settles = DATA.people.map(function(){ return true; });
 
 
   function renderCrew(){
     if(document.getElementById('eWho')) buildWho();
-    $('#crewCount').textContent = DATA.people.length + ' os. w rozliczeniu';
+    var pl = payList(), extra = DATA.people.length - pl.length;
+    $('#crewCount').textContent = pl.length + ' os. w rozliczeniu' +
+      (extra ? ' · ' + extra + ' poza kasą, tylko w turnieju' : '');
     $('#crew').innerHTML = DATA.people.map(function(n, i){
-      return '<input type="text" data-p="' + i + '" value="' + esc(n) + '" aria-label="Imię osoby ' + (i + 1) + '" maxlength="24">';
+      return '<input type="text" data-p="' + i + '" value="' + esc(n) + '"' +
+        (pays(i) ? '' : ' class="offcash" title="Poza rozliczeniem — gra tylko w turnieju"') +
+        ' aria-label="Imię osoby ' + (i + 1) + '" maxlength="24">';
     }).join('');
-    var opts = DATA.people.map(function(n, i){ return '<option value="' + i + '">' + esc(n) + '</option>'; }).join('');
+    var opts = pl.map(function(i){ return '<option value="' + i + '">' + esc(DATA.people[i]) + '</option>'; }).join('');
     $('#fPayer').innerHTML = opts;
     var pf = $('#pFrom'), pt = $('#pTo'), keepF = pf.value, keepT = pt.value;
     pf.innerHTML = opts; pt.innerHTML = opts;
-    pf.value = keepF && keepF < DATA.people.length ? keepF : 0;
-    pt.value = keepT && keepT < DATA.people.length ? keepT : (DATA.people.length > 1 ? 1 : 0);
-    $('#fWho').innerHTML = DATA.people.map(function(n, i){
-      return '<label><input type="checkbox" value="' + i + '" checked>' + esc(n) + '</label>';
+    pf.value = pl.indexOf(+keepF) > -1 ? keepF : (pl[0] === undefined ? '' : pl[0]);
+    pt.value = pl.indexOf(+keepT) > -1 && +keepT !== +pf.value ? keepT : (pl[1] === undefined ? pl[0] : pl[1]);
+    $('#fWho').innerHTML = pl.map(function(i){
+      return '<label><input type="checkbox" value="' + i + '" checked>' + esc(DATA.people[i]) + '</label>';
     }).join('');
   }
   function refreshNames(){
     $$('#crew input').forEach(function(inp, i){
       if(document.activeElement !== inp && inp.value !== DATA.people[i]) inp.value = DATA.people[i];
     });
-    var opts = $('#fPayer').options, labs = $$('#fWho label');
-    var from = $('#pFrom').options, to = $('#pTo').options;
-    DATA.people.forEach(function(n, i){
-      if(opts[i]) opts[i].textContent = n;
-      if(labs[i]) labs[i].lastChild.nodeValue = n;
-      if(from[i]) from[i].textContent = n;
-      if(to[i])   to[i].textContent = n;
-    });
+    // listy pomijaja osoby poza rozliczeniem, wiec indeks osoby != indeks pozycji
+    function relabel(list, attr){
+      Array.prototype.forEach.call(list, function(el){
+        var i = +(attr ? el.querySelector('input').value : el.value);
+        if(DATA.people[i] === undefined) return;
+        if(attr) el.lastChild.nodeValue = DATA.people[i];
+        else el.textContent = DATA.people[i];
+      });
+    }
+    relabel($('#fPayer').options, false);
+    relabel($('#pFrom').options, false);
+    relabel($('#pTo').options, false);
+    relabel($$('#fWho label'), true);
     $$('#eWho label').forEach(function(l, i){ if(DATA.people[i]) l.lastChild.nodeValue = DATA.people[i]; });
     renderTurniej();
   }
@@ -1535,7 +1557,7 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
     var word = n === 1 ? 'wpis' : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 'wpisy' : 'wpisów';
     $('#expLead').textContent = n + ' ' + word + ' na łączną kwotę ' + zl(tot) + '.';
     list.innerHTML = DATA.exp.map(function(e){
-      var who = e.who.length === DATA.people.length ? 'za wszystkich' : 'za: ' + e.who.map(nm).join(', ');
+      var who = e.who.length === payList().length ? 'za wszystkich' : 'za: ' + e.who.map(nm).join(', ');
       return '<li><div class="what"><strong>' + esc(e.what) + '</strong><span>' + esc(nm(e.payer)) +
         ' · ' + esc(who) + ' · ' + zl(e.amount / e.who.length) + '/os.</span></div>' +
         '<span class="amt">' + zl(e.amount) + '</span>' +
@@ -1631,7 +1653,8 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
   function renderBal(){
     var t = tally(), b = t.bal;
     var peak = Math.max(1, Math.max.apply(null, b.map(function(v){ return Math.abs(v); })));
-    $('#balList').innerHTML = DATA.people.map(function(n, i){
+    $('#balList').innerHTML = payList().map(function(i){
+      var n = DATA.people[i];
       var v = Math.round(b[i] * 100) / 100;
       var cls = v > 0.005 ? 'up' : v < -0.005 ? 'down' : 'zero';
       var txt = v > 0.005 ? '+' + zl(v) : v < -0.005 ? '−' + zl(-v) : zl(0);
@@ -1721,9 +1744,9 @@ create policy turniej_delete on turniej for delete to anon using (true);</pre>
     var t = tally(), b = t.bal, s = settle();
     var tot = DATA.exp.reduce(function(a, e){ return a + e.amount; }, 0);
     var L = ['KAWALERSKI WALDKA — ROZLICZENIE', 'Razem wydane: ' + zl(tot), '', 'Kto ile wylozyl:'];
-    DATA.people.forEach(function(n, i){
+    payList().forEach(function(i){
       var v = Math.round(b[i] * 100) / 100;
-      L.push('  ' + n + ': ' + zl(t.paid[i]) + '  (bilans ' + (v >= 0 ? '+' : '-') + zl(Math.abs(v)) + ')');
+      L.push('  ' + DATA.people[i] + ': ' + zl(t.paid[i]) + '  (bilans ' + (v >= 0 ? '+' : '-') + zl(Math.abs(v)) + ')');
     });
     if(DATA.pay.length){
       L.push('', 'Wplaty (juz przekazane):');
